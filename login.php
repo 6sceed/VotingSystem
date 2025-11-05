@@ -16,7 +16,19 @@ $data = json_decode(file_get_contents("php://input"), true);
 $email = $data['email'] ?? '';
 $password = $data['password'] ?? '';
 
-// Prepare SQL (check voters table instead of users)
+// --- 1️⃣ Hardcoded admin account ---
+if ($email === 'admin' && $password === 'admin123') {
+    echo json_encode([
+        "status" => "admin",
+        "redirect" => "admindashboard.html",
+        "user" => [
+            "username" => "Administrator"
+        ]
+    ]);
+    exit;
+}
+
+// --- 2️⃣ Otherwise, check voters table (regular users) ---
 $sql = "SELECT * FROM voters WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $email);
@@ -24,10 +36,11 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($row = $result->fetch_assoc()) {
-    // Verify password hash
-    if (password_verify($password, $row['password'])) {
+    // If password is hashed, use password_verify(); if plain text, use simple match
+    if (password_verify($password, $row['password']) || $password === $row['password']) {
         echo json_encode([
             "status" => "success",
+            "redirect" => "dashboard.html",
             "user" => [
                 "id" => $row["id"],
                 "name" => $row["name"],
@@ -35,10 +48,10 @@ if ($row = $result->fetch_assoc()) {
             ]
         ]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Invalid password"]);
+        echo json_encode(["status" => "error", "message" => "Invalid password."]);
     }
 } else {
-    echo json_encode(["status" => "error", "message" => "No account found"]);
+    echo json_encode(["status" => "error", "message" => "No account found."]);
 }
 
 $stmt->close();

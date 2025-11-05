@@ -8,48 +8,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-header("Content-Type: application/json");
+header('Content-Type: application/json');
+include 'db.php';
 
-// Get raw JSON input
-$input = json_decode(file_get_contents("php://input"), true);
+// Get JSON input
+$data = json_decode(file_get_contents("php://input"), true);
 
-$name = $input["name"] ?? "";
-$email = $input["email"] ?? "";
-$password = $input["password"] ?? "";
+$name = trim($data['name'] ?? '');
+$email = trim($data['email'] ?? '');
+$password = $data['password'] ?? '';
+$address = trim($data['address'] ?? '');
+$phone = trim($data['phone'] ?? '');
+$age = intval($data['age'] ?? 0);
 
-// Quick validation
-if (empty($name) || empty($email) || empty($password)) {
+if (!$name || !$email || !$password || !$address || !$phone || !$age) {
     echo json_encode(["status" => "error", "message" => "All fields are required."]);
     exit;
 }
 
-// Connect to your DB
-$conn = new mysqli("localhost", "root", "", "voting_system");
-if ($conn->connect_error) {
-    echo json_encode(["status" => "error", "message" => "DB connection failed: " . $conn->connect_error]);
+// Age check (backend validation)
+if ($age < 18) {
+    echo json_encode(["status" => "error", "message" => "You must be at least 18 years old to register."]);
     exit;
 }
 
-// Check if email exists
-$stmt = $conn->prepare("SELECT * FROM voters WHERE email = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$result = $stmt->get_result();
+// Check if email already exists
+$check = $conn->prepare("SELECT id FROM voters WHERE email = ?");
+$check->bind_param("s", $email);
+$check->execute();
+$check->store_result();
 
-if ($result->num_rows > 0) {
-    echo json_encode(["status" => "error", "message" => "Email already registered."]);
+if ($check->num_rows > 0) {
+    echo json_encode(["status" => "error", "message" => "Email is already registered."]);
+    $check->close();
+    $conn->close();
     exit;
 }
+$check->close();
 
-// Insert new user
-$hashed = password_hash($password, PASSWORD_DEFAULT);
-$stmt = $conn->prepare("INSERT INTO voters (name, email, password) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $name, $email, $hashed);
+// ⚠️ Store password as plain text (for testing only)
+$plainPassword = $password;
+
+// Insert new voter
+$stmt = $conn->prepare("INSERT INTO voters (name, email, password, address, phone, age) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssssi", $name, $email, $plainPassword, $address, $phone, $age);
 
 if ($stmt->execute()) {
-    echo json_encode(["status" => "success", "message" => "Registration successful."]);
+    echo json_encode(["status" => "success", "message" => "Registration successful!"]);
 } else {
-    echo json_encode(["status" => "error", "message" => "Registration failed: " . $stmt->error]);
+    echo json_encode(["status" => "error", "message" => "Database error: " . $stmt->error]);
 }
 
 $stmt->close();

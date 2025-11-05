@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Voting Assistance — Admin Dashboard</title>
+    <style>
+        :root{
+            --bg:#f5f7fb; --card:#fff; --accent:#2b6ef6; --muted:#6b7280;
+        }
+        *{box-sizing:border-box;font-family:Inter,Segoe UI,Arial,sans-serif}
+        body{margin:0;background:var(--bg);color:#111}
+        header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#fff;border-bottom:1px solid #e6e9ef}
+        header h1{font-size:16px;margin:0}
+        .layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px)}
+        nav{padding:18px;border-right:1px solid #e6e9ef;background:linear-gradient(0deg,#fff,transparent)}
+        .nav-item{display:block;padding:10px 12px;border-radius:8px;color:var(--muted);text-decoration:none;margin-bottom:6px}
+        .nav-item.active{background:#eef6ff;color:var(--accent);font-weight:600}
+        main{padding:20px}
+        .row{display:flex;gap:16px;flex-wrap:wrap}
+        .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 1px 2px rgba(15,23,42,0.03);min-width:0}
+        .stat{flex:1;min-width:160px}
+        .stat h3{margin:0;font-size:12px;color:var(--muted)}
+        .stat p{margin:8px 0 0;font-size:20px;font-weight:700}
+        .controls{display:flex;gap:8px;align-items:center}
+        button{border:0;padding:8px 12px;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer}
+        button.secondary{background:#f3f4f6;color:#111;border:1px solid #e6e9ef}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:10px 8px;text-align:left;border-bottom:1px solid #eef2f7}
+        .muted{color:var(--muted)}
+        .small{font-size:13px}
+        .actions button{margin-right:6px}
+        .badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef2ff;color:var(--accent);font-weight:600;font-size:12px}
+        .chart-bar{height:12px;background:#e6eefc;border-radius:6px;overflow:hidden}
+        .chart-fill{height:100%;background:linear-gradient(90deg,var(--accent),#4facff);display:block}
+        form .row-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .modal{position:fixed;inset:0;background:rgba(11,15,25,0.45);display:none;align-items:center;justify-content:center}
+        .modal.open{display:flex}
+        .modal .card{width:460px;max-width:94%}
+        footer{padding:12px 20px;color:var(--muted);font-size:13px;background:#fff;border-top:1px solid #e6e9ef;text-align:center}
+        @media (max-width:720px){.layout{grid-template-columns:1fr}nav{display:flex;overflow:auto;padding:10px}nav .nav-item{white-space:nowrap}}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Voting Assistance — Admin</h1>
+        <div class="controls">
+            <div id="status" class="muted small">Loading…</div>
+            <button id="toggleVoting" title="Start or stop voting">Start Voting</button>
+            <button id="exportBtn" class="secondary">Export Results</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav aria-label="Main navigation">
+            <a href="#" class="nav-item active" data-view="overview">Overview</a>
+            <a href="#" class="nav-item" data-view="candidates">Candidates</a>
+            <a href="#" class="nav-item" data-view="voters">Voters</a>
+            <a href="#" class="nav-item" data-view="results">Results</a>
+            <a href="#" class="nav-item" data-view="settings">Settings</a>
+        </nav>
+
+        <main>
+            <!-- Overview -->
+            <section id="view-overview" class="view">
+                <div class="row">
+                    <div class="card stat">
+                        <h3>Total Voters</h3>
+                        <p id="totalVoters">0</p>
+                    </div>
+                    <div class="card stat">
+                        <h3>Total Candidates</h3>
+                        <p id="totalCandidates">0</p>
+                    </div>
+                    <div class="card stat">
+                        <h3>Total Votes Cast</h3>
+                        <p id="totalVotes">0</p>
+                    </div>
+                </div>
+
+                <div style="margin-top:16px" class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                        <strong>Management</strong>
+                        <div>
+                            <button id="addCandidateBtn">Add Candidate</button>
+                            <button id="addVoterBtn" class="secondary">Add Voter</button>
+                        </div>
+                    </div>
+                    <p class="muted small">Quick actions for the voting assistance system. Use Candidates and Voters tabs to manage lists.</p>
+                </div>
+            </section>
+
+            <!-- Candidates -->
+            <section id="view-candidates" class="view" style="display:none">
+                <div class="card" style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <strong>Candidates</strong>
+                        <div>
+                            <button id="addCandidateBtn2">New Candidate</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <table id="candidatesTable" aria-describedby="candidates">
+                        <thead>
+                            <tr><th>Candidate</th><th class="small">Votes</th><th style="width:200px">Progress</th><th class="small">Actions</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Voters -->
+            <section id="view-voters" class="view" style="display:none">
+                <div class="card" style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <strong>Registered Voters</strong>
+                        <div>
+                            <button id="addVoterBtn2">New Voter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <table id="votersTable">
+                        <thead><tr><th>Name</th><th class="small">Email</th><th class="small">Has Voted</th><th class="small">Actions</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Results -->
+            <section id="view-results" class="view" style="display:none">
+                <div class="card" style="margin-bottom:12px">
+                    <strong>Live Results</strong>
+                </div>
+
+                <div id="resultsList" class="card"></div>
+            </section>
+
+            <!-- Settings -->
+            <section id="view-settings" class="view" style="display:none">
+                <div class="card">
+                    <strong>Settings</strong>
+                    <p class="muted small">This demo stores data in your browser (localStorage). Use Reset to clear demo data.</p>
+                    <div style="margin-top:12px">
+                        <button id="resetBtn" class="secondary">Reset Demo Data</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <h3 id="modalTitle">Modal</h3>
+            <form id="modalForm">
+                <div id="modalBody"></div>
+                <div style="display:flex;justify-content:flex-end;margin-top:12px">
+                    <button type="button" id="modalCancel" class="secondary">Cancel</button>
+                    <button type="submit" style="margin-left:8px">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>Admin Dashboard — Voting Assistance System (demo)</footer>
+
+    <script>
+        // Simple demo admin dashboard with localStorage persistence
+        const STORAGE_KEY = 'vs_admin_data_v1';
+        const defaultData = {
+            votingActive: false,
+            candidates: [
+                {id:1,name:'Alice Johnson',votes:3},
+                {id:2,name:'Carlos Martinez',votes:2},
+                {id:3,name:'Fatima Noor',votes:1}
+            ],
+            voters: [
+                {id:1,name:'Voter One',email:'voter1@example.com',hasVoted:false},
+                {id:2,name:'Voter Two',email:'voter2@example.com',hasVoted:true}
+            ]
+        };
+
+        let store = loadStore();
+
+        // DOM refs
+        const views = document.querySelectorAll('.view');
+        const navItems = document.querySelectorAll('.nav-item');
+        const statusEl = document.getElementById('status');
+        const toggleBtn = document.getElementById('toggleVoting');
+        const exportBtn = document.getElementById('exportBtn');
+        const addCandidateBtn = document.getElementById('addCandidateBtn');
+        const addCandidateBtn2 = document.getElementById('addCandidateBtn2');
+        const addVoterBtn = document.getElementById('addVoterBtn');
+        const addVoterBtn2 = document.getElementById('addVoterBtn2');
+        const resetBtn = document.getElementById('resetBtn');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalForm = document.getElementById('modalForm');
+        const modalCancel = document.getElementById('modalCancel');
+
+        // Navigation
+        navItems.forEach(a=>{
+            a.addEventListener('click', e=>{
+                e.preventDefault();
+                navItems.forEach(n=>n.classList.remove('active'));
+                a.classList.add('active');
+                const view = a.dataset.view;
+                showView(view);
+            });
+        });
+
+        function showView(name){
+            views.forEach(v=>v.style.display = v.id === 'view-' + name ? '' : 'none');
+            renderAll();
+        }
+
+        // Data operations
+        function loadStore(){
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(defaultData));
+            } catch(e){ return JSON.parse(JSON.stringify(defaultData)); }
+        }
+        function saveStore(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); renderAll(); }
+        function resetStore(){ localStorage.removeItem(STORAGE_KEY); store = JSON.parse(JSON.stringify(defaultData)); saveStore(); }
+
+        function nextId(list){ return list.length ? Math.max(...list.map(i=>i.id))+1 : 1; }
+
+        // Renderers
+        function renderAll(){
+            renderStatus();
+            renderOverview();
+            renderCandidates();
+            renderVoters();
+            renderResults();
+        }
+
+        function renderStatus(){
+            statusEl.textContent = store.votingActive ? 'Voting: ACTIVE' : 'Voting: INACTIVE';
+            toggleBtn.textContent = store.votingActive ? 'Stop Voting' : 'Start Voting';
+            toggleBtn.style.background = store.votingActive ? '#ff5c5c' : 'var(--accent)';
+        }
+
+        function renderOverview(){
+            document.getElementById('totalVoters').textContent = store.voters.length;
+            document.getElementById('totalCandidates').textContent = store.candidates.length;
+            const totalVotes = store.candidates.reduce((s,c)=>s+c.votes,0);
+            document.getElementById('totalVotes').textContent = totalVotes;
+        }
+
+        function renderCandidates(){
+            const tbody = document.querySelector('#candidatesTable tbody');
+            tbody.innerHTML = '';
+            const totalVotes = Math.max(1, store.candidates.reduce((s,c)=>s+c.votes,0));
+            store.candidates.forEach(c=>{
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${escapeHtml(c.name)}</strong></td>
+                    <td class="small">${c.votes}</td>
+                    <td>
+                        <div class="chart-bar" aria-hidden="true">
+                            <span class="chart-fill" style="width:${Math.round((c.votes/totalVotes)*100)}%"></span>
+                        </div>
+                    </td>
+                    <td class="actions small">
+                        <button class="secondary" data-id="${c.id}" data-action="edit">Edit</button>
+                        <button data-id="${c.id}" data-action="delete">Delete</button>
+                        <button class="secondary" data-id="${c.id}" data-action="forceVote">+1 Vote</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // attach actions
+            tbody.querySelectorAll('button').forEach(btn=>{
+                const id = Number(btn.dataset.id);
+                const action = btn.dataset.action;
+                btn.addEventListener('click', ()=>{
+                    if(action === 'edit') openCandidateModal(findCandidate(id));
+                    if(action === 'delete'){ if(confirm('Delete candidate?')){ store.candidates = store.candidates.filter(x=>x.id!==id); saveStore(); } }
+                    if(action === 'forceVote'){ store.candidates = store.candidates.map(x=>x.id===id?{...x,votes:x.votes+1}:x); saveStore(); }
+                });
+            });
+        }
+
+        function renderVoters(){
+            const tbody = document.querySelector('#votersTable tbody');
+            tbody.innerHTML = '';
+            store.voters.forEach(v=>{
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${escapeHtml(v.name)}</td>
+                    <td class="small muted">${escapeHtml(v.email)}</td>
+                    <td class="small">${v.hasVoted ? '<span class="badge">Yes</span>' : '<span class="muted">No</span>'}</td>
+                    <td class="small">
+                        <button class="secondary" data-id="${v.id}" data-action="edit">Edit</button>
+                        <button data-id="${v.id}" data-action="delete">Delete</button>
+                        <button class="secondary" data-id="${v.id}" data-action="mark">Mark Voted</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            tbody.querySelectorAll('button').forEach(btn=>{
+                const id = Number(btn.dataset.id);
+                const action = btn.dataset.action;
+                btn.addEventListener('click', ()=>{
+                    if(action === 'edit') openVoterModal(findVoter(id));
+                    if(action === 'delete'){ if(confirm('Delete voter?')){ store.voters = store.voters.filter(x=>x.id!==id); saveStore(); } }
+                    if(action === 'mark'){ store.voters = store.voters.map(x=>x.id===id?{...x,hasVoted:true}:x); saveStore(); }
+                });
+            });
+        }
+
+        function renderResults(){
+            const container = document.getElementById('resultsList');
+            container.innerHTML = '';
+            const totalVotes = store.candidates.reduce((s,c)=>s+c.votes,0);
+            store.candidates.slice().sort((a,b)=>b.votes-a.votes).forEach(c=>{
+                const percent = totalVotes ? Math.round((c.votes/totalVotes)*100) : 0;
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.style.marginBottom = '10px';
+                div.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <div><strong>${escapeHtml(c.name)}</strong><div class="muted small">${c.votes} votes — ${percent}%</div></div>
+                        <div style="min-width:200px">
+                            <div class="chart-bar" aria-hidden="true"><span class="chart-fill" style="width:${percent}%"></span></div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Helpers
+        function findCandidate(id){ return store.candidates.find(c=>c.id===id); }
+        function findVoter(id){ return store.voters.find(v=>v.id===id); }
+
+        function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); }
+
+        // Modal controls
+        function openModal(title, bodyHtml, onSubmit){
+            modalTitle.textContent = title;
+            modalBody.innerHTML = bodyHtml;
+            modal.classList.add('open');
+            modalForm.onsubmit = function(e){ e.preventDefault(); onSubmit(new FormData(modalForm)); modalClose(); };
+        }
+        function modalClose(){ modal.classList.remove('open'); modalForm.onsubmit = null; modalBody.innerHTML = ''; }
+
+        modalCancel.addEventListener('click', modalClose);
+        modal.addEventListener('click', e=>{ if(e.target === modal) modalClose(); });
+
+        // Candidate modal
+        function openCandidateModal(candidate = null){
+            const name = candidate ? candidate.name : '';
+            openModal(candidate ? 'Edit Candidate' : 'Add Candidate', `
+                <label class="small muted">Full name</label>
+                <input name="name" required value="${escapeHtml(name)}" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e6e9ef;border-radius:6px">
+            `, (formData)=>{
+                const n = formData.get('name').trim();
+                if(!n) return alert('Name required');
+                if(candidate){
+                    store.candidates = store.candidates.map(c=>c.id===candidate.id?{...c,name:n}:c);
+                } else {
+                    store.candidates.push({id:nextId(store.candidates),name:n,votes:0});
+                }
+                saveStore();
+            });
+        }
+
+        // Voter modal
+        function openVoterModal(voter = null){
+            const name = voter ? voter.name : '';
+            const email = voter ? voter.email : '';
+            openModal(voter ? 'Edit Voter' : 'Add Voter', `
+                <div class="row-grid">
+                    <div>
+                        <label class="small muted">Full name</label>
+                        <input name="name" required value="${escapeHtml(name)}" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e6e9ef;border-radius:6px">
+                    </div>
+                    <div>
+                        <label class="small muted">Email</label>
+                        <input name="email" type="email" required value="${escapeHtml(email)}" style="width:100%;padding:8px;margin-top:6px;border:1px solid #e6e9ef;border-radius:6px">
+                    </div>
+                </div>
+            `, (formData)=>{
+                const n = formData.get('name').trim();
+                const e = formData.get('email').trim();
+                if(!n || !e) return alert('Name and email required');
+                if(voter){
+                    store.voters = store.voters.map(v=>v.id===voter.id?{...v,name:n,email:e}:v);
+                } else {
+                    store.voters.push({id:nextId(store.voters),name:n,email:e,hasVoted:false});
+                }
+                saveStore();
+            });
+        }
+
+        // Events
+        toggleBtn.addEventListener('click', ()=>{
+            store.votingActive = !store.votingActive;
+            saveStore();
+        });
+
+        exportBtn.addEventListener('click', ()=>{
+            const rows = [
+                ['candidate','votes'],
+                ...store.candidates.map(c=>[c.name.replace(/,/g,' '),String(c.votes)])
+            ];
+            const csv = rows.map(r=>r.join(',')).join('\n');
+            const blob = new Blob([csv], {type:'text/csv'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'results.csv'; document.body.appendChild(a); a.click();
+            a.remove(); URL.revokeObjectURL(url);
+        });
+
+        addCandidateBtn.addEventListener('click', ()=>openCandidateModal());
+        addCandidateBtn2.addEventListener('click', ()=>openCandidateModal());
+        addVoterBtn.addEventListener('click', ()=>openVoterModal());
+        addVoterBtn2.addEventListener('click', ()=>openVoterModal());
+        resetBtn.addEventListener('click', ()=>{ if(confirm('Reset demo data?')) resetStore(); });
+
+        // Init
+        renderAll();
+        // show overview by default ensures nav highlight available
+        showView('overview');
+    </script>
+</body>
+</html></div>
