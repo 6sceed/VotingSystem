@@ -186,10 +186,10 @@
         <div></div><div></div><div></div>
       </button>
       <div class="dropdown" id="dropdownMenu">
-        <a href="profile.html">Profile</a>
-        <a href="contactus.html">Contact Us</a>
-        <a href="about.html">About</a>
-        <a href="privacypolicy.html">Privacy Policy</a>
+        <a href="public/user/profile.html">Profile</a>
+        <a href="public/user/contactus.html">Contact Us</a>
+        <a href="public/user/about.html">About</a>
+        <a href="public/user/privacypolicy.html">Privacy Policy</a>
         <a href="index.html" onclick="logout()">Logout</a>
       </div>
     </div>
@@ -236,18 +236,46 @@
   </main>
 
   <script>
-    function toggleMenu() {
-      document.getElementById("dropdownMenu").classList.toggle("show");
-    }
-    window.onclick = function(e) {
-      if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) {
-        document.getElementById("dropdownMenu").classList.remove("show");
+  window.onload = function() {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user && user.name) {
+      // Extract only the first name (first word)
+      let firstName = user.name.trim().split(" ")[0];
+
+      // In case the name format is "Last, First"
+      if (firstName.includes(",")) {
+        firstName = user.name.split(",")[1]?.trim().split(" ")[0] || firstName;
       }
-    };
-    function logout() {
-      localStorage.removeItem("user");
+
+      // Capitalize the first letter just in case
+      firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+
+      // Update the welcome text
+      document.getElementById("welcomeLarge").textContent = `Welcome, ${firstName}`;
+      document.getElementById("welcomeSub").textContent = `Good to see you — ${firstName}.`;
+    } else {
+      // If no user found, redirect to login
       window.location.href = "index.html";
     }
-  </script>
+  };
+
+  function toggleMenu() {
+    document.getElementById("dropdownMenu").classList.toggle("show");
+  }
+
+  window.onclick = function(e) {
+    if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) {
+      document.getElementById("dropdownMenu").classList.remove("show");
+    }
+  };
+
+  function logout() {
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+  }
+</script>
+
+
 </body>
 </html>

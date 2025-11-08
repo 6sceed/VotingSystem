@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voting System</title>
+    <title>VoteEase</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -22,6 +22,88 @@
         input::placeholder {
             color: #9ca3af;
         }
+        /* ===== BLUE EYE TOGGLE ===== */
+        .input-wrapper {
+            position: relative;
+        }
+        .toggle-eye {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 16px;
+            color: #4e9eff;
+            user-select: none;
+        }
+        /* ===== CUSTOM MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(3px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-box {
+            background: #1d1f23;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.7);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            color: #fff;
+            border: 1px solid #333;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .modal-message {
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .modal-box button {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            border: none;
+            min-width: 80px;
+        }
+        .modal-confirm {
+            background: #3b82f6;
+            color: #fff;
+        }
+        .modal-cancel {
+            background: #444;
+            color: #fff;
+        }
+        .modal-ok {
+            background: #3b82f6;
+            color: #fff;
+            width: 100%;
+        }
+        /* Success and Error specific styles */
+        .modal-success .modal-title {
+            color: #4CAF50;
+        }
+        .modal-error .modal-title {
+            color: #f44336;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -29,7 +111,7 @@
     <header class="bg-[#1a1c21] shadow-md p-4 sticky top-0 z-10">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-extrabold text-blue-400 cursor-pointer" onclick="showView('home')">
-                Voting System
+                VoteEase
             </h1>
 
             <nav>
@@ -49,7 +131,7 @@
             <div class="space-y-4">
                 <h2 class="text-4xl md:text-5xl font-extrabold text-gray-100 leading-tight">Your Voice, Your Vote. Simplified.</h2>
                 <p class="text-lg text-gray-400 max-w-2xl mx-auto">
-                    The Voting System allows citizens to register, log in, and securely participate in elections online.
+                    VoteEase allows citizens to register, log in, and securely participate in elections online.
                 </p>
             </div>
 
@@ -69,10 +151,11 @@
                     <input type="text" id="voter-id" required placeholder="e.g., voter@example.com"
                         class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150">
                 </div>
-                <div>
+                <div class="input-wrapper">
                     <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
                     <input type="password" id="password" required placeholder="••••••••"
-                        class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+                        class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150 pr-10">
+                    <span class="toggle-eye" onmousedown="holdEye('password')" onmouseup="releaseEye('password')" onmouseleave="releaseEye('password')">&#128065;</span>
                 </div>
                 <div id="login-message" class="text-center text-sm font-medium hidden"></div>
                 <button type="submit" class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition duration-150 transform hover:scale-[1.01]">
@@ -129,18 +212,18 @@
                         class="block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm">
                 </div>
 
-                <div class="relative">
+                <div class="input-wrapper">
                     <label for="reg-password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
                     <input type="password" id="reg-password" required placeholder="••••••••"
                         class="block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm pr-10">
-                    <span class="absolute right-3 top-9 text-gray-400 cursor-pointer" onclick="togglePassword('reg-password', this)">👁️</span>
+                    <span class="toggle-eye" onmousedown="holdEye('reg-password')" onmouseup="releaseEye('reg-password')" onmouseleave="releaseEye('reg-password')">&#128065;</span>
                 </div>
 
-                <div class="relative">
+                <div class="input-wrapper">
                     <label for="reg-confirm-password" class="block text-sm font-medium text-gray-300 mb-1">Confirm Password</label>
                     <input type="password" id="reg-confirm-password" required placeholder="••••••••"
                         class="block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm pr-10">
-                    <span class="absolute right-3 top-9 text-gray-400 cursor-pointer" onclick="togglePassword('reg-confirm-password', this)">👁️</span>
+                    <span class="toggle-eye" onmousedown="holdEye('reg-confirm-password')" onmouseup="releaseEye('reg-confirm-password')" onmouseleave="releaseEye('reg-confirm-password')">&#128065;</span>
                 </div>
 
                 <div class="flex items-center">
@@ -157,11 +240,16 @@
 
     </main>
 
-    <footer class="bg-[#111318] text-gray-400 p-4">
-        <div class="max-w-7xl mx-auto text-center text-sm">
-            &copy; 2024 Voting System. All rights reserved.
+    <!-- Modal for popups -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box" id="modalBox">
+            <div class="modal-title" id="modalTitle">Notification</div>
+            <div class="modal-message" id="modalMessage">Message will appear here</div>
+            <div class="modal-buttons" id="modalButtons">
+                <button class="modal-ok" onclick="closeModal()">OK</button>
+            </div>
         </div>
-    </footer>
+    </div>
 
     <script>
         const views = {
@@ -169,8 +257,45 @@
             login: document.getElementById('login-view'),
             register: document.getElementById('register-view')
         };
-        const loginMessage = document.getElementById('login-message');
-        const registerMessage = document.getElementById('register-message');
+
+        // ===== MODAL LOGIC =====
+        function showModal(title = "Notification", message = "Message will appear here", type = "info") {
+            const modalBox = document.getElementById("modalBox");
+            const modalTitle = document.getElementById("modalTitle");
+            const modalMessage = document.getElementById("modalMessage");
+            const modalButtons = document.getElementById("modalButtons");
+            
+            // Set title and message
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            
+            // Set modal type (success, error, info)
+            modalBox.className = "modal-box";
+            if (type === "success") {
+                modalBox.classList.add("modal-success");
+            } else if (type === "error") {
+                modalBox.classList.add("modal-error");
+            }
+            
+            // Set buttons
+            modalButtons.innerHTML = `
+                <button class="modal-ok" onclick="closeModal()">OK</button>
+            `;
+            
+            document.getElementById("modalOverlay").style.display = "flex";
+        }
+
+        function showSuccess(message) {
+            showModal("Success", message, "success");
+        }
+
+        function showError(message) {
+            showModal("Error", message, "error");
+        }
+
+        function closeModal() {
+            document.getElementById("modalOverlay").style.display = "none";
+        }
 
         function showView(viewName) {
             for (const name in views) {
@@ -183,15 +308,28 @@
             }
         }
 
-        function togglePassword(id, icon) {
-            const input = document.getElementById(id);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.textContent = "🙈";
-            } else {
-                input.type = "password";
-                icon.textContent = "👁️";
+        // ===== Eye hold logic =====
+        function holdEye(id) { 
+            const input = document.getElementById(id); 
+            input.type = "text"; 
+        }
+        function releaseEye(id) { 
+            const input = document.getElementById(id); 
+            input.type = "password"; 
+        }
+
+        // Function to extract first name from full name
+        function getFirstName(fullName) {
+            // Handle format like "GARCIA, CED E" - extract "CED"
+            if (fullName.includes(',')) {
+                const parts = fullName.split(',');
+                if (parts.length > 1) {
+                    const firstNamePart = parts[1].trim().split(' ')[0];
+                    return firstNamePart;
+                }
             }
+            // If no comma, just return the first word
+            return fullName.split(' ')[0];
         }
 
         async function handleRegistration() {
@@ -208,31 +346,23 @@
             const confirmPassword = document.getElementById('reg-confirm-password').value;
             const filipino = document.getElementById('reg-filipino').checked;
 
-            registerMessage.classList.add('hidden');
-
             if (age < 18) {
-                registerMessage.textContent = 'You must be at least 18 years old to register.';
-                registerMessage.classList.remove('hidden');
-                registerMessage.classList.add('text-red-600');
+                showError('You must be at least 18 years old to register.');
                 return;
             }
 
             if (password !== confirmPassword) {
-                registerMessage.textContent = 'Passwords do not match.';
-                registerMessage.classList.remove('hidden');
-                registerMessage.classList.add('text-red-600');
+                showError('Passwords do not match.');
                 return;
             }
 
             if (!filipino) {
-                registerMessage.textContent = 'You must confirm that you are a Filipino citizen.';
-                registerMessage.classList.remove('hidden');
-                registerMessage.classList.add('text-red-600');
+                showError('You must confirm that you are a Filipino citizen.');
                 return;
             }
 
             try {
-                const res = await fetch('http://localhost/voting_system/register.php', {
+                const res = await fetch('http://localhost/voting_system/backend/register.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, password, address, phone, age })
@@ -241,79 +371,58 @@
                 const data = await res.json();
 
                 if (data.status === 'success') {
-                    registerMessage.textContent = 'Registration successful! Redirecting...';
-                    registerMessage.classList.remove('text-red-600');
-                    registerMessage.classList.add('text-green-600');
-                    registerMessage.classList.remove('hidden');
-                    setTimeout(() => showView('login'), 1500);
+                    showSuccess('Registration successful! Redirecting to login...');
+                    setTimeout(() => showView('login'), 2000);
                 } else {
-                    registerMessage.textContent = data.message || 'Registration failed.';
-                    registerMessage.classList.remove('hidden');
-                    registerMessage.classList.add('text-red-600');
+                    showError(data.message || 'Registration failed.');
                 }
             } catch (err) {
-                registerMessage.textContent = 'Error connecting to server.';
-                registerMessage.classList.remove('hidden');
-                registerMessage.classList.add('text-red-600');
+                showError('Error connecting to server.');
             }
         }
 
-       async function handleLogin() {
-    const voterId = document.getElementById('voter-id').value.trim();
-    const password = document.getElementById('password').value;
+        async function handleLogin() {
+            const voterId = document.getElementById('voter-id').value.trim();
+            const password = document.getElementById('password').value;
 
-    loginMessage.classList.add('hidden');
+            try {
+                const res = await fetch('http://localhost/voting_system/backend/login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: voterId, password })
+                });
 
-    try {
-        const res = await fetch('http://localhost/voting_system/login.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: voterId, password })
-        });
+                const data = await res.json();
+                console.log("Login response:", data);
 
-        const data = await res.json();
-        console.log("Login response:", data);
+                if (data.status === 'admin') {
+                    // save admin user to localStorage
+                    const adminUser = { id: 0, name: data.user?.username || 'Administrator', email: 'admin' };
+                    localStorage.setItem('user', JSON.stringify(adminUser));
 
-        if (data.status === 'admin') {
-            // save admin user to localStorage
-            const adminUser = { id: 0, name: data.user?.username || 'Administrator', email: 'admin' };
-            localStorage.setItem('user', JSON.stringify(adminUser));
+                    showSuccess('Welcome Admin! Redirecting...');
+                    setTimeout(() => window.location.href = data.redirect, 1500);
 
-            loginMessage.textContent = 'Welcome Admin! Redirecting...';
-            loginMessage.classList.remove('text-red-600');
-            loginMessage.classList.add('text-green-600');
-            loginMessage.classList.remove('hidden');
+                } else if (data.status === 'success') {
+                    // save regular voter info
+                    localStorage.setItem('user', JSON.stringify(data.user));
 
-            setTimeout(() => window.location.href = data.redirect, 800);
+                    // Extract first name only
+                    const firstName = getFirstName(data.user.name);
+                    showSuccess(`Welcome, ${firstName}! Redirecting...`);
+                    setTimeout(() => window.location.href = data.redirect, 1500);
 
-        } else if (data.status === 'success') {
-            // save regular voter info
-            localStorage.setItem('user', JSON.stringify(data.user));
+                } else {
+                    showError(data.message || 'Invalid credentials.');
+                }
 
-            loginMessage.textContent = `Welcome, ${data.user.name}! Redirecting...`;
-            loginMessage.classList.remove('text-red-600');
-            loginMessage.classList.add('text-green-600');
-            loginMessage.classList.remove('hidden');
-
-            setTimeout(() => window.location.href = data.redirect, 800);
-
-        } else {
-            loginMessage.textContent = data.message || 'Invalid credentials.';
-            loginMessage.classList.remove('text-green-600');
-            loginMessage.classList.add('text-red-600');
-            loginMessage.classList.remove('hidden');
+            } catch (err) {
+                console.error("Login error:", err);
+                showError('Error connecting to server.');
+            }
         }
 
-    } catch (err) {
-        console.error("Login error:", err);
-        loginMessage.textContent = 'Error connecting to server.';
-        loginMessage.classList.remove('text-green-600');
-        loginMessage.classList.add('text-red-600');
-        loginMessage.classList.remove('hidden');
-    }
-}
-
-window.onload = () => showView('home');
+        window.onload = () => showView('home');
     </script>
 </body>
 </html>

@@ -44,7 +44,9 @@ if ($row = $result->fetch_assoc()) {
             "user" => [
                 "id" => $row["id"],
                 "name" => $row["name"],
-                "email" => $row["email"]
+                "email" => $row["email"],
+                "address" => $row["address"], // ✅ ADDED THIS
+                "phone" => $row["phone"]      // ✅ ADDED THIS
             ]
         ]);
     } else {
