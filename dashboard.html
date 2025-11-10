@@ -179,7 +179,7 @@
 
 <body>
   <header>
-    <div class="logo">Voting System</div>
+    <div class="logo">VoteEase</div>
     <div class="menu">
       <div class="menu-links"></div>
       <button class="menu-btn" onclick="toggleMenu()">
@@ -204,28 +204,29 @@
     </section>
 
     <section class="grid">
-      <div class="card">
-        <h3>Vote</h3>
-        <p class="small-muted">Cast your vote for the active election. Review candidates before confirming.</p>
-        <ul class="summary-list">
-          <li><strong>Active Election:</strong> National Elections 2025</li>
-          <li><strong>Polling Period:</strong> May 12 - May 15</li>
-          <li><strong>Status:</strong> Registered</li>
-        </ul>
-        <a href="voting.html" class="vote-action">Start Voting</a>
-      </div>
+     <div class="card">
+    <h3>Vote</h3>
+    <p class="small-muted" id="voteStatusText">Cast your vote for the active election. Review candidates before confirming.</p>
+    <ul class="summary-list">
+        <li><strong>Active Election:</strong> <span id="electionTitle">Loading...</span></li>
+        <li><strong>Polling Period:</strong> <span id="pollingPeriod">Loading...</span></li>
+        <li><strong>Status:</strong> <span id="votingStatus">Loading...</span></li>
+    </ul>
+    <a href="public/user/vote.html" class="vote-action" id="voteButton">Start Voting</a>
+</div>
 
       <div class="card">
-        <h3>Summary</h3>
-        <p class="small-muted">Your voting summary for the current election.</p>
-        <ul class="summary-list">
-          <li><strong>President:</strong> Maria Dela Cruz</li>
-          <li><strong>Vice President:</strong> James Bautista</li>
-          <li><strong>Secretary:</strong> Liza Ramos</li>
-        </ul>
-        <p class="small-muted" style="margin-top:10px;">Vote recorded: May 12, 2025</p>
-      </div>
-    </section>
+    <h3>Summary</h3>
+    <p class="small-muted">Your voting summary for the current election.</p>
+    <ul class="summary-list" id="voteSummaryList">
+        <li><strong>President:</strong> <span id="presidentVote">Not voted yet</span></li>
+        <li><strong>Vice President:</strong> <span id="vicePresidentVote">Not voted yet</span></li>
+        <li><strong>Secretary:</strong> <span id="secretaryVote">Not voted yet</span></li>
+        <li><strong>Treasurer:</strong> <span id="treasurerVote">Not voted yet</span></li>
+        <li><strong>Auditor:</strong> <span id="auditorVote">Not voted yet</span></li>
+    </ul>
+    <p class="small-muted" id="voteDate" style="margin-top:10px;">Not voted yet</p>
+</div>
 
     <section>
       <div class="chart">
@@ -236,46 +237,233 @@
   </main>
 
   <script>
-  window.onload = function() {
+window.onload = function() {
     const user = JSON.parse(localStorage.getItem("user"));
-
     if (user && user.name) {
-      // Extract only the first name (first word)
-      let firstName = user.name.trim().split(" ")[0];
+        let firstName = user.name.trim().split(" ")[0];
+        if (firstName.includes(",")) {
+            firstName = user.name.split(",")[1]?.trim().split(" ")[0] || firstName;
+        }
+        firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
 
-      // In case the name format is "Last, First"
-      if (firstName.includes(",")) {
-        firstName = user.name.split(",")[1]?.trim().split(" ")[0] || firstName;
-      }
-
-      // Capitalize the first letter just in case
-      firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
-
-      // Update the welcome text
-      document.getElementById("welcomeLarge").textContent = `Welcome, ${firstName}`;
-      document.getElementById("welcomeSub").textContent = `Good to see you — ${firstName}.`;
+        document.getElementById("welcomeLarge").textContent = `Welcome, ${firstName}`;
+        document.getElementById("welcomeSub").textContent = `Good to see you — ${firstName}.`;
+        
+        // Load both functions - NO BLOCKING FLAGS
+        loadElectionInfo();
+        loadVoteSummary();
     } else {
-      // If no user found, redirect to login
-      window.location.href = "index.html";
+        window.location.href = "index.html";
     }
-  };
+};
 
-  function toggleMenu() {
+// Load election info for user dashboard - REMOVED THE BLOCKING FLAG
+function loadElectionInfo() {
+    console.log('🔄 loadElectionInfo() RUNNING...');
+    
+    fetch('/voting_system/backend/get_election_settings.php')
+        .then(response => response.json())
+        .then(data => {
+            console.log('📥 ELECTION DATA:', data);
+            
+            if (data.success && data.settings) {
+                const settings = data.settings;
+                
+                // Convert is_active from string to number
+                const isActiveNumber = parseInt(settings.is_active);
+                console.log('🔍 is_active:', isActiveNumber);
+
+                const now = new Date();
+                const start = new Date(settings.start_date);
+                const end = new Date(settings.end_date);
+                
+                const isVotingActive = isActiveNumber === 1 && now >= start && now <= end;
+                console.log('🔍 FINAL - Voting Active:', isVotingActive);
+                
+                document.getElementById('electionTitle').textContent = settings.election_title;
+                
+                const startDate = new Date(settings.start_date).toLocaleDateString();
+                const endDate = new Date(settings.end_date).toLocaleDateString();
+                document.getElementById('pollingPeriod').textContent = `${startDate} - ${endDate}`;
+                
+                // Update voting status and button
+                const voteButton = document.getElementById('voteButton');
+                const votingStatus = document.getElementById('votingStatus');
+                const voteStatusText = document.getElementById('voteStatusText');
+                const hasVoted = localStorage.getItem('hasVoted');
+
+                console.log('🔍 User hasVoted:', hasVoted);
+
+                if (hasVoted) {
+                    if (isVotingActive) {
+                        console.log('🔍 STATE: Already voted, voting active - GRAY');
+                        votingStatus.textContent = 'Already Voted';
+                        votingStatus.style.color = '#36c97e';
+                        voteButton.textContent = 'Already Voted';
+                        voteButton.style.background = 'var(--muted)';
+                        voteButton.style.opacity = '0.6';
+                        voteButton.style.cursor = 'not-allowed';
+                        voteButton.onclick = function(e) {
+                            e.preventDefault();
+                            alert('You have already voted in this election.');
+                        };
+                        voteStatusText.textContent = 'You have already cast your vote.';
+                    } else {
+                        console.log('🔍 STATE: Already voted, voting closed - GRAY');
+                        votingStatus.textContent = 'Voting Closed';
+                        votingStatus.style.color = '#ff6b6b';
+                        voteButton.textContent = 'Voting Closed';
+                        voteButton.style.background = 'var(--muted)';
+                        voteButton.style.opacity = '0.6';
+                        voteButton.style.cursor = 'not-allowed';
+                        voteButton.onclick = function(e) {
+                            e.preventDefault();
+                            alert('Voting is currently closed.');
+                        };
+                        voteStatusText.textContent = 'Voting is currently closed.';
+                    }
+                } else {
+                    if (isVotingActive) {
+                        console.log('🔍 STATE: Not voted, voting active - BLUE');
+                        votingStatus.textContent = 'Open for Voting';
+                        votingStatus.style.color = '#36c97e';
+                        voteButton.textContent = 'Start Voting';
+                        voteButton.style.background = 'linear-gradient(90deg, #4e9eff 0%, #2a7bd6 100%)';
+                        voteButton.style.opacity = '1';
+                        voteButton.style.cursor = 'pointer';
+                        voteButton.onclick = null;
+                        voteStatusText.textContent = 'Cast your vote for the active election. Review candidates before confirming.';
+                    } else {
+                        console.log('🔍 STATE: Not voted, voting closed - GRAY');
+                        votingStatus.textContent = 'Voting Closed';
+                        votingStatus.style.color = '#ff6b6b';
+                        voteButton.textContent = 'Voting Closed';
+                        voteButton.style.background = 'var(--muted)';
+                        voteButton.style.opacity = '0.6';
+                        voteButton.style.cursor = 'not-allowed';
+                        voteButton.onclick = function(e) {
+                            e.preventDefault();
+                            alert('Voting is currently closed. Please contact the administrator.');
+                        };
+                        voteStatusText.textContent = 'Voting is currently closed. Check back later.';
+                    }
+                }
+            } else {
+                console.error('❌ Failed to load election settings:', data);
+                document.getElementById('electionTitle').textContent = 'National Elections 2025';
+                document.getElementById('pollingPeriod').textContent = 'May 12 - May 15, 2025';
+                document.getElementById('votingStatus').textContent = 'Registered';
+            }
+        })
+        .catch(error => {
+            console.error('❌ Error loading election info:', error);
+            document.getElementById('electionTitle').textContent = 'National Elections 2025';
+            document.getElementById('pollingPeriod').textContent = 'May 12 - May 15, 2025';
+            document.getElementById('votingStatus').textContent = 'Registered';
+        });
+}
+
+// Load user's vote summary
+function loadVoteSummary() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const localVotes = JSON.parse(localStorage.getItem('userVote') || '{}');
+    
+    console.log('Checking vote status:', { user, localVotes });
+    
+    // Always show localStorage data immediately
+    if (Object.keys(localVotes).length > 0) {
+        displayVoteSummary(localVotes);
+        localStorage.setItem('hasVoted', 'true');
+    }
+    
+    // Then try to get from backend for updates
+    if (user && user.id) {
+        fetch(`/voting_system/backend/get_user_votes.php?user_id=${user.id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.votes) {
+                    displayVoteSummary(data.votes);
+                    // Update localStorage with latest data
+                    localStorage.setItem('userVote', JSON.stringify(data.votes));
+                }
+            })
+            .catch(error => {
+                console.error('Backend fetch failed:', error);
+            });
+    }
+}
+
+function displayVoteSummary(votes) {
+    console.log('Displaying votes:', votes);
+    
+    // Convert candidate IDs to names by fetching candidate data
+    fetch('/voting_system/backend/get_candidates.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.candidates) {
+                const candidatesMap = {};
+                data.candidates.forEach(candidate => {
+                    candidatesMap[candidate.id] = candidate.name;
+                });
+                
+                // Update display with candidate names
+                for (const [position, candidateId] of Object.entries(votes)) {
+                    const candidateName = candidatesMap[candidateId] || `Candidate ${candidateId}`;
+                    updatePositionDisplay(position, candidateName);
+                }
+                
+                // Update vote date
+                updateVoteDate();
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching candidates:', error);
+            // Fallback: just show IDs
+            for (const [position, candidateId] of Object.entries(votes)) {
+                updatePositionDisplay(position, `Candidate ${candidateId}`);
+            }
+            updateVoteDate();
+        });
+}
+
+function updatePositionDisplay(position, candidateName) {
+    if (position === 'President') {
+        document.getElementById('presidentVote').textContent = candidateName;
+    } else if (position === 'Vice President') {
+        document.getElementById('vicePresidentVote').textContent = candidateName;
+    } else if (position === 'Secretary') {
+        document.getElementById('secretaryVote').textContent = candidateName;
+    } else if (position === 'Treasurer') {
+        document.getElementById('treasurerVote').textContent = candidateName;
+    } else if (position === 'Auditor') {
+        document.getElementById('auditorVote').textContent = candidateName;
+    }
+}
+
+function updateVoteDate() {
+    const hasVoted = localStorage.getItem('hasVoted');
+    if (hasVoted) {
+        document.getElementById('voteDate').textContent = 
+            `Vote recorded: ${new Date().toLocaleDateString()}`;
+    }
+}
+
+function toggleMenu() {
     document.getElementById("dropdownMenu").classList.toggle("show");
-  }
+}
 
-  window.onclick = function(e) {
+window.onclick = function(e) {
     if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) {
-      document.getElementById("dropdownMenu").classList.remove("show");
+        document.getElementById("dropdownMenu").classList.remove("show");
     }
-  };
+};
 
-  function logout() {
+function logout() {
     localStorage.removeItem("user");
+    localStorage.removeItem("userVote");
+    localStorage.removeItem("hasVoted");
     window.location.href = "index.html";
-  }
+}
 </script>
-
-
 </body>
 </html>

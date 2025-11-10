@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Voting System — Cast Your Vote</title>
+  <style>
+    :root {
+      --bg: #121417;
+      --header-bg: #1d1f23;
+      --header-text: #f2f2f2;
+      --card-bg: #1a1c20;
+      --text: #eaeaea;
+      --accent: #4e9eff;
+      --border: #2b2d32;
+      --shadow: rgba(0, 0, 0, 0.6);
+      --muted: #9aa3ad;
+      --success: #36c97e;
+    }
+
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+    }
+
+    /* ===== HEADER (unchanged from your dashboard) ===== */
+    header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { font-weight: 800; font-size: 20px; color: var(--accent); }
+    .menu { position: relative; display: flex; align-items: center; gap: 18px; }
+    .menu-links { display: flex; gap: 18px; align-items: center; }
+    .menu-links a {
+      text-decoration: none;
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 15px;
+      transition: opacity 0.2s ease;
+    }
+    .menu-links a:hover { opacity: 0.7; }
+    .menu-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+    }
+    .menu-btn div {
+      width: 22px; height: 2px; background: var(--header-text);
+      margin: 5px 0; transition: 0.3s;
+    }
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 42px;
+      background: #23262b;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      min-width: 160px;
+      overflow: hidden;
+      z-index: 999;
+    }
+    .dropdown a {
+      display: block;
+      padding: 10px 14px;
+      text-decoration: none;
+      color: #eaeaea;
+      font-size: 14px;
+      transition: background 0.2s ease;
+    }
+    .dropdown a:hover { background: #2e3238; }
+    .show { display: block; }
+
+    /* ===== VOTING STYLES ===== */
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      font-size: 16px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .positions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .position-section {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+
+    .position-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .candidates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .candidate-card {
+      background: #23262b;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .candidate-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .candidate-card.selected {
+      border-color: var(--success);
+      background: rgba(54, 201, 126, 0.1);
+    }
+
+    .candidate-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .candidate-position {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .candidate-bio {
+      color: #c9d2db;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .vote-btn {
+      flex: 1;
+      padding: 16px;
+      background: linear-gradient(90deg, var(--success) 0%, #2a9d5e 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .back-btn {
+      flex: 0.3;
+      padding: 16px;
+      background: var(--muted);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .vote-btn:disabled {
+      background: var(--muted);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .vote-btn:not(:disabled):hover,
+    .back-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .loading {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px;
+      font-size: 16px;
+    }
+
+    .error {
+      text-align: center;
+      color: #ff6b6b;
+      padding: 40px;
+      font-size: 16px;
+    }
+
+    .selection-info {
+      text-align: center;
+      color: var(--muted);
+      margin: 20px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Voting System</div>
+    <div class="menu">
+      <div class="menu-links"></div>
+      <button class="menu-btn" onclick="toggleMenu()">
+        <div></div><div></div><div></div>
+      </button>
+      <div class="dropdown" id="dropdownMenu">
+        <a href="/voting_system/public/user/profile.html">Profile</a>
+        <a href="/voting_system/public/user/contactus.html">Contact Us</a>
+        <a href="/voting_system/public/user/about.html">About</a>
+        <a href="/voting_system/public/user/privacypolicy.html">Privacy Policy</a>
+        <a href="/voting_system/index.html" onclick="logout()">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="page-title">Cast Your Vote</h1>
+    <p class="page-subtitle">Select one candidate for each position. Your vote is final.</p>
+
+    <div id="positionsContainer" class="positions-grid">
+      <div class="loading">Loading candidates...</div>
+    </div>
+
+    <div class="selection-info" id="selectionInfo">
+      Please select one candidate for each position to proceed
+    </div>
+
+    <div class="action-buttons">
+      <a href="/voting_system/dashboard.html" class="back-btn">← Go Back</a>
+      <button id="submitVote" class="vote-btn" disabled>
+        Submit Your Vote
+      </button>
+    </div>
+  </main>
+
+  <script>
+    let selectedCandidates = {};
+    let allCandidates = [];
+
+    // Load candidates when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCandidates();
+      
+      // Check if user is logged in
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user) {
+        window.location.href = "/voting_system/index.html";
+      }
+    });
+
+    // Load candidates from backend
+    function loadCandidates() {
+      fetch('/voting_system/backend/get_candidates.php')
+        .then(response => response.json())
+        .then(data => {
+          console.log('Candidates data:', data); // Debug log
+          if (data.success && data.candidates) {
+            allCandidates = data.candidates;
+            displayCandidatesByPosition();
+          } else {
+            document.getElementById('positionsContainer').innerHTML = 
+              '<div class="error">No candidates available for voting.</div>';
+          }
+        })
+        .catch(error => {
+          console.error('Error loading candidates:', error);
+          document.getElementById('positionsContainer').innerHTML = 
+            '<div class="error">Error loading candidates. Please try again.</div>';
+        });
+    }
+
+    // Display candidates grouped by position
+    function displayCandidatesByPosition() {
+      const container = document.getElementById('positionsContainer');
+      
+      // Group candidates by position
+      const positions = {};
+      allCandidates.forEach(candidate => {
+        if (!positions[candidate.position]) {
+          positions[candidate.position] = [];
+        }
+        positions[candidate.position].push(candidate);
+      });
+
+      // Create position sections
+      let html = '';
+      for (const [position, candidates] of Object.entries(positions)) {
+        html += `
+          <div class="position-section">
+            <h2 class="position-title">${escapeHtml(position)}</h2>
+            <div class="candidates-grid">
+        `;
+        
+        candidates.forEach(candidate => {
+          html += `
+            <div class="candidate-card" onclick="selectCandidate('${position}', ${candidate.id})">
+              <div class="candidate-name">${escapeHtml(candidate.name)}</div>
+              <div class="candidate-position">${escapeHtml(candidate.position)}</div>
+              ${candidate.bio ? `<div class="candidate-bio">${escapeHtml(candidate.bio)}</div>` : ''}
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+      updateSubmitButton();
+    }
+
+    // Select candidate for a position
+    function selectCandidate(position, candidateId) {
+      // Remove selected class from all candidates in this position
+      const positionSection = document.querySelector(`.position-section:has(.candidate-card[onclick*="${position}"])`);
+      const cards = positionSection.querySelectorAll('.candidate-card');
+      cards.forEach(card => card.classList.remove('selected'));
+      
+      // Add selected class to clicked candidate
+      const selectedCard = document.querySelector(`.candidate-card[onclick*="${position}"][onclick*="${candidateId}"]`);
+      selectedCard.classList.add('selected');
+      
+      // Store selection
+      selectedCandidates[position] = candidateId;
+      updateSubmitButton();
+    }
+
+    // Update submit button state
+    function updateSubmitButton() {
+      const positions = [...new Set(allCandidates.map(c => c.position))];
+      const allPositionsSelected = positions.every(position => selectedCandidates[position]);
+      
+      const submitBtn = document.getElementById('submitVote');
+      const selectionInfo = document.getElementById('selectionInfo');
+      
+      if (allPositionsSelected) {
+        submitBtn.disabled = false;
+        selectionInfo.textContent = `Ready to vote! You've selected candidates for all ${positions.length} positions.`;
+        selectionInfo.style.color = 'var(--success)';
+      } else {
+        submitBtn.disabled = true;
+        const selectedCount = Object.keys(selectedCandidates).length;
+        selectionInfo.textContent = `Please select one candidate for each position (${selectedCount}/${positions.length} selected)`;
+        selectionInfo.style.color = 'var(--muted)';
+      }
+    }
+
+    // Submit vote
+document.getElementById('submitVote').addEventListener('click', function() {
+    // First check if voting is active
+    fetch('/voting_system/backend/get_election_settings.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.settings) {
+                const settings = data.settings;
+                const now = new Date();
+                const start = new Date(settings.start_date);
+                const end = new Date(settings.end_date);
+                
+                if (!settings.is_active || now < start || now > end) {
+                    alert('Voting is currently closed. Please contact the administrator.');
+                    return;
+                }
+                
+                // If voting is active, proceed with voting
+                if (confirm('Are you sure you want to submit your vote? This action cannot be undone.')) {
+                    const user = JSON.parse(localStorage.getItem("user"));
+                    const userId = user.id || 1;
+                    
+                    console.log('Submitting vote for user:', userId, 'Votes:', selectedCandidates);
+                    
+                    // Send vote to backend
+                    fetch('/voting_system/backend/cast_vote.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            votes: selectedCandidates
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Server response:', data);
+                        if (data.success) {
+                            // Store vote in localStorage for immediate display
+                            localStorage.setItem('userVote', JSON.stringify(selectedCandidates));
+                            localStorage.setItem('hasVoted', 'true');
+                            alert('Vote submitted successfully!');
+                            window.location.href = '/voting_system/dashboard.html';
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Vote submission error:', error);
+                        alert('Error submitting vote: ' + error.message);
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error checking voting status:', error);
+            alert('Error checking voting status. Please try again.');
+        });
+});
+
+    // Helper functions (same as admin dashboard)
+    function escapeHtml(s) { 
+      return (s+'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); 
+    }
+
+    function toggleMenu() {
+      document.getElementById("dropdownMenu").classList.toggle("show");
+    }
+
+    window.onclick = function(e) {
+      if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) {
+        document.getElementById("dropdownMenu").classList.remove("show");
+      }
+    };
+
+    function logout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("userVote");
+      window.location.href = "/voting_system/index.html";
+    }
+  </script>
+</body>
+</html>
