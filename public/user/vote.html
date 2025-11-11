@@ -429,9 +429,19 @@ document.getElementById('submitVote').addEventListener('click', function() {
                     .then(data => {
                         console.log('Server response:', data);
                         if (data.success) {
+                            // FIXED: Convert candidate IDs to names for localStorage
+                            const votesWithNames = {};
+                            for (const [position, candidateId] of Object.entries(selectedCandidates)) {
+                                const candidate = allCandidates.find(c => c.id == candidateId);
+                                if (candidate) {
+                                    votesWithNames[position] = candidate.name;
+                                }
+                            }
+                            
                             // Store vote in localStorage for immediate display
-                            localStorage.setItem('userVote', JSON.stringify(selectedCandidates));
+                            localStorage.setItem('userVote', JSON.stringify(votesWithNames));
                             localStorage.setItem('hasVoted', 'true');
+                            
                             alert('Vote submitted successfully!');
                             window.location.href = '/voting_system/dashboard.html';
                         } else {
@@ -469,6 +479,7 @@ document.getElementById('submitVote').addEventListener('click', function() {
     function logout() {
       localStorage.removeItem("user");
       localStorage.removeItem("userVote");
+      localStorage.removeItem("hasVoted"); // ADDED THIS LINE
       window.location.href = "/voting_system/index.html";
     }
   </script>

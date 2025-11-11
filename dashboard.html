@@ -24,7 +24,7 @@
       margin: 0;
     }
 
-    /* ===== HEADER (unchanged) ===== */
+    /* ===== HEADER ===== */
     header {
       background: var(--header-bg);
       color: var(--header-text);
@@ -156,6 +156,12 @@
       transition: transform 0.12s ease;
       margin-top: 12px;
     }
+    .disabled-link {
+        background: #6c757d !important;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        opacity: 0.6 !important;
+    }
     .vote-action:active { transform: translateY(1px); }
 
     .chart {
@@ -237,6 +243,10 @@
   </main>
 
   <script>
+// WORKING VERSION - COMPLETELY BLOCKS ACCESS TO VOTE.HTML
+let userHasVoted = localStorage.getItem('hasVoted') === 'true';
+let canUserVote = false;
+
 window.onload = function() {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.name) {
@@ -249,203 +259,181 @@ window.onload = function() {
         document.getElementById("welcomeLarge").textContent = `Welcome, ${firstName}`;
         document.getElementById("welcomeSub").textContent = `Good to see you — ${firstName}.`;
         
-        // Load both functions - NO BLOCKING FLAGS
-        loadElectionInfo();
-        loadVoteSummary();
+        loadEverything();
     } else {
         window.location.href = "index.html";
     }
 };
 
-// Load election info for user dashboard - REMOVED THE BLOCKING FLAG
+function loadEverything() {
+    loadElectionInfo();
+    loadVoteSummary();
+    checkVoteStatus();
+}
+
+
+
 function loadElectionInfo() {
-    console.log('🔄 loadElectionInfo() RUNNING...');
-    
     fetch('/voting_system/backend/get_election_settings.php')
         .then(response => response.json())
         .then(data => {
-            console.log('📥 ELECTION DATA:', data);
+            console.log('📊 ELECTION SETTINGS RESPONSE:', data); // DEBUG
             
             if (data.success && data.settings) {
                 const settings = data.settings;
                 
-                // Convert is_active from string to number
-                const isActiveNumber = parseInt(settings.is_active);
-                console.log('🔍 is_active:', isActiveNumber);
-
-                const now = new Date();
-                const start = new Date(settings.start_date);
-                const end = new Date(settings.end_date);
-                
-                const isVotingActive = isActiveNumber === 1 && now >= start && now <= end;
-                console.log('🔍 FINAL - Voting Active:', isVotingActive);
-                
                 document.getElementById('electionTitle').textContent = settings.election_title;
                 
-                const startDate = new Date(settings.start_date).toLocaleDateString();
-                const endDate = new Date(settings.end_date).toLocaleDateString();
-                document.getElementById('pollingPeriod').textContent = `${startDate} - ${endDate}`;
+                const startDate = new Date(settings.start_date);
+                const endDate = new Date(settings.end_date);
                 
-                // Update voting status and button
-                const voteButton = document.getElementById('voteButton');
-                const votingStatus = document.getElementById('votingStatus');
-                const voteStatusText = document.getElementById('voteStatusText');
-                const hasVoted = localStorage.getItem('hasVoted');
-
-                console.log('🔍 User hasVoted:', hasVoted);
-
-                if (hasVoted) {
-                    if (isVotingActive) {
-                        console.log('🔍 STATE: Already voted, voting active - GRAY');
-                        votingStatus.textContent = 'Already Voted';
-                        votingStatus.style.color = '#36c97e';
-                        voteButton.textContent = 'Already Voted';
-                        voteButton.style.background = 'var(--muted)';
-                        voteButton.style.opacity = '0.6';
-                        voteButton.style.cursor = 'not-allowed';
-                        voteButton.onclick = function(e) {
-                            e.preventDefault();
-                            alert('You have already voted in this election.');
-                        };
-                        voteStatusText.textContent = 'You have already cast your vote.';
-                    } else {
-                        console.log('🔍 STATE: Already voted, voting closed - GRAY');
-                        votingStatus.textContent = 'Voting Closed';
-                        votingStatus.style.color = '#ff6b6b';
-                        voteButton.textContent = 'Voting Closed';
-                        voteButton.style.background = 'var(--muted)';
-                        voteButton.style.opacity = '0.6';
-                        voteButton.style.cursor = 'not-allowed';
-                        voteButton.onclick = function(e) {
-                            e.preventDefault();
-                            alert('Voting is currently closed.');
-                        };
-                        voteStatusText.textContent = 'Voting is currently closed.';
-                    }
-                } else {
-                    if (isVotingActive) {
-                        console.log('🔍 STATE: Not voted, voting active - BLUE');
-                        votingStatus.textContent = 'Open for Voting';
-                        votingStatus.style.color = '#36c97e';
-                        voteButton.textContent = 'Start Voting';
-                        voteButton.style.background = 'linear-gradient(90deg, #4e9eff 0%, #2a7bd6 100%)';
-                        voteButton.style.opacity = '1';
-                        voteButton.style.cursor = 'pointer';
-                        voteButton.onclick = null;
-                        voteStatusText.textContent = 'Cast your vote for the active election. Review candidates before confirming.';
-                    } else {
-                        console.log('🔍 STATE: Not voted, voting closed - GRAY');
-                        votingStatus.textContent = 'Voting Closed';
-                        votingStatus.style.color = '#ff6b6b';
-                        voteButton.textContent = 'Voting Closed';
-                        voteButton.style.background = 'var(--muted)';
-                        voteButton.style.opacity = '0.6';
-                        voteButton.style.cursor = 'not-allowed';
-                        voteButton.onclick = function(e) {
-                            e.preventDefault();
-                            alert('Voting is currently closed. Please contact the administrator.');
-                        };
-                        voteStatusText.textContent = 'Voting is currently closed. Check back later.';
-                    }
-                }
+                const startDateStr = startDate.toLocaleDateString();
+                const endDateStr = endDate.toLocaleDateString();
+                document.getElementById('pollingPeriod').textContent = `${startDateStr} - ${endDateStr}`;
+                
+                // FIX: Use the is_voting_active flag from server directly
+                const isVotingActive = settings.is_voting_active === true || settings.is_voting_active === 'true';
+                console.log('🎯 VOTING ACTIVE STATUS:', isVotingActive);
+                
+                updateVotingStatus(isVotingActive);
             } else {
-                console.error('❌ Failed to load election settings:', data);
-                document.getElementById('electionTitle').textContent = 'National Elections 2025';
-                document.getElementById('pollingPeriod').textContent = 'May 12 - May 15, 2025';
-                document.getElementById('votingStatus').textContent = 'Registered';
+                console.error('❌ No election settings found');
             }
         })
         .catch(error => {
-            console.error('❌ Error loading election info:', error);
-            document.getElementById('electionTitle').textContent = 'National Elections 2025';
-            document.getElementById('pollingPeriod').textContent = 'May 12 - May 15, 2025';
-            document.getElementById('votingStatus').textContent = 'Registered';
+            console.error('Error loading election info:', error);
         });
 }
 
-// Load user's vote summary
-function loadVoteSummary() {
+
+
+function checkVoteStatus() {
     const user = JSON.parse(localStorage.getItem("user"));
-    const localVotes = JSON.parse(localStorage.getItem('userVote') || '{}');
-    
-    console.log('Checking vote status:', { user, localVotes });
-    
-    // Always show localStorage data immediately
-    if (Object.keys(localVotes).length > 0) {
-        displayVoteSummary(localVotes);
-        localStorage.setItem('hasVoted', 'true');
-    }
-    
-    // Then try to get from backend for updates
-    if (user && user.id) {
-        fetch(`/voting_system/backend/get_user_votes.php?user_id=${user.id}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.votes) {
-                    displayVoteSummary(data.votes);
-                    // Update localStorage with latest data
+    if (!user || !user.id) return;
+
+    fetch(`/voting_system/backend/get_user_votes.php?user_id=${user.id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const hasVotesInDB = Object.keys(data.votes || {}).length > 0;
+                
+                // Sync with database
+                if (!hasVotesInDB && userHasVoted) {
+                    localStorage.removeItem('hasVoted');
+                    localStorage.removeItem('userVote');
+                    userHasVoted = false;
+                    loadVoteSummary();
+                    refreshVotingUI();
+                } else if (hasVotesInDB && !userHasVoted) {
+                    localStorage.setItem('hasVoted', 'true');
                     localStorage.setItem('userVote', JSON.stringify(data.votes));
+                    userHasVoted = true;
+                    loadVoteSummary();
+                    refreshVotingUI();
                 }
-            })
-            .catch(error => {
-                console.error('Backend fetch failed:', error);
-            });
+            }
+        })
+        .catch(error => {
+            console.error('Error checking vote status:', error);
+        });
+}
+
+function updateVotingStatus(isVotingActive) {
+    const voteButton = document.getElementById('voteButton');
+    const votingStatus = document.getElementById('votingStatus');
+    const voteStatusText = document.getElementById('voteStatusText');
+
+    // Reset button
+    voteButton.classList.remove('disabled-link');
+    voteButton.onclick = null;
+    voteButton.href = 'public/user/vote.html';
+
+    if (userHasVoted) {
+        votingStatus.textContent = 'Already Voted';
+        votingStatus.style.color = '#36c97e';
+        voteButton.textContent = 'Already Voted';
+        voteButton.classList.add('disabled-link');
+        voteButton.href = '#';
+        voteButton.onclick = function(e) {
+            e.preventDefault();
+            alert('You have already voted in this election.');
+        };
+        voteStatusText.textContent = 'You have already cast your vote.';
+    } else {
+        if (isVotingActive) {
+            votingStatus.textContent = 'Open for Voting';
+            votingStatus.style.color = '#36c97e';
+            voteButton.textContent = 'Start Voting';
+            voteButton.style.background = 'linear-gradient(90deg, #4e9eff 0%, #2a7bd6 100%)';
+            voteButton.style.cursor = 'pointer';
+            voteButton.onclick = null;
+            voteButton.href = 'public/user/vote.html';
+            voteStatusText.textContent = 'Cast your vote for the active election. Review candidates before confirming.';
+        } else {
+            votingStatus.textContent = 'Voting Closed';
+            votingStatus.style.color = '#ff6b6b';
+            voteButton.textContent = 'Voting Closed';
+            voteButton.classList.add('disabled-link');
+            voteButton.href = '#';
+            voteButton.onclick = function(e) {
+                e.preventDefault();
+                alert('Voting is currently closed. Please contact the administrator.');
+            };
+            voteStatusText.textContent = 'Voting is currently closed. Check back later.';
+        }
+    }
+}
+
+function refreshVotingUI() {
+    fetch('/voting_system/backend/get_election_settings.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.settings) {
+                const startDate = new Date(data.settings.start_date);
+                const endDate = new Date(data.settings.end_date);
+                const now = new Date();
+                const isVotingActive = (now >= startDate && now <= endDate);
+                updateVotingStatus(isVotingActive);
+            }
+        });
+}
+
+function loadVoteSummary() {
+    const localVotes = JSON.parse(localStorage.getItem('userVote') || '{}');
+    userHasVoted = localStorage.getItem('hasVoted') === 'true';
+    
+    if (userHasVoted && Object.keys(localVotes).length > 0) {
+        displayVoteSummary(localVotes);
+    } else {
+        clearVoteSummary();
     }
 }
 
 function displayVoteSummary(votes) {
-    console.log('Displaying votes:', votes);
+    const positions = {
+        'President': 'presidentVote',
+        'Vice President': 'vicePresidentVote', 
+        'Secretary': 'secretaryVote',
+        'Treasurer': 'treasurerVote',
+        'Auditor': 'auditorVote'
+    };
     
-    // Convert candidate IDs to names by fetching candidate data
-    fetch('/voting_system/backend/get_candidates.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.candidates) {
-                const candidatesMap = {};
-                data.candidates.forEach(candidate => {
-                    candidatesMap[candidate.id] = candidate.name;
-                });
-                
-                // Update display with candidate names
-                for (const [position, candidateId] of Object.entries(votes)) {
-                    const candidateName = candidatesMap[candidateId] || `Candidate ${candidateId}`;
-                    updatePositionDisplay(position, candidateName);
-                }
-                
-                // Update vote date
-                updateVoteDate();
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching candidates:', error);
-            // Fallback: just show IDs
-            for (const [position, candidateId] of Object.entries(votes)) {
-                updatePositionDisplay(position, `Candidate ${candidateId}`);
-            }
-            updateVoteDate();
-        });
+    for (const [position, candidateName] of Object.entries(votes)) {
+        if (positions[position]) {
+            document.getElementById(positions[position]).textContent = candidateName;
+        }
+    }
+    
+    document.getElementById('voteDate').textContent = `Vote recorded: ${new Date().toLocaleDateString()}`;
 }
 
-function updatePositionDisplay(position, candidateName) {
-    if (position === 'President') {
-        document.getElementById('presidentVote').textContent = candidateName;
-    } else if (position === 'Vice President') {
-        document.getElementById('vicePresidentVote').textContent = candidateName;
-    } else if (position === 'Secretary') {
-        document.getElementById('secretaryVote').textContent = candidateName;
-    } else if (position === 'Treasurer') {
-        document.getElementById('treasurerVote').textContent = candidateName;
-    } else if (position === 'Auditor') {
-        document.getElementById('auditorVote').textContent = candidateName;
-    }
-}
-
-function updateVoteDate() {
-    const hasVoted = localStorage.getItem('hasVoted');
-    if (hasVoted) {
-        document.getElementById('voteDate').textContent = 
-            `Vote recorded: ${new Date().toLocaleDateString()}`;
-    }
+function clearVoteSummary() {
+    document.getElementById('presidentVote').textContent = 'Not voted yet';
+    document.getElementById('vicePresidentVote').textContent = 'Not voted yet';
+    document.getElementById('secretaryVote').textContent = 'Not voted yet';
+    document.getElementById('treasurerVote').textContent = 'Not voted yet';
+    document.getElementById('auditorVote').textContent = 'Not voted yet';
+    document.getElementById('voteDate').textContent = 'Not voted yet';
 }
 
 function toggleMenu() {
@@ -464,6 +452,9 @@ function logout() {
     localStorage.removeItem("hasVoted");
     window.location.href = "index.html";
 }
+
+// Auto-refresh every 3 seconds
+setInterval(loadEverything, 3000);
 </script>
 </body>
 </html>

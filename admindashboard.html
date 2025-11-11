@@ -25,6 +25,7 @@
         .controls{display:flex;gap:8px;align-items:center}
         button{border:0;padding:8px 12px;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer}
         button.secondary{background:#f3f4f6;color:#111;border:1px solid #e6e9ef}
+        button.danger{background:#dc2626;color:white;border:1px solid #dc2626}
         table{width:100%;border-collapse:collapse}
         th,td{padding:10px 8px;text-align:left;border-bottom:1px solid #eef2f7}
         .muted{color:var(--muted)}
@@ -48,22 +49,28 @@
         .message{padding:12px;border-radius:6px;margin-bottom:16px;text-align:center}
         .success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
         .error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+        
+        /* Election controls */
+        .election-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 16px;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Voting Assistance — Admin</h1>
         <div class="controls">
-            <div id="status" class="muted small">Loading…</div>
             <button id="toggleVoting" title="Start or stop voting">Start Voting</button>
-            <button id="exportBtn" class="secondary">Export Results</button>
         </div>
     </header>
 
     <div class="layout">
         <nav aria-label="Main navigation">
             <a href="#" class="nav-item active" data-view="overview">Overview</a>
-            <a href="#" class="nav-item" data-view="candidates">Candidates</a>
+            <a href="#" class="nav-item" data-view="candidates">Election</a>
             <a href="#" class="nav-item" data-view="voters">Voters</a>
             <a href="#" class="nav-item" data-view="results">Results</a>
             <a href="#" class="nav-item" data-view="settings">Settings</a>
@@ -100,69 +107,66 @@
             </section>
 
             <!-- Candidates -->
-<section id="view-candidates" class="view" style="display:none">
+            <section id="view-candidates" class="view" style="display:none">
+                <!-- Election Configuration at the TOP -->
+                <div class="card" style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                        <strong>Election Controls</strong>
+                        <div class="election-controls">
+                            <button id="startVotingBtn" class="secondary" style="background:#36c97e;">Start Voting</button>
+                            <button id="stopVotingBtn" class="secondary" style="background:#ff6b6b; display:none;">Stop Voting</button>
+                            <button id="resetAllBtn" class="danger" title="Reset all votes">Reset All Votes</button>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label for="electionTitle">Election Title:</label>
+                            <input type="text" id="electionTitle" name="election_title" required placeholder="Enter election title">
+                        </div>
+                        <div class="form-group">
+                            <label for="electionDescription">Description:</label>
+                            <input type="text" id="electionDescription" name="election_description" placeholder="Brief description">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+                        <div class="form-group">
+                            <label for="startDate">Start Date:</label>
+                            <input type="datetime-local" id="startDate" name="start_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date:</label>
+                            <input type="datetime-local" id="endDate" name="end_date" required>
+                        </div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+                        <div class="muted small" id="electionStatus">Status: Not configured</div>
+                        <button type="button" id="resetSettings" class="secondary">Reset Form</button>
+                    </div>
+                </div>
 
-    
-    <!-- Election Configuration at the TOP -->
-<div class="card" style="margin-bottom:12px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <strong>Election Controls</strong>
-        <div>
-            <button id="startVotingBtn" class="secondary" style="background:#36c97e;">Start Voting</button>
-            <button id="stopVotingBtn" class="secondary" style="background:#ff6b6b; display:none;">Stop Voting</button>
-        </div>
-    </div>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <div class="form-group">
-            <label for="electionTitle">Election Title:</label>
-            <input type="text" id="electionTitle" name="election_title" required placeholder="Enter election title">
-        </div>
-        <div class="form-group">
-            <label for="electionDescription">Description:</label>
-            <input type="text" id="electionDescription" name="election_description" placeholder="Brief description">
-        </div>
-    </div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
-        <div class="form-group">
-            <label for="startDate">Start Date:</label>
-            <input type="datetime-local" id="startDate" name="start_date" required>
-        </div>
-        <div class="form-group">
-            <label for="endDate">End Date:</label>
-            <input type="datetime-local" id="endDate" name="end_date" required>
-        </div>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
-        <div class="muted small" id="electionStatus">Status: Not configured</div>
-        <button type="button" id="resetSettings" class="secondary">Reset Form</button>
-    </div>
-</div>
+                <!-- Candidate Management -->
+                <div class="card" style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <strong>Candidate Management</strong>
+                        <div>
+                            <button id="addCandidateBtn2">Add New Candidate</button>
+                        </div>
+                    </div>
+                </div>
 
-    
-
-    <!-- Your existing Candidate Management -->
-    <div class="card" style="margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-            <strong>Candidate Management</strong>
-            <div>
-                <button id="addCandidateBtn2">Add New Candidate</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div id="candidateMessage"></div>
-        <table id="candidatesTable" aria-describedby="candidates">
-            <thead>
-                <tr><th>Candidate</th><th>Position</th><th class="small">Status</th><th class="small">Actions</th></tr>
-            </thead>
-            <tbody id="candidatesTableBody">
-                <tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Loading candidates...</td></tr>
-            </tbody>
-        </table>
-    </div>
-</section>
+                <div class="card">
+                    <div id="candidateMessage"></div>
+                    <table id="candidatesTable" aria-describedby="candidates">
+                        <thead>
+                            <tr><th>Candidate</th><th>Position</th><th class="small">Status</th><th class="small">Actions</th></tr>
+                        </thead>
+                        <tbody id="candidatesTableBody">
+                            <tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Loading candidates...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
             <!-- Voters -->
             <section id="view-voters" class="view" style="display:none">
@@ -186,52 +190,59 @@
             <!-- Results -->
             <section id="view-results" class="view" style="display:none">
                 <div class="card" style="margin-bottom:12px">
-                    <strong>Live Results</strong>
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <strong>Live Results</strong>
+                        <div>
+                            <button id="exportResultsBtn" class="secondary">Export Results</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="resultsList" class="card"></div>
             </section>
 
             <!-- Settings -->
-<section id="view-settings" class="view" style="display:none">
-    <div class="card" style="margin-bottom:12px">
-        <strong>Election Configuration</strong>
-        <p class="muted small">Configure the current election settings.</p>
-    </div>
+            <section id="view-settings" class="view" style="display:none">
+                <div class="card" style="margin-bottom:12px">
+                    <strong>Election Configuration</strong>
+                    <p class="muted small">Configure the current election settings.</p>
+                </div>
 
-    <div class="card">
-        <form id="electionSettingsForm">
-            <div class="form-group">
-                <label for="electionTitle">Election Title:</label>
-                <input type="text" id="electionTitle" name="election_title" required placeholder="Enter election title">
-            </div>
-            <div class="form-group">
-                <label for="electionDescription">Description:</label>
-                <textarea id="electionDescription" name="election_description" placeholder="Brief description about the election"></textarea>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <div class="form-group">
-                    <label for="startDate">Start Date:</label>
-                    <input type="date" id="startDate" name="start_date" required>
+                <div class="card">
+                    <form id="electionSettingsForm">
+                        <div class="form-group">
+                            <label for="settingsElectionTitle">Election Title:</label>
+                            <input type="text" id="settingsElectionTitle" name="election_title" required placeholder="Enter election title">
+                        </div>
+                        <div class="form-group">
+                            <label for="settingsElectionDescription">Description:</label>
+                            <textarea id="settingsElectionDescription" name="election_description" placeholder="Brief description about the election"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label for="settingsStartDate">Start Date:</label>
+                                <input type="datetime-local" id="settingsStartDate" name="start_date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="settingsEndDate">End Date:</label>
+                                <input type="datetime-local" id="settingsEndDate" name="end_date" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="isActive" name="is_active">
+                                <span>Activate Voting</span>
+                            </label>
+                        </div>
+                        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+                            <button type="button" id="resetSettingsForm" class="secondary">Reset</button>
+                            <button type="submit">Save Settings</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="endDate">End Date:</label>
-                    <input type="date" id="endDate" name="end_date" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label style="display: flex; align-items: center; gap: 8px;">
-                    <input type="checkbox" id="isActive" name="is_active">
-                    <span>Activate Voting</span>
-                </label>
-            </div>
-            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
-                <button type="button" id="resetSettings" class="secondary">Reset</button>
-                <button type="submit">Save Settings</button>
-            </div>
-        </form>
+            </section>
+        </main>
     </div>
-</section>
 
     <!-- Candidate Modal -->
     <div class="modal" id="candidateModal">
@@ -260,401 +271,317 @@
                     </div>
                     <div class="form-group">
                         <label for="candidatePhoto">Photo URL (optional):</label>
-                        <input type="text" id="candidatePhoto" name="photo" placeholder="Enter image URL">
+                            <input type="text" id="candidatePhoto" name="photo" placeholder="Enter image URL">
+                        </div>
                     </div>
-                </div>
-                <div style="display:flex;justify-content:flex-end;margin-top:12px">
-                    <button type="button" id="candidateModalCancel" class="secondary">Cancel</button>
-                    <button type="submit" style="margin-left:8px">Save Candidate</button>
-                </div>
-            </form>
+                    <div style="display:flex;justify-content:flex-end;margin-top:12px">
+                        <button type="button" id="candidateModalCancel" class="secondary">Cancel</button>
+                        <button type="submit" style="margin-left:8px">Save Candidate</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <footer>Admin Dashboard — Voting Assistance System</footer>
+        <footer>Admin Dashboard — Voting Assistance System</footer>
 
-    <script>
+        <script>
+            // DOM refs
+            const views = document.querySelectorAll('.view');
+            const navItems = document.querySelectorAll('.nav-item');
+            const candidateModal = document.getElementById('candidateModal');
+            const candidateForm = document.getElementById('candidateForm');
+            const candidateModalCancel = document.getElementById('candidateModalCancel');
 
-       
-
-
-        // Load election settings
-function loadElectionSettings() {
-    fetch('/voting_system/backend/get_election_settings.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.settings) {
-                const settings = data.settings;
-                document.getElementById('electionTitle').value = settings.election_title || '';
-                document.getElementById('electionDescription').value = settings.election_description || '';
-                
-                // Format dates for datetime-local input
-                const startDate = settings.start_date ? settings.start_date.replace(' ', 'T') : '';
-                const endDate = settings.end_date ? settings.end_date.replace(' ', 'T') : '';
-                document.getElementById('startDate').value = startDate;
-                document.getElementById('endDate').value = endDate;
-                
-                // Update voting controls
-                updateVotingControls(settings.is_active);
-                
-                // Update status display
-                const statusElement = document.getElementById('electionStatus');
-                if (settings.is_active) {
-                    statusElement.innerHTML = 'Status: <span style="color:#36c97e;font-weight:600">Voting ACTIVE</span>';
-                } else {
-                    statusElement.innerHTML = 'Status: <span style="color:#ff6b6b;font-weight:600">Voting INACTIVE</span>';
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error loading election settings:', error);
-        });
-}
-
-// Update voting control buttons
-function updateVotingControls(isActive) {
-    const startBtn = document.getElementById('startVotingBtn');
-    const stopBtn = document.getElementById('stopVotingBtn');
-    
-    if (isActive) {
-        startBtn.style.display = 'none';
-        stopBtn.style.display = 'inline-block';
-    } else {
-        startBtn.style.display = 'inline-block';
-        stopBtn.style.display = 'none';
-    }
-}
-
-// Start voting - saves configuration AND starts voting
-document.getElementById('startVotingBtn').addEventListener('click', function() {
-    const title = document.getElementById('electionTitle').value;
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-    
-    if (!title || !startDate || !endDate) {
-        alert('Please fill in Election Title, Start Date, and End Date before starting voting.');
-        return;
-    }
-    
-    if (confirm('Start voting now? This will allow users to cast their votes.')) {
-        const settings = {
-            election_title: title,
-            election_description: document.getElementById('electionDescription').value,
-            start_date: startDate,
-            end_date: endDate,
-            is_active: 1
-        };
-        
-        fetch('/voting_system/backend/save_election_settings.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(settings)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                updateVotingControls(1);
-                const statusElement = document.getElementById('electionStatus');
-                statusElement.innerHTML = 'Status: <span style="color:#36c97e;font-weight:600">Voting ACTIVE</span>';
-                alert('Voting started successfully!');
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => {
-            alert('Network error: ' + error);
-        });
-    }
-});
-
-// Stop voting
-document.getElementById('stopVotingBtn').addEventListener('click', function() {
-    if (confirm('Stop voting now? This will prevent users from casting new votes.')) {
-        updateVotingStatus(0);
-    }
-});
-
-// Update voting status in database
-function updateVotingStatus(isActive) {
-    const settings = {
-        election_title: document.getElementById('electionTitle').value,
-        election_description: document.getElementById('electionDescription').value,
-        start_date: document.getElementById('startDate').value,
-        end_date: document.getElementById('endDate').value,
-        is_active: isActive
-    };
-    
-    fetch('/voting_system/backend/save_election_settings.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(settings)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            updateVotingControls(isActive);
-            const statusElement = document.getElementById('electionStatus');
-            if (isActive) {
-                statusElement.innerHTML = 'Status: <span style="color:#36c97e;font-weight:600">Voting ACTIVE</span>';
-                alert('Voting started successfully!');
-            } else {
-                statusElement.innerHTML = 'Status: <span style="color:#ff6b6b;font-weight:600">Voting INACTIVE</span>';
-                alert('Voting stopped successfully!');
-            }
-        } else {
-            alert('Error: ' + data.message);
-        }
-    })
-    .catch(error => {
-        alert('Network error: ' + error);
-    });
-}
-
-// Save election settings form
-document.getElementById('electionSettingsForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const formData = {
-        election_title: document.getElementById('electionTitle').value,
-        election_description: document.getElementById('electionDescription').value,
-        start_date: document.getElementById('startDate').value,
-        end_date: document.getElementById('endDate').value,
-        is_active: 0 // Default to inactive when saving config
-    };
-    
-    fetch('/voting_system/backend/save_election_settings.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Election configuration saved successfully!');
-            updateVotingControls(0); // Reset to inactive after saving config
-        } else {
-            alert('Error: ' + data.message);
-        }
-    })
-    .catch(error => {
-        alert('Network error: ' + error);
-    });
-});
-
-// Reset settings
-document.getElementById('resetSettings').addEventListener('click', function() {
-    document.getElementById('electionSettingsForm').reset();
-});
-
-// Save election settings
-document.getElementById('electionSettingsForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const formData = {
-        election_title: document.getElementById('electionTitle').value,
-        election_description: document.getElementById('electionDescription').value,
-        start_date: document.getElementById('startDate').value,
-        end_date: document.getElementById('endDate').value,
-        is_active: document.getElementById('isActive').checked ? 1 : 0
-    };
-    
-    fetch('backend/save_election_settings.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Election settings saved successfully!');
-            loadElectionSettings();
-        } else {
-            alert('Error: ' + data.message);
-        }
-    })
-    .catch(error => {
-        alert('Network error: ' + error);
-    });
-});
-
-// Reset settings
-document.getElementById('resetSettings').addEventListener('click', function() {
-    document.getElementById('electionSettingsForm').reset();
-});
-
-// Update the showView function to load settings when needed
-function showView(name){
-    views.forEach(v=>v.style.display = v.id === 'view-' + name ? '' : 'none');
-    if (name === 'candidates') {
-        loadCandidates();
-        loadElectionSettings(); 
-    }
-}
-        // DOM refs
-        const views = document.querySelectorAll('.view');
-        const navItems = document.querySelectorAll('.nav-item');
-        const candidateModal = document.getElementById('candidateModal');
-        const candidateForm = document.getElementById('candidateForm');
-        const candidateModalCancel = document.getElementById('candidateModalCancel');
-
-        // Navigation
-        navItems.forEach(a=>{
-            a.addEventListener('click', e=>{
-                e.preventDefault();
-                navItems.forEach(n=>n.classList.remove('active'));
-                a.classList.add('active');
-                const view = a.dataset.view;
-                showView(view);
-            });
-        });
-
-        function showView(name){
-            views.forEach(v=>v.style.display = v.id === 'view-' + name ? '' : 'none');
-            if (name === 'candidates') {
-                loadCandidates();
-            }
-        }
-
-       function loadCandidates() {
-    fetch('/voting_system/backend/get_candidates.php')
-        .then(response => response.json())
-        .then(data => {
-            const tbody = document.getElementById('candidatesTableBody');
-            if (data.success && data.candidates) {
-                tbody.innerHTML = '';
-                data.candidates.forEach(candidate => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${escapeHtml(candidate.name)}</strong></td>
-                        <td>${escapeHtml(candidate.position)}</td>
-                        <td class="small">${candidate.is_active ? '<span class="badge">Active</span>' : '<span class="muted">Inactive</span>'}</td>
-                        <td class="actions small">
-                            <button class="secondary" onclick="editCandidate(${candidate.id})">Edit</button>
-                            <button onclick="deleteCandidate(${candidate.id})">Delete</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
+            // Navigation
+            navItems.forEach(a=>{
+                a.addEventListener('click', e=>{
+                    e.preventDefault();
+                    navItems.forEach(n=>n.classList.remove('active'));
+                    a.classList.add('active');
+                    const view = a.dataset.view;
+                    showView(view);
                 });
-                
-                // Update overview stats
-                document.getElementById('totalCandidates').textContent = data.candidates.length;
-            } else {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">No candidates found</td></tr>';
-            }
-        })
-        .catch(error => {
-            console.error('Error loading candidates:', error);
-            document.getElementById('candidatesTableBody').innerHTML = 
-                '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Error loading candidates</td></tr>';
-        });
-}
-
-function addCandidate(candidateData) {
-    fetch('/voting_system/backend/add_candidate.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(candidateData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showCandidateMessage('Candidate added successfully!', 'success');
-            candidateModal.classList.remove('open');
-            candidateForm.reset();
-            loadCandidates();
-        } else {
-            showCandidateMessage('Error: ' + data.message, 'error');
-        }
-    })
-    .catch(error => {
-        showCandidateMessage('Network error: ' + error, 'error');
-    });
-}
-
-function deleteCandidate(candidateId) {
-    if (confirm('Are you sure you want to delete this candidate?')) {
-        fetch('/voting_system/backend/delete_candidate.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: candidateId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showCandidateMessage('Candidate deleted successfully!', 'success');
-                loadCandidates();
-            } else {
-                showCandidateMessage('Error: ' + data.message, 'error');
-            }
-        })
-        .catch(error => {
-            showCandidateMessage('Network error: ' + error, 'error');
-        });
-    }
-}
-
-function addCandidate(candidateData) {
-    fetch('./backend/add_candidate.php', {
-        // ... rest of your code
-    })
-}
-
-function deleteCandidate(candidateId) {
-    fetch('./backend/delete_candidate.php', {
-        // ... rest of your code
-    })
-}
-
-        function addCandidate(candidateData) {
-            fetch('backend/add_candidate.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(candidateData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showCandidateMessage('Candidate added successfully!', 'success');
-                    candidateModal.classList.remove('open');
-                    candidateForm.reset();
-                    loadCandidates();
-                } else {
-                    showCandidateMessage('Error: ' + data.message, 'error');
-                }
-            })
-            .catch(error => {
-                showCandidateMessage('Network error: ' + error, 'error');
             });
-        }
 
-        function deleteCandidate(candidateId) {
-            if (confirm('Are you sure you want to delete this candidate?')) {
-                fetch('backend/delete_candidate.php', {
+            function showView(name){
+                views.forEach(v=>v.style.display = v.id === 'view-' + name ? '' : 'none');
+                if (name === 'candidates') {
+                    loadCandidates();
+                    loadElectionSettings(); 
+                } else if (name === 'results') {
+                    loadResults();
+                }
+            }
+
+            // Reset all votes function
+            function resetAllVotes() {
+                if (confirm('🚨 DANGER ZONE! This will DELETE ALL VOTES permanently!\n\nAll users will be able to vote again.\nThis cannot be undone!\n\nClick OK to continue or Cancel to abort.')) {
+                    fetch('/voting_system/backend/reset_votes.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ password: 'admin123' })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('✅ All votes reset successfully! Users can now vote again.');
+                            // Reload stats
+                            loadStats();
+                        } else {
+                            alert('❌ Reset failed: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('❌ Network error: ' + error);
+                    });
+                }
+            }
+
+            // Load stats for overview
+            function loadStats() {
+                // Load total voters
+                fetch('/voting_system/backend/get_voters.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.voters) {
+                            document.getElementById('totalVoters').textContent = data.voters.length;
+                        }
+                    });
+
+                // Load total candidates
+                fetch('/voting_system/backend/get_candidates.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.candidates) {
+                            document.getElementById('totalCandidates').textContent = data.candidates.length;
+                        }
+                    });
+
+                // Load total votes
+                fetch('/voting_system/backend/get_votes_count.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('totalVotes').textContent = data.total_votes || 0;
+                        }
+                    });
+            }
+
+            // Load election settings
+            function loadElectionSettings() {
+                fetch('/voting_system/backend/get_election_settings.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.settings) {
+                            const settings = data.settings;
+                            document.getElementById('electionTitle').value = settings.election_title || '';
+                            document.getElementById('electionDescription').value = settings.election_description || '';
+                            
+                            // Format dates for datetime-local input - FIXED
+                            const formatDateForInput = (dateString) => {
+                                if (!dateString) return '';
+                                const date = new Date(dateString);
+                                // Format to YYYY-MM-DDTHH:mm (datetime-local format)
+                                const year = date.getFullYear();
+                                const month = String(date.getMonth() + 1).padStart(2, '0');
+                                const day = String(date.getDate()).padStart(2, '0');
+                                const hours = String(date.getHours()).padStart(2, '0');
+                                const minutes = String(date.getMinutes()).padStart(2, '0');
+                                return `${year}-${month}-${day}T${hours}:${minutes}`;
+                            };
+                            
+                            document.getElementById('startDate').value = formatDateForInput(settings.start_date);
+                            document.getElementById('endDate').value = formatDateForInput(settings.end_date);
+                            
+                            // Update voting controls
+                            updateVotingControls(settings.is_active);
+                            
+                            // Update status display
+                            const statusElement = document.getElementById('electionStatus');
+                            if (settings.is_active) {
+                                statusElement.innerHTML = 'Status: <span style="color:#36c97e;font-weight:600">Voting ACTIVE</span>';
+                            } else {
+                                statusElement.innerHTML = 'Status: <span style="color:#ff6b6b;font-weight:600">Voting INACTIVE</span>';
+                            }
+
+                            // Update header button
+                            const toggleVotingBtn = document.getElementById('toggleVoting');
+                            if (settings.is_active) {
+                                toggleVotingBtn.textContent = 'Stop Voting';
+                                toggleVotingBtn.style.background = '#ff6b6b';
+                            } else {
+                                toggleVotingBtn.textContent = 'Start Voting';
+                                toggleVotingBtn.style.background = 'var(--accent)';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading election settings:', error);
+                    });
+            }
+
+            // Update voting control buttons
+            function updateVotingControls(isActive) {
+                const startBtn = document.getElementById('startVotingBtn');
+                const stopBtn = document.getElementById('stopVotingBtn');
+                
+                if (isActive) {
+                    startBtn.style.display = 'none';
+                    stopBtn.style.display = 'inline-block';
+                } else {
+                    startBtn.style.display = 'inline-block';
+                    stopBtn.style.display = 'none';
+                }
+            }
+
+            // Start voting - saves configuration AND starts voting
+            document.getElementById('startVotingBtn').addEventListener('click', function() {
+                const title = document.getElementById('electionTitle').value;
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                
+                if (!title || !startDate || !endDate) {
+                    alert('Please fill in Election Title, Start Date, and End Date before starting voting.');
+                    return;
+                }
+                
+                if (confirm('Start voting now? This will allow users to cast their votes.')) {
+                    updateVotingStatus(1);
+                }
+            });
+
+            // Stop voting
+            document.getElementById('stopVotingBtn').addEventListener('click', function() {
+                if (confirm('Stop voting now? This will prevent users from casting new votes.')) {
+                    updateVotingStatus(0);
+                }
+            });
+
+            // Header voting toggle
+            document.getElementById('toggleVoting').addEventListener('click', function() {
+                fetch('/voting_system/backend/get_election_settings.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.settings) {
+                            const currentStatus = data.settings.is_active;
+                            const newStatus = currentStatus ? 0 : 1;
+                            
+                            if (newStatus === 1) {
+                                if (confirm('Start voting now? This will allow users to cast their votes.')) {
+                                    updateVotingStatus(1);
+                                }
+                            } else {
+                                if (confirm('Stop voting now? This will prevent users from casting new votes.')) {
+                                    updateVotingStatus(0);
+                                }
+                            }
+                        }
+                    });
+            });
+
+            // Reset all votes button (moved to election controls)
+            document.getElementById('resetAllBtn').addEventListener('click', resetAllVotes);
+
+            // Update voting status in database
+            function updateVotingStatus(isActive) {
+                const settings = {
+                    election_title: document.getElementById('electionTitle').value,
+                    election_description: document.getElementById('electionDescription').value,
+                    start_date: document.getElementById('startDate').value.replace('T', ' ') + ':00',
+                    end_date: document.getElementById('endDate').value.replace('T', ' ') + ':00',
+                    is_active: isActive
+                };
+                
+                fetch('/voting_system/backend/save_election_settings.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ id: candidateId })
+                    body: JSON.stringify(settings)
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        showCandidateMessage('Candidate deleted successfully!', 'success');
+                        updateVotingControls(isActive);
+                        const statusElement = document.getElementById('electionStatus');
+                        const toggleVotingBtn = document.getElementById('toggleVoting');
+                        
+                        if (isActive) {
+                            statusElement.innerHTML = 'Status: <span style="color:#36c97e;font-weight:600">Voting ACTIVE</span>';
+                            toggleVotingBtn.textContent = 'Stop Voting';
+                            toggleVotingBtn.style.background = '#ff6b6b';
+                            alert('Voting started successfully!');
+                        } else {
+                            statusElement.innerHTML = 'Status: <span style="color:#ff6b6b;font-weight:600">Voting INACTIVE</span>';
+                            toggleVotingBtn.textContent = 'Start Voting';
+                            toggleVotingBtn.style.background = 'var(--accent)';
+                            alert('Voting stopped successfully!');
+                        }
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert('Network error: ' + error);
+                });
+            }
+
+            // Export results
+            document.getElementById('exportResultsBtn').addEventListener('click', function() {
+                alert('Exporting results... This would generate a CSV/PDF file in a real implementation.');
+                // You can implement actual export functionality here
+            });
+
+            // Candidate management functions
+            function loadCandidates() {
+                fetch('/voting_system/backend/get_candidates.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        const tbody = document.getElementById('candidatesTableBody');
+                        if (data.success && data.candidates) {
+                            tbody.innerHTML = '';
+                            data.candidates.forEach(candidate => {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `
+                                    <td><strong>${escapeHtml(candidate.name)}</strong></td>
+                                    <td>${escapeHtml(candidate.position)}</td>
+                                    <td class="small">${candidate.is_active ? '<span class="badge">Active</span>' : '<span class="muted">Inactive</span>'}</td>
+                                    <td class="actions small">
+                                        <button class="secondary" onclick="editCandidate(${candidate.id})">Edit</button>
+                                        <button onclick="deleteCandidate(${candidate.id})">Delete</button>
+                                    </td>
+                                `;
+                                tbody.appendChild(tr);
+                            });
+                        } else {
+                            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">No candidates found</td></tr>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading candidates:', error);
+                        document.getElementById('candidatesTableBody').innerHTML = 
+                            '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Error loading candidates</td></tr>';
+                    });
+            }
+
+            function addCandidate(candidateData) {
+                fetch('/voting_system/backend/add_candidate.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(candidateData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showCandidateMessage('Candidate added successfully!', 'success');
+                        candidateModal.classList.remove('open');
+                        candidateForm.reset();
                         loadCandidates();
+                        loadStats();
                     } else {
                         showCandidateMessage('Error: ' + data.message, 'error');
                     }
@@ -663,65 +590,90 @@ function deleteCandidate(candidateId) {
                     showCandidateMessage('Network error: ' + error, 'error');
                 });
             }
-        }
 
-        function editCandidate(candidateId) {
-            // For now, we'll just alert - you can implement edit functionality later
-            alert('Edit functionality will be implemented in the next phase!');
-        }
+            function deleteCandidate(candidateId) {
+                if (confirm('Are you sure you want to delete this candidate?')) {
+                    fetch('/voting_system/backend/delete_candidate.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id: candidateId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showCandidateMessage('Candidate deleted successfully!', 'success');
+                            loadCandidates();
+                            loadStats();
+                        } else {
+                            showCandidateMessage('Error: ' + data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        showCandidateMessage('Network error: ' + error, 'error');
+                    });
+                }
+            }
 
-        function showCandidateMessage(text, type) {
-            const messageDiv = document.getElementById('candidateMessage');
-            messageDiv.innerHTML = text;
-            messageDiv.className = `message ${type}`;
-            
-            setTimeout(() => {
-                messageDiv.innerHTML = '';
-                messageDiv.className = '';
-            }, 5000);
-        }
+            function editCandidate(candidateId) {
+                alert('Edit functionality will be implemented in the next phase!');
+            }
 
-        // Modal controls
-        function openCandidateModal() {
-            candidateModal.classList.add('open');
-        }
+            function showCandidateMessage(text, type) {
+                const messageDiv = document.getElementById('candidateMessage');
+                messageDiv.innerHTML = text;
+                messageDiv.className = `message ${type}`;
+                
+                setTimeout(() => {
+                    messageDiv.innerHTML = '';
+                    messageDiv.className = '';
+                }, 5000);
+            }
 
-        function closeCandidateModal() {
-            candidateModal.classList.remove('open');
-            candidateForm.reset();
-        }
+            // Modal controls
+            function openCandidateModal() {
+                candidateModal.classList.add('open');
+            }
 
-        // Event listeners
-        candidateForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                name: document.getElementById('candidateName').value,
-                position: document.getElementById('candidatePosition').value,
-                bio: document.getElementById('candidateBio').value,
-                photo: document.getElementById('candidatePhoto').value || 'default_photo.jpg'
-            };
+            function closeCandidateModal() {
+                candidateModal.classList.remove('open');
+                candidateForm.reset();
+            }
 
-            addCandidate(formData);
-        });
+            // Event listeners
+            candidateForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    name: document.getElementById('candidateName').value,
+                    position: document.getElementById('candidatePosition').value,
+                    bio: document.getElementById('candidateBio').value,
+                    photo: document.getElementById('candidatePhoto').value || 'default_photo.jpg'
+                };
 
-        candidateModalCancel.addEventListener('click', closeCandidateModal);
-        candidateModal.addEventListener('click', function(e) {
-            if (e.target === candidateModal) closeCandidateModal();
-        });
+                addCandidate(formData);
+            });
 
-        // Add candidate buttons
-        document.getElementById('addCandidateBtn').addEventListener('click', openCandidateModal);
-        document.getElementById('addCandidateBtn2').addEventListener('click', openCandidateModal);
+            candidateModalCancel.addEventListener('click', closeCandidateModal);
+            candidateModal.addEventListener('click', function(e) {
+                if (e.target === candidateModal) closeCandidateModal();
+            });
 
-        // Helper function
-        function escapeHtml(s) { 
-            return (s+'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); 
-        }
+            // Add candidate buttons
+            document.getElementById('addCandidateBtn').addEventListener('click', openCandidateModal);
+            document.getElementById('addCandidateBtn2').addEventListener('click', openCandidateModal);
 
-        // Initialize
-        showView('overview');
-        loadCandidates();
-    </script>
-</body>
+            // Helper function
+            function escapeHtml(s) { 
+                return (s+'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); 
+            }
+
+            // Initialize
+            showView('overview');
+            loadCandidates();
+            loadStats();
+            loadElectionSettings();
+        </script>
+    </body>
 </html>

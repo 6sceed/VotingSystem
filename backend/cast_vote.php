@@ -18,7 +18,25 @@ $userId = intval($input['user_id']);
 $votes = $input['votes'];
 
 try {
-    // First, check if user already voted (any position)
+    // FIRST: Check if voting is active before anything else
+    $settingsSql = "SELECT * FROM election_settings ORDER BY id DESC LIMIT 1";
+    $settingsResult = $conn->query($settingsSql);
+
+    if ($settingsResult->num_rows > 0) {
+        $settings = $settingsResult->fetch_assoc();
+        $now = date('Y-m-d H:i:s');
+        $start = $settings['start_date'];
+        $end = $settings['end_date'];
+
+        $isActive = $settings['is_active'] == '1' || $settings['is_active'] === 1;
+
+        if (!$isActive || $now < $start || $now > $end) {
+            echo json_encode(['success' => false, 'message' => 'Voting is currently closed.']);
+            exit;
+        }
+    }
+
+    // Second, check if user already voted (any position)
     $checkStmt = $conn->prepare("SELECT id FROM votes WHERE user_id = ? LIMIT 1");
     $checkStmt->bind_param("i", $userId);
     $checkStmt->execute();
@@ -41,22 +59,6 @@ try {
         'success' => true,
         'message' => 'Vote submitted successfully!'
     ]);
-
-    // Check if voting is active
-    $settingsSql = "SELECT * FROM election_settings ORDER BY id DESC LIMIT 1";
-    $settingsResult = $conn->query($settingsSql);
-
-    if ($settingsResult->num_rows > 0) {
-        $settings = $settingsResult->fetch_assoc();
-        $now = date('Y-m-d H:i:s');
-        $start = $settings['start_date'];
-        $end = $settings['end_date'];
-
-        if (!$settings['is_active'] || $now < $start || $now > $end) {
-            echo json_encode(['success' => false, 'message' => 'Voting is currently closed.']);
-            exit;
-        }
-    }
 
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
