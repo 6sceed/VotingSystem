@@ -6,6 +6,114 @@
     <title>VoteEase</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="asset/style/index.css">
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-box {
+            background: #1a1c21;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid #2d3748;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .modal-message {
+            color: #cbd5e0;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .modal-ok {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .modal-ok:hover {
+            background: #2563eb;
+        }
+        
+        .modal-success .modal-title {
+            color: #10b981;
+        }
+        
+        .modal-error .modal-title {
+            color: #ef4444;
+        }
+        
+        .modal-suspended {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+        }
+        
+        .modal-suspended .modal-title {
+            color: #fca5a5;
+        }
+        
+        .modal-suspended .modal-message {
+            color: #fecaca;
+        }
+        
+        .modal-suspended .modal-ok {
+            background: #dc2626;
+        }
+        
+        .modal-suspended .modal-ok:hover {
+            background: #b91c1c;
+        }
+
+        /* Input wrapper for eye icon */
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .toggle-eye {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 18px;
+            user-select: none;
+        }
+        
+        .view-transition {
+            transition: opacity 0.3s ease-in-out;
+        }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
@@ -170,12 +278,14 @@
             modalTitle.textContent = title;
             modalMessage.textContent = message;
             
-            // Set modal type (success, error, info)
+            // Set modal type (success, error, info, suspended)
             modalBox.className = "modal-box";
             if (type === "success") {
                 modalBox.classList.add("modal-success");
             } else if (type === "error") {
                 modalBox.classList.add("modal-error");
+            } else if (type === "suspended") {
+                modalBox.classList.add("modal-suspended");
             }
             
             // Set buttons
@@ -192,6 +302,10 @@
 
         function showError(message) {
             showModal("Error", message, "error");
+        }
+
+        function showSuspended(message) {
+            showModal("ACCOUNT SUSPENDED", message, "suspended");
         }
 
         function closeModal() {
@@ -286,6 +400,17 @@
             const voterId = document.getElementById('voter-id').value.trim();
             const password = document.getElementById('password').value;
 
+            // Hardcoded admin account check
+            if (voterId === 'admin' && password === 'admin123') {
+                // save admin user to localStorage
+                const adminUser = { id: 0, name: 'Administrator', email: 'admin' };
+                localStorage.setItem('user', JSON.stringify(adminUser));
+
+                showSuccess('Welcome Admin! Redirecting...');
+                setTimeout(() => window.location.href = 'http://localhost/voting_system/admindashboard.html', 1500);
+                return;
+            }
+
             try {
                 const res = await fetch('http://localhost/voting_system/backend/login.php', {
                     method: 'POST',
@@ -296,22 +421,19 @@
                 const data = await res.json();
                 console.log("Login response:", data);
 
-                if (data.status === 'admin') {
-                    // save admin user to localStorage
-                    const adminUser = { id: 0, name: data.user?.username || 'Administrator', email: 'admin' };
-                    localStorage.setItem('user', JSON.stringify(adminUser));
-
-                    showSuccess('Welcome Admin! Redirecting...');
-                    setTimeout(() => window.location.href = data.redirect, 1500);
-
-                } else if (data.status === 'success') {
+                if (data.status === 'success') {
                     // save regular voter info
                     localStorage.setItem('user', JSON.stringify(data.user));
 
                     // Extract first name only
                     const firstName = getFirstName(data.user.name);
                     showSuccess(`Welcome, ${firstName}! Redirecting...`);
-                    setTimeout(() => window.location.href   = data.redirect, 1500);
+                    setTimeout(() => window.location.href = data.redirect, 1500);
+
+                } else if (data.status === 'suspended') {
+                    // Show suspension popup with reason
+                    const reason = data.reason || 'Your account has been suspended by the administrator.';
+                    showSuspended(`Suspension Reason:\n\n${reason}\n\nPlease contact the administrator for more information.`);
 
                 } else {
                     showError(data.message || 'Invalid credentials.');

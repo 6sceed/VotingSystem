@@ -12,9 +12,18 @@
       --card-bg: #1a1c20;
       --text: #eaeaea;
       --accent: #4e9eff;
+      --accent-glow: rgba(78, 158, 255, 0.3);
       --border: #2b2d32;
       --shadow: rgba(0, 0, 0, 0.6);
       --muted: #9aa3ad;
+      --success: #36c97e;
+      --success-glow: rgba(54, 201, 126, 0.3);
+      --warning: #ffa726;
+      --danger: #ff6b6b;
+      --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-success: linear-gradient(135deg, #36c97e 0%, #2a9d5e 100%);
+      --gradient-accent: linear-gradient(135deg, #4e9eff 0%, #2a7bd6 100%);
+      --gradient-dark: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
     }
 
     body {
@@ -22,6 +31,7 @@
       background: var(--bg);
       color: var(--text);
       margin: 0;
+      overflow-x: hidden;
     }
 
     /* ===== HEADER ===== */
@@ -83,53 +93,220 @@
 
     /* ===== BODY ===== */
     .container {
-      max-width: 1000px;
-      margin: 30px auto;
+      max-width: 1200px;
+      margin: 40px auto;
       padding: 0 20px;
     }
 
     .hero {
-      padding: 20px;
+      padding: 30px 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 20px;
     }
 
     .welcome-large {
-      font-size: 40px;
+      font-size: 52px;
       font-weight: 800;
       color: #fff;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .welcome-sub { color: var(--muted); font-size: 15px; }
+    
+    .welcome-sub { 
+      color: var(--muted); 
+      font-size: 18px; 
+      margin-bottom: 10px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(78, 158, 255, 0.1);
+      border: 1px solid var(--accent);
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .status-badge.success {
+      background: rgba(54, 201, 126, 0.1);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .status-badge.warning {
+      background: rgba(255, 167, 38, 0.1);
+      border-color: var(--warning);
+      color: var(--warning);
+    }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 18px;
-      margin-top: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 10px;
-      padding: 22px;
-      box-shadow: 0 1px 8px var(--shadow);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-      min-height: 160px;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
     }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-accent);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card:hover { 
+      transform: translateY(-8px); 
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border-color: rgba(78, 158, 255, 0.2);
+    }
+
+    .card.glow {
+      background: linear-gradient(135deg, rgba(78, 158, 255, 0.05) 0%, rgba(26, 28, 32, 1) 100%);
+      border: 1px solid rgba(78, 158, 255, 0.2);
+    }
 
     .card h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-      color: var(--accent);
+      margin: 0 0 20px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card h3::before {
+      content: '';
+      width: 6px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 3px;
     }
 
     .summary-list {
-      margin: 8px 0 0;
+      margin: 0;
+      color: #c9d2db;
+      font-size: 16px;
+      line-height: 1.8;
+      list-style: none;
+      padding: 0;
+    }
+
+    .summary-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .summary-list li:last-child {
+      border-bottom: none;
+    }
+
+    .vote-value {
+      font-weight: 600;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .vote-value.voted {
+      background: var(--success-glow);
+      color: var(--success);
+    }
+
+    .small-muted {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .vote-action {
+      display: block;
+      padding: 18px 24px;
+      background: var(--gradient-accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      text-align: center;
+      font-size: 16px;
+      box-shadow: 0 8px 24px rgba(46, 125, 246, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 20px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vote-action::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .vote-action:hover::before {
+      left: 100%;
+    }
+
+    .vote-action:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(46, 125, 246, 0.4);
+    }
+
+    .vote-action:active { transform: translateY(-1px); }
+
+    .disabled-link {
+        background: var(--gradient-dark) !important;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        opacity: 0.6 !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Results Styles */
+    .results-list {
+      margin: 0;
       color: #c9d2db;
       font-size: 14px;
       line-height: 1.6;
@@ -137,48 +314,88 @@
       padding: 0;
     }
 
-    .small-muted {
-      color: var(--muted);
-      font-size: 13px;
+    .results-list li {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .results-list li:last-child {
+      border-bottom: none;
+    }
+
+    .candidate-result {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 8px;
     }
 
-    .vote-action {
-      display: block;
-      padding: 14px 18px;
-      background: linear-gradient(90deg, #4e9eff 0%, #2a7bd6 100%);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 700;
-      text-align: center;
-      box-shadow: 0 6px 16px rgba(46,125,246,0.16);
-      transition: transform 0.12s ease;
-      margin-top: 12px;
-    }
-    .disabled-link {
-        background: #6c757d !important;
-        cursor: not-allowed !important;
-        pointer-events: none !important;
-        opacity: 0.6 !important;
-    }
-    .vote-action:active { transform: translateY(1px); }
-
-    .chart {
-      background: linear-gradient(120deg, #4e9eff 0%, #36c97e 100%);
-      color: #fff;
-      border-radius: 8px;
-      padding: 35px;
-      text-align: center;
-      font-size: 16px;
+    .candidate-name {
       font-weight: 600;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-      margin-top: 25px;
+      color: #fff;
+      flex: 1;
     }
 
-    @media (max-width: 720px) {
-      .welcome-large { font-size: 32px; }
+    .vote-count {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .vote-count.leading {
+      background: var(--success-glow);
+      color: var(--success);
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-accent);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-fill.leading {
+      background: var(--gradient-success);
+    }
+
+    .position-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .vote-date {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .vote-date.voted {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .welcome-large { font-size: 36px; }
       .grid { grid-template-columns: 1fr; }
+      .card { padding: 20px; }
     }
   </style>
 </head>
@@ -204,48 +421,83 @@
   <main class="container">
     <section class="hero">
       <div>
-        <div id="welcomeLarge" class="welcome-large">Welcome, John</div>
-        <div id="welcomeSub" class="welcome-sub">Good to see you — John.</div>
+        <div id="welcomeLarge" class="welcome-large">Welcome, Voter</div>
+        <div id="welcomeSub" class="welcome-sub">Ready to make your voice heard in the democratic process</div>
+        <div id="statusBadge" class="status-badge">
+          <span>System Online</span>
+        </div>
       </div>
     </section>
 
     <section class="grid">
-     <div class="card">
-    <h3>Vote</h3>
-    <p class="small-muted" id="voteStatusText">Cast your vote for the active election. Review candidates before confirming.</p>
-    <ul class="summary-list">
-        <li><strong>Active Election:</strong> <span id="electionTitle">Loading...</span></li>
-        <li><strong>Polling Period:</strong> <span id="pollingPeriod">Loading...</span></li>
-        <li><strong>Status:</strong> <span id="votingStatus">Loading...</span></li>
-    </ul>
-    <a href="public/user/vote.html" class="vote-action" id="voteButton">Start Voting</a>
-</div>
+      <!-- Vote Card -->
+      <div class="card glow">
+        <h3>Cast Your Vote</h3>
+        <p class="small-muted" id="voteStatusText">Participate in the democratic process by casting your vote for the positions that matter.</p>
+        <ul class="summary-list">
+          <li>
+            <span>Active Election</span>
+            <span class="vote-value" id="electionTitle">Loading...</span>
+          </li>
+          <li>
+            <span>Voting Period</span>
+            <span class="vote-value" id="pollingPeriod">Loading...</span>
+          </li>
+          <li>
+            <span>Status</span>
+            <span class="vote-value" id="votingStatus">Loading...</span>
+          </li>
+        </ul>
+        <a href="public/user/vote.html" class="vote-action" id="voteButton">
+          <span id="voteButtonText">Start Voting</span>
+        </a>
+      </div>
 
+      <!-- Vote Summary Card -->
       <div class="card">
-    <h3>Summary</h3>
-    <p class="small-muted">Your voting summary for the current election.</p>
-    <ul class="summary-list" id="voteSummaryList">
-        <li><strong>President:</strong> <span id="presidentVote">Not voted yet</span></li>
-        <li><strong>Vice President:</strong> <span id="vicePresidentVote">Not voted yet</span></li>
-        <li><strong>Secretary:</strong> <span id="secretaryVote">Not voted yet</span></li>
-        <li><strong>Treasurer:</strong> <span id="treasurerVote">Not voted yet</span></li>
-        <li><strong>Auditor:</strong> <span id="auditorVote">Not voted yet</span></li>
-    </ul>
-    <p class="small-muted" id="voteDate" style="margin-top:10px;">Not voted yet</p>
-</div>
+        <h3>Your Vote Summary</h3>
+        <p class="small-muted">Your voting decisions for the current election cycle</p>
+        <ul class="summary-list" id="voteSummaryList">
+          <li>
+            <span>President</span>
+            <span class="vote-value" id="presidentVote">Not voted</span>
+          </li>
+          <li>
+            <span>Vice President</span>
+            <span class="vote-value" id="vicePresidentVote">Not voted</span>
+          </li>
+          <li>
+            <span>Secretary</span>
+            <span class="vote-value" id="secretaryVote">Not voted</span>
+          </li>
+          <li>
+            <span>Treasurer</span>
+            <span class="vote-value" id="treasurerVote">Not voted</span>
+          </li>
+          <li>
+            <span>Auditor</span>
+            <span class="vote-value" id="auditorVote">Not voted</span>
+          </li>
+        </ul>
+        <div class="vote-date" id="voteDate">
+          Last updated: Just now
+        </div>
+      </div>
 
-    <section>
-      <div class="chart">
-        🏆 <strong>Top Candidate:</strong> Liza Ramos (27 votes)<br>
-        ⚙️ <strong>Least Votes:</strong> Carl Mendoza (8 votes)
+      <!-- Live Results Card -->
+      <div class="card">
+        <h3>Live Results</h3>
+        <p class="small-muted">Current voting results across all positions</p>
+        <div id="resultsContainer">
+          <div class="loading">Loading results...</div>
+        </div>
       </div>
     </section>
   </main>
 
   <script>
-// WORKING VERSION - COMPLETELY BLOCKS ACCESS TO VOTE.HTML
+// SIMPLE VERSION - ALWAYS ALLOWS ACCESS TO VOTE.HTML
 let userHasVoted = localStorage.getItem('hasVoted') === 'true';
-let canUserVote = false;
 
 window.onload = function() {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -257,7 +509,7 @@ window.onload = function() {
         firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
 
         document.getElementById("welcomeLarge").textContent = `Welcome, ${firstName}`;
-        document.getElementById("welcomeSub").textContent = `Good to see you — ${firstName}.`;
+        document.getElementById("welcomeSub").textContent = `Ready to make your voice heard, ${firstName}`;
         
         loadEverything();
     } else {
@@ -269,35 +521,42 @@ function loadEverything() {
     loadElectionInfo();
     loadVoteSummary();
     checkVoteStatus();
+    loadLiveResults();
 }
-
-
 
 function loadElectionInfo() {
     fetch('/voting_system/backend/get_election_settings.php')
         .then(response => response.json())
         .then(data => {
-            console.log('📊 ELECTION SETTINGS RESPONSE:', data); // DEBUG
+            console.log('📊 ELECTION SETTINGS RESPONSE:', data);
             
             if (data.success && data.settings) {
                 const settings = data.settings;
                 
-                document.getElementById('electionTitle').textContent = settings.election_title;
+                document.getElementById('electionTitle').textContent = settings.election_title || 'General Election 2024';
                 
                 const startDate = new Date(settings.start_date);
                 const endDate = new Date(settings.end_date);
                 
-                const startDateStr = startDate.toLocaleDateString();
-                const endDateStr = endDate.toLocaleDateString();
+                const startDateStr = startDate.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                const endDateStr = endDate.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                });
                 document.getElementById('pollingPeriod').textContent = `${startDateStr} - ${endDateStr}`;
                 
-                // FIX: Use the is_voting_active flag from server directly
+                // Use the is_voting_active flag from server
                 const isVotingActive = settings.is_voting_active === true || settings.is_voting_active === 'true';
-                console.log('🎯 VOTING ACTIVE STATUS:', isVotingActive);
+                console.log('VOTING ACTIVE STATUS:', isVotingActive);
                 
                 updateVotingStatus(isVotingActive);
             } else {
-                console.error('❌ No election settings found');
+                console.error('No election settings found');
             }
         })
         .catch(error => {
@@ -305,32 +564,30 @@ function loadElectionInfo() {
         });
 }
 
-
-
 function checkVoteStatus() {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id) return;
 
+    // Always check with the server for the current user's vote status
     fetch(`/voting_system/backend/get_user_votes.php?user_id=${user.id}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 const hasVotesInDB = Object.keys(data.votes || {}).length > 0;
                 
-                // Sync with database
-                if (!hasVotesInDB && userHasVoted) {
-                    localStorage.removeItem('hasVoted');
-                    localStorage.removeItem('userVote');
-                    userHasVoted = false;
-                    loadVoteSummary();
-                    refreshVotingUI();
-                } else if (hasVotesInDB && !userHasVoted) {
+                // Update localStorage based on server response
+                if (hasVotesInDB) {
                     localStorage.setItem('hasVoted', 'true');
                     localStorage.setItem('userVote', JSON.stringify(data.votes));
                     userHasVoted = true;
-                    loadVoteSummary();
-                    refreshVotingUI();
+                } else {
+                    localStorage.removeItem('hasVoted');
+                    localStorage.removeItem('userVote');
+                    userHasVoted = false;
                 }
+                
+                loadVoteSummary();
+                refreshVotingUI();
             }
         })
         .catch(error => {
@@ -342,44 +599,38 @@ function updateVotingStatus(isVotingActive) {
     const voteButton = document.getElementById('voteButton');
     const votingStatus = document.getElementById('votingStatus');
     const voteStatusText = document.getElementById('voteStatusText');
+    const statusBadge = document.getElementById('statusBadge');
 
-    // Reset button
+    // ALWAYS allow going to vote.html - just update status and button text
     voteButton.classList.remove('disabled-link');
-    voteButton.onclick = null;
     voteButton.href = 'public/user/vote.html';
+    voteButton.style.background = 'var(--gradient-accent)';
+    voteButton.style.cursor = 'pointer';
+    voteButton.style.opacity = '1';
+    voteButton.onclick = null;
 
     if (userHasVoted) {
-        votingStatus.textContent = 'Already Voted';
-        votingStatus.style.color = '#36c97e';
-        voteButton.textContent = 'Already Voted';
-        voteButton.classList.add('disabled-link');
-        voteButton.href = '#';
-        voteButton.onclick = function(e) {
-            e.preventDefault();
-            alert('You have already voted in this election.');
-        };
-        voteStatusText.textContent = 'You have already cast your vote.';
+        votingStatus.textContent = 'Voted';
+        votingStatus.style.color = 'var(--success)';
+        document.getElementById('voteButtonText').textContent = 'View My Vote';
+        voteStatusText.textContent = 'Thank you for participating! Your vote has been recorded.';
+        statusBadge.className = 'status-badge success';
+        statusBadge.innerHTML = '<span>Vote Submitted</span>';
     } else {
         if (isVotingActive) {
-            votingStatus.textContent = 'Open for Voting';
-            votingStatus.style.color = '#36c97e';
-            voteButton.textContent = 'Start Voting';
-            voteButton.style.background = 'linear-gradient(90deg, #4e9eff 0%, #2a7bd6 100%)';
-            voteButton.style.cursor = 'pointer';
-            voteButton.onclick = null;
-            voteButton.href = 'public/user/vote.html';
-            voteStatusText.textContent = 'Cast your vote for the active election. Review candidates before confirming.';
+            votingStatus.textContent = 'Active';
+            votingStatus.style.color = 'var(--success)';
+            document.getElementById('voteButtonText').textContent = 'Cast Your Vote';
+            voteStatusText.textContent = 'The election is currently active. Cast your vote now to make your voice heard!';
+            statusBadge.className = 'status-badge success';
+            statusBadge.innerHTML = '<span>Voting Active</span>';
         } else {
-            votingStatus.textContent = 'Voting Closed';
-            votingStatus.style.color = '#ff6b6b';
-            voteButton.textContent = 'Voting Closed';
-            voteButton.classList.add('disabled-link');
-            voteButton.href = '#';
-            voteButton.onclick = function(e) {
-                e.preventDefault();
-                alert('Voting is currently closed. Please contact the administrator.');
-            };
-            voteStatusText.textContent = 'Voting is currently closed. Check back later.';
+            votingStatus.textContent = 'Closed';
+            votingStatus.style.color = 'var(--warning)';
+            document.getElementById('voteButtonText').textContent = 'View Candidates';
+            voteStatusText.textContent = 'Voting is currently closed. Check back during the next election period.';
+            statusBadge.className = 'status-badge warning';
+            statusBadge.innerHTML = '<span>Voting Closed</span>';
         }
     }
 }
@@ -389,10 +640,7 @@ function refreshVotingUI() {
         .then(response => response.json())
         .then(data => {
             if (data.success && data.settings) {
-                const startDate = new Date(data.settings.start_date);
-                const endDate = new Date(data.settings.end_date);
-                const now = new Date();
-                const isVotingActive = (now >= startDate && now <= endDate);
+                const isVotingActive = data.settings.is_voting_active === true || data.settings.is_voting_active === 'true';
                 updateVotingStatus(isVotingActive);
             }
         });
@@ -418,22 +666,130 @@ function displayVoteSummary(votes) {
         'Auditor': 'auditorVote'
     };
     
-    for (const [position, candidateName] of Object.entries(votes)) {
-        if (positions[position]) {
-            document.getElementById(positions[position]).textContent = candidateName;
-        }
+    // First, set all to "Not voted"
+    for (const position in positions) {
+        const element = document.getElementById(positions[position]);
+        element.textContent = 'Not voted';
+        element.classList.remove('voted');
     }
     
-    document.getElementById('voteDate').textContent = `Vote recorded: ${new Date().toLocaleDateString()}`;
+    // Fetch all candidates to get their names
+    fetch('/voting_system/backend/get_candidates.php')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.candidates) {
+            // Create a mapping of candidate ID to candidate name
+            const candidateMap = {};
+            data.candidates.forEach(candidate => {
+                candidateMap[candidate.id] = candidate.name;
+            });
+            
+            // Update the display with candidate names
+            for (const [position, candidateId] of Object.entries(votes)) {
+                if (positions[position] && candidateMap[candidateId]) {
+                    const element = document.getElementById(positions[position]);
+                    element.textContent = candidateMap[candidateId];
+                    element.classList.add('voted');
+                }
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching candidates:', error);
+        // Fallback: show IDs if names can't be fetched
+        for (const [position, candidateId] of Object.entries(votes)) {
+            if (positions[position]) {
+                const element = document.getElementById(positions[position]);
+                element.textContent = `Candidate ${candidateId}`;
+                element.classList.add('voted');
+            }
+        }
+    });
+    
+    const voteDate = document.getElementById('voteDate');
+    voteDate.textContent = `Vote recorded: ${new Date().toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    })}`;
+    voteDate.classList.add('voted');
 }
 
 function clearVoteSummary() {
-    document.getElementById('presidentVote').textContent = 'Not voted yet';
-    document.getElementById('vicePresidentVote').textContent = 'Not voted yet';
-    document.getElementById('secretaryVote').textContent = 'Not voted yet';
-    document.getElementById('treasurerVote').textContent = 'Not voted yet';
-    document.getElementById('auditorVote').textContent = 'Not voted yet';
-    document.getElementById('voteDate').textContent = 'Not voted yet';
+    const positions = ['presidentVote', 'vicePresidentVote', 'secretaryVote', 'treasurerVote', 'auditorVote'];
+    positions.forEach(position => {
+        const element = document.getElementById(position);
+        element.textContent = 'Not voted';
+        element.classList.remove('voted');
+    });
+    
+    const voteDate = document.getElementById('voteDate');
+    voteDate.textContent = 'Last updated: Just now';
+    voteDate.classList.remove('voted');
+}
+
+function loadLiveResults() {
+    fetch('/voting_system/backend/get_live_results.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.results) {
+                displayLiveResults(data.results);
+            } else {
+                document.getElementById('resultsContainer').innerHTML = 
+                    '<div class="small-muted">No results available yet</div>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading live results:', error);
+            document.getElementById('resultsContainer').innerHTML = 
+                '<div class="small-muted">Error loading results</div>';
+        });
+}
+
+function displayLiveResults(results) {
+    let html = '';
+    
+    // Group results by position
+    const positions = {};
+    results.forEach(result => {
+        if (!positions[result.position]) {
+            positions[result.position] = [];
+        }
+        positions[result.position].push(result);
+    });
+    
+    // Find max votes per position for percentage calculation
+    Object.keys(positions).forEach(position => {
+        const positionResults = positions[position];
+        const maxVotes = Math.max(...positionResults.map(r => r.vote_count));
+        
+        html += `<div class="position-title">${position}</div>`;
+        html += '<ul class="results-list">';
+        
+        positionResults.forEach(candidate => {
+            const isLeading = candidate.vote_count === maxVotes && maxVotes > 0;
+            const percentage = maxVotes > 0 ? (candidate.vote_count / maxVotes) * 100 : 0;
+            
+            html += `
+                <li>
+                    <div class="candidate-result">
+                        <span class="candidate-name">${candidate.name}</span>
+                        <span class="vote-count ${isLeading ? 'leading' : ''}">${candidate.vote_count} votes</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill ${isLeading ? 'leading' : ''}" style="width: ${percentage}%"></div>
+                    </div>
+                </li>
+            `;
+        });
+        
+        html += '</ul>';
+    });
+    
+    document.getElementById('resultsContainer').innerHTML = html;
 }
 
 function toggleMenu() {

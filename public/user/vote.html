@@ -16,6 +16,8 @@
       --shadow: rgba(0, 0, 0, 0.6);
       --muted: #9aa3ad;
       --success: #36c97e;
+      --voted-bg: rgba(54, 201, 126, 0.15);
+      --voted-border: #36c97e;
     }
 
     body {
@@ -82,6 +84,26 @@
     .dropdown a:hover { background: #2e3238; }
     .show { display: block; }
 
+    /* ===== GO BACK BUTTON ===== */
+    .go-back-container {
+      text-align: left;
+      padding: 16px 24px;
+    }
+    .go-back-btn {
+      background: none;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .go-back-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
     /* ===== VOTING STYLES ===== */
     .container {
       max-width: 1000px;
@@ -139,6 +161,7 @@
       padding: 20px;
       transition: all 0.3s ease;
       cursor: pointer;
+      position: relative;
     }
 
     .candidate-card:hover {
@@ -149,6 +172,30 @@
     .candidate-card.selected {
       border-color: var(--success);
       background: rgba(54, 201, 126, 0.1);
+    }
+
+    .candidate-card.voted {
+      border-color: var(--voted-border);
+      background: var(--voted-bg);
+      cursor: default;
+    }
+
+    .candidate-card.voted::after {
+      content: "✓ YOUR VOTE";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--voted-border);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+
+    .candidate-card.voted:hover {
+      transform: none;
+      border-color: var(--voted-border);
     }
 
     .candidate-name {
@@ -235,6 +282,18 @@
       margin: 20px 0;
       font-size: 14px;
     }
+
+    .voted-message {
+      text-align: center;
+      color: var(--success);
+      margin: 20px 0;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 15px;
+      background: rgba(54, 201, 126, 0.1);
+      border-radius: 8px;
+      border: 1px solid var(--voted-border);
+    }
   </style>
 </head>
 
@@ -256,6 +315,11 @@
     </div>
   </header>
 
+  <!-- ADDED GO BACK BUTTON -->
+  <div class="go-back-container">
+    <button class="go-back-btn" onclick="goBack()">← Go Back</button>
+  </div>
+
   <main class="container">
     <h1 class="page-title">Cast Your Vote</h1>
     <p class="page-subtitle">Select one candidate for each position. Your vote is final.</p>
@@ -264,12 +328,15 @@
       <div class="loading">Loading candidates...</div>
     </div>
 
+    <div id="votedMessage" class="voted-message" style="display: none;">
+      ✅ You have already voted. Below are your selections (view only).
+    </div>
+
     <div class="selection-info" id="selectionInfo">
       Please select one candidate for each position to proceed
     </div>
 
     <div class="action-buttons">
-      <a href="/voting_system/dashboard.html" class="back-btn">← Go Back</a>
       <button id="submitVote" class="vote-btn" disabled>
         Submit Your Vote
       </button>
@@ -279,9 +346,26 @@
   <script>
     let selectedCandidates = {};
     let allCandidates = [];
+    let hasVoted = false;
+    let userVotes = {};
+
+    // Go back function
+    function goBack() {
+      window.location.href = "/voting_system/dashboard.html";
+    }
 
     // Load candidates when page loads
     document.addEventListener('DOMContentLoaded', function() {
+      // Check if user has already voted
+      const votedStatus = localStorage.getItem('hasVoted');
+      const storedVotes = localStorage.getItem('userVote');
+      
+      if (votedStatus === 'true' && storedVotes) {
+        hasVoted = true;
+        userVotes = JSON.parse(storedVotes);
+        showVotedMessage();
+      }
+      
       loadCandidates();
       
       // Check if user is logged in
@@ -290,6 +374,13 @@
         window.location.href = "/voting_system/index.html";
       }
     });
+
+    // Show voted message and hide voting controls
+    function showVotedMessage() {
+      document.getElementById('votedMessage').style.display = 'block';
+      document.getElementById('selectionInfo').style.display = 'none';
+      document.getElementById('submitVote').style.display = 'none';
+    }
 
     // Load candidates from backend
     function loadCandidates() {
@@ -335,8 +426,12 @@
         `;
         
         candidates.forEach(candidate => {
+          const isVoted = hasVoted && userVotes[position] === candidate.name;
+          const isSelected = selectedCandidates[position] === candidate.id;
+          
           html += `
-            <div class="candidate-card" onclick="selectCandidate('${position}', ${candidate.id})">
+            <div class="candidate-card ${isVoted ? 'voted' : ''} ${isSelected ? 'selected' : ''}" 
+                 onclick="${!hasVoted ? `selectCandidate('${position}', ${candidate.id})` : ''}">
               <div class="candidate-name">${escapeHtml(candidate.name)}</div>
               <div class="candidate-position">${escapeHtml(candidate.position)}</div>
               ${candidate.bio ? `<div class="candidate-bio">${escapeHtml(candidate.bio)}</div>` : ''}
@@ -351,11 +446,16 @@
       }
 
       container.innerHTML = html;
-      updateSubmitButton();
+      
+      if (!hasVoted) {
+        updateSubmitButton();
+      }
     }
 
     // Select candidate for a position
     function selectCandidate(position, candidateId) {
+      if (hasVoted) return; // Don't allow selection if already voted
+      
       // Remove selected class from all candidates in this position
       const positionSection = document.querySelector(`.position-section:has(.candidate-card[onclick*="${position}"])`);
       const cards = positionSection.querySelectorAll('.candidate-card');
@@ -363,7 +463,9 @@
       
       // Add selected class to clicked candidate
       const selectedCard = document.querySelector(`.candidate-card[onclick*="${position}"][onclick*="${candidateId}"]`);
-      selectedCard.classList.add('selected');
+      if (selectedCard) {
+        selectedCard.classList.add('selected');
+      }
       
       // Store selection
       selectedCandidates[position] = candidateId;
@@ -390,8 +492,11 @@
       }
     }
 
+    
     // Submit vote
 document.getElementById('submitVote').addEventListener('click', function() {
+    if (hasVoted) return; // Prevent voting if already voted
+    
     // First check if voting is active
     fetch('/voting_system/backend/get_election_settings.php')
         .then(response => response.json())
@@ -410,7 +515,7 @@ document.getElementById('submitVote').addEventListener('click', function() {
                 // If voting is active, proceed with voting
                 if (confirm('Are you sure you want to submit your vote? This action cannot be undone.')) {
                     const user = JSON.parse(localStorage.getItem("user"));
-                    const userId = user.id || 1;
+                    const userId = user.id;
                     
                     console.log('Submitting vote for user:', userId, 'Votes:', selectedCandidates);
                     
@@ -429,17 +534,8 @@ document.getElementById('submitVote').addEventListener('click', function() {
                     .then(data => {
                         console.log('Server response:', data);
                         if (data.success) {
-                            // FIXED: Convert candidate IDs to names for localStorage
-                            const votesWithNames = {};
-                            for (const [position, candidateId] of Object.entries(selectedCandidates)) {
-                                const candidate = allCandidates.find(c => c.id == candidateId);
-                                if (candidate) {
-                                    votesWithNames[position] = candidate.name;
-                                }
-                            }
-                            
                             // Store vote in localStorage for immediate display
-                            localStorage.setItem('userVote', JSON.stringify(votesWithNames));
+                            localStorage.setItem('userVote', JSON.stringify(selectedCandidates));
                             localStorage.setItem('hasVoted', 'true');
                             
                             alert('Vote submitted successfully!');
@@ -461,7 +557,7 @@ document.getElementById('submitVote').addEventListener('click', function() {
         });
 });
 
-    // Helper functions (same as admin dashboard)
+    // Helper functions
     function escapeHtml(s) { 
       return (s+'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); 
     }
@@ -479,7 +575,7 @@ document.getElementById('submitVote').addEventListener('click', function() {
     function logout() {
       localStorage.removeItem("user");
       localStorage.removeItem("userVote");
-      localStorage.removeItem("hasVoted"); // ADDED THIS LINE
+      localStorage.removeItem("hasVoted");
       window.location.href = "/voting_system/index.html";
     }
   </script>

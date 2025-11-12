@@ -2,18 +2,26 @@
 header('Content-Type: application/json');
 require_once 'db.php';
 
-try {
-    $sql = "SELECT * FROM users";
-    $result = $conn->query($sql);
+$user_id = $_GET['user_id'];
 
-    $voters = [];
+try {
+    $sql = "SELECT v.position, c.name 
+            FROM votes v 
+            JOIN candidates c ON v.candidate_id = c.id 
+            WHERE v.user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $votes = [];
     while ($row = $result->fetch_assoc()) {
-        $voters[] = $row;
+        $votes[$row['position']] = $row['name'];
     }
 
     echo json_encode([
         'success' => true,
-        'voters' => $voters
+        'votes' => $votes
     ]);
 
 } catch (Exception $e) {

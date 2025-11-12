@@ -2,58 +2,69 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
-header('Content-Type: application/json');
 include 'db.php';
 
-// Get JSON input
 $data = json_decode(file_get_contents("php://input"), true);
 $email = $data['email'] ?? '';
 $password = $data['password'] ?? '';
 
-// --- 1️⃣ Hardcoded admin account ---
-if ($email === 'admin' && $password === 'admin123') {
-    echo json_encode([
-        "status" => "admin",
-        "redirect" => "admindashboard.html",
-        "user" => [
-            "username" => "Administrator"
-        ]
-    ]);
-    exit;
-}
-
-// --- 2️⃣ Otherwise, check voters table (regular users) ---
-$sql = "SELECT * FROM voters WHERE email = ?";
-$stmt = $conn->prepare($sql);
+// Check if voter exists and get their status
+$stmt = $conn->prepare("SELECT id, name, email, password, status FROM voters WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($row = $result->fetch_assoc()) {
-    // If password is hashed, use password_verify(); if plain text, use simple match
-    if (password_verify($password, $row['password']) || $password === $row['password']) {
-        echo json_encode([
-            "status" => "success",
-            "redirect" => "dashboard.html",
-            "user" => [
-                "id" => $row["id"],
-                "name" => $row["name"],
-                "email" => $row["email"],
-                "address" => $row["address"], // ✅ ADDED THIS
-                "phone" => $row["phone"]      // ✅ ADDED THIS
-            ]
-        ]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Invalid password."]);
+if ($result->num_rows === 0) {
+    echo json_encode(["status" => "error", "message" => "Invalid email or password"]);
+    exit;
+}
+
+$voter = $result->fetch_assoc();
+
+// Check if account is suspended - adjust based on your actual status values
+if ($voter['status'] === 'suspended' || $voter['status'] === 'Suspended' || $voter['status'] === '0') {
+    // Get suspension reason from suspension_logs table
+    $reason_stmt = $conn->prepare("SELECT reason FROM suspension_logs WHERE voter_id = ? ORDER BY suspended_at DESC LIMIT 1");
+    $reason_stmt->bind_param("i", $voter['id']);
+    $reason_stmt->execute();
+    $reason_result = $reason_stmt->get_result();
+
+    $suspension_reason = "Your account has been suspended by the administrator.";
+    if ($reason_result->num_rows > 0) {
+        $reason_data = $reason_result->fetch_assoc();
+        $suspension_reason = $reason_data['reason'];
     }
+
+    echo json_encode([
+        "status" => "suspended",
+        "message" => "Account suspended",
+        "reason" => $suspension_reason
+    ]);
+    exit;
+}
+
+// FIXED: Use plain text comparison instead of password_verify
+if ($password === $voter['password']) {
+    // Login successful
+    echo json_encode([
+        "status" => "success",
+        "message" => "Login successful",
+        "user" => [
+            "id" => $voter['id'],
+            "name" => $voter['name'],
+            "email" => $voter['email']
+        ],
+        "redirect" => "dashboard.html"
+    ]);
 } else {
-    echo json_encode(["status" => "error", "message" => "No account found."]);
+    echo json_encode(["status" => "error", "message" => "Invalid email or password"]);
 }
 
 $stmt->close();
