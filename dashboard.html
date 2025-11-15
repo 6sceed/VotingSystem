@@ -409,10 +409,10 @@
         <div></div><div></div><div></div>
       </button>
       <div class="dropdown" id="dropdownMenu">
-        <a href="public/user/profile.html">Profile</a>
-        <a href="public/user/contactus.html">Contact Us</a>
-        <a href="public/user/about.html">About</a>
-        <a href="public/user/privacypolicy.html">Privacy Policy</a>
+        <a href="./public/user/profile.html">Profile</a>
+        <a href="./public/user/contactus.html">Contact Us</a>
+        <a href="./public/user/about.html">About</a>
+        <a href="./public/user/privacypolicy.html">Privacy Policy</a>
         <a href="index.html" onclick="logout()">Logout</a>
       </div>
     </div>
@@ -448,12 +448,12 @@
             <span class="vote-value" id="votingStatus">Loading...</span>
           </li>
         </ul>
-        <a href="public/user/vote.html" class="vote-action" id="voteButton">
+        <a href="./public/user/vote.html" class="vote-action" id="voteButton">
           <span id="voteButtonText">Start Voting</span>
         </a>
       </div>
 
-      <!-- Vote Summary Card -->
+
       <div class="card">
         <h3>Your Vote Summary</h3>
         <p class="small-muted">Your voting decisions for the current election cycle</p>
@@ -484,7 +484,7 @@
         </div>
       </div>
 
-      <!-- Live Results Card -->
+    
       <div class="card">
         <h3>Live Results</h3>
         <p class="small-muted">Current voting results across all positions</p>
@@ -495,12 +495,12 @@
     </section>
   </main>
 
-  <script>
-// SIMPLE VERSION - ALWAYS ALLOWS ACCESS TO VOTE.HTML
+ <script>
 let userHasVoted = localStorage.getItem('hasVoted') === 'true';
 
 window.onload = function() {
     const user = JSON.parse(localStorage.getItem("user"));
+    
     if (user && user.name) {
         let firstName = user.name.trim().split(" ")[0];
         if (firstName.includes(",")) {
@@ -513,7 +513,7 @@ window.onload = function() {
         
         loadEverything();
     } else {
-        window.location.href = "index.html";
+        window.location.href = "./index.html";
     }
 };
 
@@ -525,11 +525,9 @@ function loadEverything() {
 }
 
 function loadElectionInfo() {
-    fetch('/voting_system/backend/get_election_settings.php')
+    fetch('./backend/get_election_settings.php')
         .then(response => response.json())
         .then(data => {
-            console.log('📊 ELECTION SETTINGS RESPONSE:', data);
-            
             if (data.success && data.settings) {
                 const settings = data.settings;
                 
@@ -550,13 +548,8 @@ function loadElectionInfo() {
                 });
                 document.getElementById('pollingPeriod').textContent = `${startDateStr} - ${endDateStr}`;
                 
-                // Use the is_voting_active flag from server
                 const isVotingActive = settings.is_voting_active === true || settings.is_voting_active === 'true';
-                console.log('VOTING ACTIVE STATUS:', isVotingActive);
-                
                 updateVotingStatus(isVotingActive);
-            } else {
-                console.error('No election settings found');
             }
         })
         .catch(error => {
@@ -568,14 +561,12 @@ function checkVoteStatus() {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id) return;
 
-    // Always check with the server for the current user's vote status
-    fetch(`/voting_system/backend/get_user_votes.php?user_id=${user.id}`)
+    fetch(`./backend/get_user_votes.php?user_id=${user.id}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 const hasVotesInDB = Object.keys(data.votes || {}).length > 0;
                 
-                // Update localStorage based on server response
                 if (hasVotesInDB) {
                     localStorage.setItem('hasVoted', 'true');
                     localStorage.setItem('userVote', JSON.stringify(data.votes));
@@ -601,9 +592,8 @@ function updateVotingStatus(isVotingActive) {
     const voteStatusText = document.getElementById('voteStatusText');
     const statusBadge = document.getElementById('statusBadge');
 
-    // ALWAYS allow going to vote.html - just update status and button text
     voteButton.classList.remove('disabled-link');
-    voteButton.href = 'public/user/vote.html';
+    voteButton.href = './public/user/vote.html';
     voteButton.style.background = 'var(--gradient-accent)';
     voteButton.style.cursor = 'pointer';
     voteButton.style.opacity = '1';
@@ -636,7 +626,7 @@ function updateVotingStatus(isVotingActive) {
 }
 
 function refreshVotingUI() {
-    fetch('/voting_system/backend/get_election_settings.php')
+    fetch('./backend/get_election_settings.php')
         .then(response => response.json())
         .then(data => {
             if (data.success && data.settings) {
@@ -666,45 +656,21 @@ function displayVoteSummary(votes) {
         'Auditor': 'auditorVote'
     };
     
-    // First, set all to "Not voted"
+    
     for (const position in positions) {
         const element = document.getElementById(positions[position]);
         element.textContent = 'Not voted';
         element.classList.remove('voted');
     }
     
-    // Fetch all candidates to get their names
-    fetch('/voting_system/backend/get_candidates.php')
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.candidates) {
-            // Create a mapping of candidate ID to candidate name
-            const candidateMap = {};
-            data.candidates.forEach(candidate => {
-                candidateMap[candidate.id] = candidate.name;
-            });
-            
-            // Update the display with candidate names
-            for (const [position, candidateId] of Object.entries(votes)) {
-                if (positions[position] && candidateMap[candidateId]) {
-                    const element = document.getElementById(positions[position]);
-                    element.textContent = candidateMap[candidateId];
-                    element.classList.add('voted');
-                }
-            }
+    
+    for (const [position, candidateName] of Object.entries(votes)) {
+        if (positions[position]) {
+            const element = document.getElementById(positions[position]);
+            element.textContent = candidateName;
+            element.classList.add('voted');
         }
-    })
-    .catch(error => {
-        console.error('Error fetching candidates:', error);
-        // Fallback: show IDs if names can't be fetched
-        for (const [position, candidateId] of Object.entries(votes)) {
-            if (positions[position]) {
-                const element = document.getElementById(positions[position]);
-                element.textContent = `Candidate ${candidateId}`;
-                element.classList.add('voted');
-            }
-        }
-    });
+    }
     
     const voteDate = document.getElementById('voteDate');
     voteDate.textContent = `Vote recorded: ${new Date().toLocaleDateString('en-US', { 
@@ -732,7 +698,7 @@ function clearVoteSummary() {
 }
 
 function loadLiveResults() {
-    fetch('/voting_system/backend/get_live_results.php')
+    fetch('./backend/get_live_results.php')
         .then(response => response.json())
         .then(data => {
             if (data.success && data.results) {
@@ -752,7 +718,7 @@ function loadLiveResults() {
 function displayLiveResults(results) {
     let html = '';
     
-    // Group results by position
+
     const positions = {};
     results.forEach(result => {
         if (!positions[result.position]) {
@@ -761,7 +727,7 @@ function displayLiveResults(results) {
         positions[result.position].push(result);
     });
     
-    // Find max votes per position for percentage calculation
+  
     Object.keys(positions).forEach(position => {
         const positionResults = positions[position];
         const maxVotes = Math.max(...positionResults.map(r => r.vote_count));
@@ -806,11 +772,11 @@ function logout() {
     localStorage.removeItem("user");
     localStorage.removeItem("userVote");
     localStorage.removeItem("hasVoted");
-    window.location.href = "index.html";
+    window.location.href = "./index.html";
 }
 
-// Auto-refresh every 3 seconds
 setInterval(loadEverything, 3000);
 </script>
+
 </body>
 </html>
