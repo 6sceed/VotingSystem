@@ -7,13 +7,13 @@ $id = $data['id'];
 $reason = $data['reason'];
 
 try {
-    // Update voter status to suspended
+
     $sql = "UPDATE voters SET status = 'suspended' WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        // Log the suspension reason
+
         $log_sql = "INSERT INTO suspension_logs (voter_id, reason, suspended_by) VALUES (?, ?, 1)";
         $log_stmt = $conn->prepare($log_sql);
         $log_stmt->bind_param("is", $id, $reason);

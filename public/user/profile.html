@@ -18,7 +18,7 @@ body {
   color: var(--header-text);
   margin: 0;
 }
-/* ===== HEADER ===== */
+
 header {
   background: var(--header-bg);
   color: var(--header-text);
@@ -115,7 +115,7 @@ header {
   background: var(--accent);
   color: #fff;
 }
-/* ===== PROFILE FORM ===== */
+
 .profile-container {
   max-width: 500px;
   margin: 20px auto;
@@ -143,7 +143,7 @@ header {
   color: var(--header-text);
   box-sizing: border-box;
 }
-/* Style for static (disabled) fields */
+
 .profile-container input:disabled {
   background: #1a1c20;
   border: 1px solid #333;
@@ -183,7 +183,7 @@ header {
 .profile-container button:hover {
   opacity: 0.8;
 }
-/* ===== CUSTOM MODAL ===== */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -245,7 +245,7 @@ header {
   color: #fff;
   width: 100%;
 }
-/* Success and Error specific styles */
+
 .modal-success .modal-title {
   color: #4CAF50;
 }
@@ -334,11 +334,11 @@ function logout() {
 }
 function goBack() {  window.location.href = "http://localhost/voting_system/dashboard.html";}
 
-// ===== Eye hold logic =====
+
 function holdEye(id) { const input = document.getElementById(id); input.type = "text"; }
 function releaseEye(id) { const input = document.getElementById(id); input.type = "password"; }
 
-// ===== MODAL LOGIC =====
+
 let modalCallback = null;
 
 function showModal(callback, title = "Confirmation", message = "Are you sure you want to save changes?", type = "confirm") {
@@ -348,11 +348,11 @@ function showModal(callback, title = "Confirmation", message = "Are you sure you
   const modalMessage = document.getElementById("modalMessage");
   const modalButtons = document.getElementById("modalButtons");
   
-  // Set title and message
+  
   modalTitle.textContent = title;
   modalMessage.textContent = message;
   
-  // Set modal type (confirm, success, error)
+
   modalBox.className = "modal-box";
   if (type === "success") {
     modalBox.classList.add("modal-success");
@@ -360,7 +360,7 @@ function showModal(callback, title = "Confirmation", message = "Are you sure you
     modalBox.classList.add("modal-error");
   }
   
-  // Set buttons based on type
+  
   if (type === "confirm") {
     modalButtons.innerHTML = `
       <button class="modal-confirm" onclick="confirmModal()">Yes</button>
@@ -392,7 +392,7 @@ function confirmModal() {
   if (modalCallback) modalCallback();
 }
 
-// Function to parse name from "Lastname, Firstname M.I." format
+
 function parseName(fullName) {
   if (!fullName) return { lastname: '', firstname: '', mi: '' };
   
@@ -412,7 +412,7 @@ function parseName(fullName) {
   }
 }
 
-// Function to format name for database
+
 function formatName(lastname, firstname, mi) {
   if (mi) {
     return `${lastname}, ${firstname} ${mi}`;
@@ -421,10 +421,9 @@ function formatName(lastname, firstname, mi) {
   }
 }
 
-// ===== PROFILE LOGIC =====
-document.addEventListener("DOMContentLoaded", ()=>{
+
+document.addEventListener("DOMContentLoaded", async ()=>{
   const user = JSON.parse(localStorage.getItem("user")||"{}");
-  console.log("User data from localStorage:", user);
   
   if(!user.id){
     showError("User not logged in.");
@@ -434,19 +433,62 @@ document.addEventListener("DOMContentLoaded", ()=>{
     return;
   }
   
-  // Parse and prefill name fields
-  const { lastname, firstname, mi } = parseName(user.name || "");
-  document.getElementById("lastname").value = lastname;
-  document.getElementById("firstname").value = firstname;
-  document.getElementById("mi").value = mi;
   
-  // Prefill other inputs
-  document.getElementById("email").value = user.email || "";
-  document.getElementById("address").value = user.address || "";
-  document.getElementById("phone").value = user.phone || "";
-  
-  console.log("Address:", user.address);
-  console.log("Phone:", user.phone);
+  try {
+    const response = await fetch('../../backend/get_user.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: user.id })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const text = await response.text();
+    let userData;
+    try {
+      userData = JSON.parse(text);
+    } catch (parseError) {
+      throw new Error("Invalid JSON response from server");
+    }
+    
+    if (userData && userData.status === "success" && userData.user) {
+      
+      localStorage.setItem("user", JSON.stringify(userData.user));
+      
+      
+      const { lastname, firstname, mi } = parseName(userData.user.name || "");
+      document.getElementById("lastname").value = lastname;
+      document.getElementById("firstname").value = firstname;
+      document.getElementById("mi").value = mi;
+      
+      
+      document.getElementById("email").value = userData.user.email || "";
+      
+      
+      const addressValue = userData.user.address;
+      const phoneValue = userData.user.phone;
+      
+      document.getElementById("address").value = addressValue && addressValue !== "" ? addressValue : "No address in database";
+      document.getElementById("phone").value = phoneValue && phoneValue !== "" ? phoneValue : "No phone in database";
+      
+    } else {
+      throw new Error(userData?.message || "Failed to fetch user data");
+    }
+    
+  } catch (error) {
+    
+    const { lastname, firstname, mi } = parseName(user.name || "");
+    document.getElementById("lastname").value = lastname;
+    document.getElementById("firstname").value = firstname;
+    document.getElementById("mi").value = mi;
+    document.getElementById("email").value = user.email || "";
+    document.getElementById("address").value = user.address && user.address !== "" ? user.address : "No address available";
+    document.getElementById("phone").value = user.phone && user.phone !== "" ? user.phone : "No phone available";
+  }
 
   const form = document.getElementById("profileForm");
   form.addEventListener("submit",(e)=>{
@@ -460,7 +502,7 @@ async function updateProfile(user){
   const firstname = document.getElementById("firstname").value.trim();
   const mi = document.getElementById("mi").value.trim();
   
-  // Format name for database
+ 
   const name = formatName(lastname, firstname, mi);
   
   const payload = {
@@ -474,8 +516,6 @@ async function updateProfile(user){
     confirm_password: document.getElementById("confirm_password").value
   };
   
-  console.log("Sending payload:", payload);
-  
   try {
     const res = await fetch("../../backend/profile.php", {
       method: "POST",
@@ -488,18 +528,13 @@ async function updateProfile(user){
     }
     
     const text = await res.text();
-    console.log("Raw response:", text);
-    
     let data;
     try {
       data = JSON.parse(text);
     } catch (parseError) {
-      console.error("JSON parse error:", parseError);
       showError("Server returned invalid response. Please try again.");
       return;
     }
-    
-    console.log("Parsed response:", data);
 
     if(data.status === "error") {
       showError(data.message);
@@ -508,34 +543,27 @@ async function updateProfile(user){
 
     if(data.status === "success") {
       showSuccess(data.message);
-      // Update local storage with new user data
+      
       if(data.user) {
-        user.name = data.user.name;
-        user.email = data.user.email;
-        user.address = data.user.address;
-        user.phone = data.user.phone;
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(data.user));
         
-        // Update form fields with new data
-        const { lastname, firstname, mi } = parseName(user.name || "");
+        
+        const { lastname, firstname, mi } = parseName(data.user.name || "");
         document.getElementById("lastname").value = lastname;
         document.getElementById("firstname").value = firstname;
         document.getElementById("mi").value = mi;
-        document.getElementById("email").value = user.email;
-        document.getElementById("address").value = user.address;
-        document.getElementById("phone").value = user.phone;
+        document.getElementById("email").value = data.user.email;
+        document.getElementById("address").value = data.user.address && data.user.address !== "" ? data.user.address : "No address in database";
+        document.getElementById("phone").value = data.user.phone && data.user.phone !== "" ? data.user.phone : "No phone in database";
         
-        // Clear password fields
+  
         document.getElementById("password").value = "";
         document.getElementById("confirm_password").value = "";
         document.getElementById("current_password").value = "";
-        
-        console.log("Updated user data:", user);
       }
     }
   } catch (err) {
     showError("Error updating profile: " + err.message);
-    console.error("Full error:", err);
   }
 }
 </script>

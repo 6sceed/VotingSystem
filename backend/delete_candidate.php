@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Get JSON input
+
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!isset($input['id']) || empty($input['id'])) {
@@ -18,7 +18,7 @@ if (!isset($input['id']) || empty($input['id'])) {
 $candidateId = intval($input['id']);
 
 try {
-    // Delete candidate from database
+    // delete candidate from database
     $stmt = $conn->prepare("DELETE FROM candidates WHERE id = ?");
     $stmt->bind_param("i", $candidateId);
 

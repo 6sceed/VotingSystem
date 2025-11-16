@@ -7,10 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
-// Validate required fields
 if (!isset($input['name']) || !isset($input['position'])) {
     echo json_encode(['success' => false, 'message' => 'Name and position are required']);
     exit;
@@ -21,7 +19,6 @@ $position = trim($input['position']);
 $bio = isset($input['bio']) ? trim($input['bio']) : '';
 $photo = isset($input['photo']) ? trim($input['photo']) : 'default_photo.jpg';
 
-// Insert candidate using MySQLi
 $stmt = $conn->prepare("INSERT INTO candidates (name, position, bio, photo) VALUES (?, ?, ?, ?)");
 $stmt->bind_param("ssss", $name, $position, $bio, $photo);
 

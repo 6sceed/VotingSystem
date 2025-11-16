@@ -2,7 +2,6 @@
 header('Content-Type: application/json');
 require_once 'db.php';
 
-// Debug: Check if database connection works
 if ($conn->connect_error) {
     echo json_encode([
         'success' => false,
@@ -13,7 +12,7 @@ if ($conn->connect_error) {
 }
 
 try {
-    // First, let's check if the table exists
+    //  check if the table exists
     $tableCheck = $conn->query("SHOW TABLES LIKE 'candidates'");
     if ($tableCheck->num_rows == 0) {
         echo json_encode([
@@ -24,7 +23,7 @@ try {
         exit;
     }
 
-    // Fetch all candidates
+    // fetch all candidates
     $sql = "SELECT id, name, position, photo, bio, created_at, is_active FROM candidates ORDER BY position, name";
     $result = $conn->query($sql);
 

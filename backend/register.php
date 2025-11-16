@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 header('Content-Type: application/json');
 include 'db.php';
 
-// Get JSON input
+
 $data = json_decode(file_get_contents("php://input"), true);
 
 $name = trim($data['name'] ?? '');
@@ -26,13 +26,13 @@ if (!$name || !$email || !$password || !$address || !$phone || !$age) {
     exit;
 }
 
-// Age check (backend validation)
+
 if ($age < 18) {
     echo json_encode(["status" => "error", "message" => "You must be at least 18 years old to register."]);
     exit;
 }
 
-// Check if email already exists
+
 $check = $conn->prepare("SELECT id FROM voters WHERE email = ?");
 $check->bind_param("s", $email);
 $check->execute();
@@ -46,10 +46,10 @@ if ($check->num_rows > 0) {
 }
 $check->close();
 
-// ⚠️ Store password as plain text (for testing only)
+
 $plainPassword = $password;
 
-// Insert new voter
+
 $stmt = $conn->prepare("INSERT INTO voters (name, email, password, address, phone, age) VALUES (?, ?, ?, ?, ?, ?)");
 $stmt->bind_param("sssssi", $name, $email, $plainPassword, $address, $phone, $age);
 

@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = ""; // default XAMPP MySQL password (empty)
+$password = "";
 $dbname = "voting_system";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

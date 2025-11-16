@@ -7,7 +7,7 @@ $user_id = $data['user_id'];
 $votes = $data['votes'];
 
 try {
-    // Check if user has already voted for any position
+
     $check_sql = "SELECT position FROM votes WHERE user_id = ?";
     $check_stmt = $conn->prepare($check_sql);
     $check_stmt->bind_param("i", $user_id);
@@ -19,7 +19,7 @@ try {
         exit;
     }
 
-    // Insert new votes
+
     $insert_sql = "INSERT INTO votes (user_id, candidate_id, position) VALUES (?, ?, ?)";
     $insert_stmt = $conn->prepare($insert_sql);
 

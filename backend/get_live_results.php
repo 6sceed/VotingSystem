@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 require_once 'db.php';
 
 try {
-    // Get vote counts for all candidates grouped by position
+
     $sql = "
         SELECT 
             c.id,

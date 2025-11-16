@@ -19,7 +19,7 @@ if (!$id) {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT id, name, email, address, phone FROM voters WHERE id = ?");
+$stmt = $conn->prepare("SELECT id, name, email, address, phone, age, created_at, status FROM voters WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -30,6 +30,10 @@ if ($result->num_rows === 0) {
 }
 
 $user = $result->fetch_assoc();
+
+
+$user['address'] = $user['address'] ?? '';
+$user['phone'] = $user['phone'] ?? '';
 
 echo json_encode([
     "status" => "success",

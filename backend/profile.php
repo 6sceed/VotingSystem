@@ -33,12 +33,15 @@ try {
     $password = $data['password'] ?? '';
     $confirm_password = $data['confirm_password'] ?? '';
 
-    // Validate required fields
-    if (!$id || !$name || !$email || !$address || !$phone || !$current_password) {
-        throw new Exception("All fields including current password are required.");
+
+    error_log("Profile Update Data - ID: $id, Name: $name, Email: $email, Address: $address, Phone: $phone, Has Current Password: " . (!empty($current_password) ? 'Yes' : 'No'));
+
+    // validate required fields
+    if (!$id || !$name || !$email || empty($current_password)) {
+        throw new Exception("ID, name, email, and current password are required.");
     }
 
-    // First, verify the current password
+
     $checkStmt = $conn->prepare("SELECT password FROM voters WHERE id = ?");
     if (!$checkStmt) {
         throw new Exception("Database prepare failed: " . $conn->error);
@@ -54,13 +57,16 @@ try {
         throw new Exception("User not found.");
     }
 
-    // Verify current password - NO HASHING, direct comparison
+
+    error_log("Password Check - Input: '$current_password', Stored: '$stored_password'");
+
+    // verify current password 
     if ($current_password !== $stored_password) {
         throw new Exception("Incorrect current password");
     }
     $checkStmt->close();
 
-    // Check if email is used by another user
+    // check if email is used by another user
     $emailStmt = $conn->prepare("SELECT id FROM voters WHERE email = ? AND id != ?");
     if (!$emailStmt) {
         throw new Exception("Database prepare failed: " . $conn->error);
@@ -75,24 +81,28 @@ try {
     }
     $emailStmt->close();
 
-    // Password change check
+    // password change check
     $updatePassword = false;
+    $new_password = '';
+
     if (!empty($password) || !empty($confirm_password)) {
+        if (empty($password) || empty($confirm_password)) {
+            throw new Exception("Both new password and confirm password are required to change password.");
+        }
         if ($password !== $confirm_password) {
-            throw new Exception("Passwords do not match.");
+            throw new Exception("New passwords do not match.");
         }
-        if (!empty($password)) {
-            $updatePassword = true;
-        }
+        $updatePassword = true;
+        $new_password = $password;
     }
 
-    // Build UPDATE query - NO PASSWORD HASHING
+
     if ($updatePassword) {
         $stmt = $conn->prepare("UPDATE voters SET name = ?, email = ?, address = ?, phone = ?, password = ? WHERE id = ?");
         if (!$stmt) {
             throw new Exception("Database prepare failed: " . $conn->error);
         }
-        $stmt->bind_param("sssssi", $name, $email, $address, $phone, $password, $id);
+        $stmt->bind_param("sssssi", $name, $email, $address, $phone, $new_password, $id);
     } else {
         $stmt = $conn->prepare("UPDATE voters SET name = ?, email = ?, address = ?, phone = ? WHERE id = ?");
         if (!$stmt) {
@@ -101,9 +111,9 @@ try {
         $stmt->bind_param("ssssi", $name, $email, $address, $phone, $id);
     }
 
-    // Execute update
+    // execute update
     if ($stmt->execute()) {
-        // Fetch updated user data
+
         $userStmt = $conn->prepare("SELECT id, name, email, address, phone FROM voters WHERE id = ?");
         if (!$userStmt) {
             throw new Exception("Database prepare failed: " . $conn->error);
@@ -128,7 +138,7 @@ try {
     $conn->close();
 
 } catch (Exception $e) {
-    // Clear any previous output
+
     ob_clean();
     echo json_encode([
         "status" => "error",
@@ -136,6 +146,6 @@ try {
     ]);
 }
 
-// Flush the output buffer
+
 ob_end_flush();
 ?>

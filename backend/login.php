@@ -15,7 +15,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 $email = $data['email'] ?? '';
 $password = $data['password'] ?? '';
 
-// Check if voter exists and get their status
+// check if voter exists and get their status
 $stmt = $conn->prepare("SELECT id, name, email, password, status FROM voters WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -28,9 +28,9 @@ if ($result->num_rows === 0) {
 
 $voter = $result->fetch_assoc();
 
-// Check if account is suspended - adjust based on your actual status values
+// check if account is suspended 
 if ($voter['status'] === 'suspended' || $voter['status'] === 'Suspended' || $voter['status'] === '0') {
-    // Get suspension reason from suspension_logs table
+
     $reason_stmt = $conn->prepare("SELECT reason FROM suspension_logs WHERE voter_id = ? ORDER BY suspended_at DESC LIMIT 1");
     $reason_stmt->bind_param("i", $voter['id']);
     $reason_stmt->execute();
@@ -50,9 +50,9 @@ if ($voter['status'] === 'suspended' || $voter['status'] === 'Suspended' || $vot
     exit;
 }
 
-// FIXED: Use plain text comparison instead of password_verify
+
 if ($password === $voter['password']) {
-    // Login successful
+
     echo json_encode([
         "status" => "success",
         "message" => "Login successful",

@@ -20,7 +20,7 @@
       margin: 0;
     }
 
-    /* ===== HEADER ===== */
+    
     header {
       background: var(--header-bg);
       color: var(--header-text);
@@ -131,19 +131,19 @@
   </header>
 
   <script>
-    // Handles dropdown toggle
+   
     function toggleMenu() {
       document.getElementById("dropdownMenu").classList.toggle("show");
     }
 
-    // Closes dropdown when clicking outside
+    
     window.onclick = function(e) {
       if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) {
         document.getElementById("dropdownMenu").classList.remove("show");
       }
     };
 
-    // Logout function
+    
     function logout() {
       localStorage.removeItem("user");
       window.location.href = "index.html";

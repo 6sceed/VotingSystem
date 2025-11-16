@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 require_once 'db.php';
 
 try {
-    // More precise query to check voting status
+
     $sql = "SELECT 
                 v.id, 
                 v.name, 

@@ -27,7 +27,7 @@
       margin: 0;
     }
 
-    /* ===== HEADER (unchanged from your dashboard) ===== */
+  
     header {
       background: var(--header-bg);
       color: var(--header-text);
@@ -84,7 +84,7 @@
     .dropdown a:hover { background: #2e3238; }
     .show { display: block; }
 
-    /* ===== GO BACK BUTTON ===== */
+   
     .go-back-container {
       text-align: left;
       padding: 16px 24px;
@@ -104,7 +104,7 @@
       color: #fff;
     }
 
-    /* ===== VOTING STYLES ===== */
+  
     .container {
       max-width: 1000px;
       margin: 30px auto;
@@ -315,7 +315,7 @@
     </div>
   </header>
 
-  <!-- ADDED GO BACK BUTTON -->
+
   <div class="go-back-container">
     <button class="go-back-btn" onclick="goBack()">← Go Back</button>
   </div>
@@ -349,14 +349,12 @@
     let hasVoted = false;
     let userVotes = {};
 
-    // Go back function
     function goBack() {
       window.location.href = "/voting_system/dashboard.html";
     }
 
-    // Load candidates when page loads
     document.addEventListener('DOMContentLoaded', function() {
-      // Check if user has already voted
+    
       const votedStatus = localStorage.getItem('hasVoted');
       const storedVotes = localStorage.getItem('userVote');
       
@@ -368,26 +366,24 @@
       
       loadCandidates();
       
-      // Check if user is logged in
+      
       const user = JSON.parse(localStorage.getItem("user"));
       if (!user) {
         window.location.href = "/voting_system/index.html";
       }
     });
 
-    // Show voted message and hide voting controls
     function showVotedMessage() {
       document.getElementById('votedMessage').style.display = 'block';
       document.getElementById('selectionInfo').style.display = 'none';
       document.getElementById('submitVote').style.display = 'none';
     }
 
-    // Load candidates from backend
     function loadCandidates() {
       fetch('/voting_system/backend/get_candidates.php')
         .then(response => response.json())
         .then(data => {
-          console.log('Candidates data:', data); // Debug log
+          console.log('Candidates data:', data); 
           if (data.success && data.candidates) {
             allCandidates = data.candidates;
             displayCandidatesByPosition();
@@ -403,20 +399,18 @@
         });
     }
 
-    // Display candidates grouped by position
+    
     function displayCandidatesByPosition() {
       const container = document.getElementById('positionsContainer');
       
-      // Group candidates by position
+    
       const positions = {};
       allCandidates.forEach(candidate => {
         if (!positions[candidate.position]) {
           positions[candidate.position] = [];
         }
         positions[candidate.position].push(candidate);
-      });
-
-      // Create position sections
+      })
       let html = '';
       for (const [position, candidates] of Object.entries(positions)) {
         html += `
@@ -452,27 +446,26 @@
       }
     }
 
-    // Select candidate for a position
+    
     function selectCandidate(position, candidateId) {
-      if (hasVoted) return; // Don't allow selection if already voted
+      if (hasVoted) return; 
       
-      // Remove selected class from all candidates in this position
       const positionSection = document.querySelector(`.position-section:has(.candidate-card[onclick*="${position}"])`);
       const cards = positionSection.querySelectorAll('.candidate-card');
       cards.forEach(card => card.classList.remove('selected'));
       
-      // Add selected class to clicked candidate
+      
       const selectedCard = document.querySelector(`.candidate-card[onclick*="${position}"][onclick*="${candidateId}"]`);
       if (selectedCard) {
         selectedCard.classList.add('selected');
       }
       
-      // Store selection
+      
       selectedCandidates[position] = candidateId;
       updateSubmitButton();
     }
 
-    // Update submit button state
+  
     function updateSubmitButton() {
       const positions = [...new Set(allCandidates.map(c => c.position))];
       const allPositionsSelected = positions.every(position => selectedCandidates[position]);
@@ -493,11 +486,10 @@
     }
 
     
-    // Submit vote
-document.getElementById('submitVote').addEventListener('click', function() {
-    if (hasVoted) return; // Prevent voting if already voted
     
-    // First check if voting is active
+document.getElementById('submitVote').addEventListener('click', function() {
+    if (hasVoted) return; 
+    
     fetch('/voting_system/backend/get_election_settings.php')
         .then(response => response.json())
         .then(data => {
@@ -512,14 +504,14 @@ document.getElementById('submitVote').addEventListener('click', function() {
                     return;
                 }
                 
-                // If voting is active, proceed with voting
+                
                 if (confirm('Are you sure you want to submit your vote? This action cannot be undone.')) {
                     const user = JSON.parse(localStorage.getItem("user"));
                     const userId = user.id;
                     
                     console.log('Submitting vote for user:', userId, 'Votes:', selectedCandidates);
                     
-                    // Send vote to backend
+                    
                     fetch('/voting_system/backend/cast_vote.php', {
                         method: 'POST',
                         headers: {
@@ -534,7 +526,7 @@ document.getElementById('submitVote').addEventListener('click', function() {
                     .then(data => {
                         console.log('Server response:', data);
                         if (data.success) {
-                            // Store vote in localStorage for immediate display
+                            
                             localStorage.setItem('userVote', JSON.stringify(selectedCandidates));
                             localStorage.setItem('hasVoted', 'true');
                             
@@ -557,7 +549,7 @@ document.getElementById('submitVote').addEventListener('click', function() {
         });
 });
 
-    // Helper functions
+    
     function escapeHtml(s) { 
       return (s+'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); 
     }

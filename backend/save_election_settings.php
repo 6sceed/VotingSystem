@@ -15,17 +15,17 @@ if (!isset($input['election_title']) || !isset($input['start_date']) || !isset($
 }
 
 try {
-    // Check if settings already exist
+
     $checkSql = "SELECT id FROM election_settings ORDER BY id DESC LIMIT 1";
     $checkResult = $conn->query($checkSql);
 
     if ($checkResult->num_rows > 0) {
-        // Update existing settings
+
         $row = $checkResult->fetch_assoc();
         $stmt = $conn->prepare("UPDATE election_settings SET election_title=?, election_description=?, start_date=?, end_date=?, is_active=? WHERE id=?");
         $stmt->bind_param("ssssii", $input['election_title'], $input['election_description'], $input['start_date'], $input['end_date'], $input['is_active'], $row['id']);
     } else {
-        // Insert new settings
+
         $stmt = $conn->prepare("INSERT INTO election_settings (election_title, election_description, start_date, end_date, is_active) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssi", $input['election_title'], $input['election_description'], $input['start_date'], $input['end_date'], $input['is_active']);
     }
