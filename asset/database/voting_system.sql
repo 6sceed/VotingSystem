@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2025 at 03:29 PM
+-- Generation Time: Nov 16, 2025 at 02:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,8 +42,10 @@ CREATE TABLE `candidates` (
 --
 
 INSERT INTO `candidates` (`id`, `name`, `position`, `photo`, `bio`, `created_at`, `is_active`) VALUES
-(26, 'p1', 'Vice President', 'default_photo.jpg', '', '2025-11-10 21:31:19', 1),
-(27, 'p1', 'President', 'default_photo.jpg', '', '2025-11-10 21:31:24', 1);
+(30, 'Kiko Barzaga', 'President', 'default_photo.jpg', '', '2025-11-12 15:38:52', 1),
+(31, 'Thirdy Barzaga', 'President', 'default_photo.jpg', '', '2025-11-12 15:39:02', 1),
+(32, 'aljur abrenica', 'Vice President', 'default_photo.jpg', '', '2025-11-12 15:39:26', 1),
+(33, 'Sarah Discaya', 'Vice President', 'default_photo.jpg', '', '2025-11-12 15:39:51', 1);
 
 -- --------------------------------------------------------
 
@@ -66,7 +68,28 @@ CREATE TABLE `election_settings` (
 --
 
 INSERT INTO `election_settings` (`id`, `election_title`, `election_description`, `start_date`, `end_date`, `is_active`, `created_at`) VALUES
-(1, 'Election 2025', 'election', '2025-11-14', '2025-11-27', 1, '2025-11-10 20:30:44');
+(1, 'Test Election 2025', 'election', '2025-11-16', '2025-11-29', 1, '2025-11-10 20:30:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `suspension_logs`
+--
+
+CREATE TABLE `suspension_logs` (
+  `id` int(11) NOT NULL,
+  `voter_id` int(11) DEFAULT NULL,
+  `reason` text DEFAULT NULL,
+  `suspended_by` int(11) DEFAULT NULL,
+  `suspended_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `suspension_logs`
+--
+
+INSERT INTO `suspension_logs` (`id`, `voter_id`, `reason`, `suspended_by`, `suspended_at`) VALUES
+(5, 14, 'test', 1, '2025-11-16 13:03:16');
 
 -- --------------------------------------------------------
 
@@ -82,19 +105,19 @@ CREATE TABLE `voters` (
   `address` varchar(255) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` enum('active','suspended') DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `voters`
 --
 
-INSERT INTO `voters` (`id`, `name`, `email`, `password`, `address`, `phone`, `age`, `created_at`) VALUES
-(2, 'GARCIA, CED E', 'ced11@gmail.com', '$2y$10$0WrQV4.KiAZhnwjdv2aWbOdGHLlfQH7s1kKGfSMb7s9rU5K46K.Xy', 'Blk e3 45', '3232', 21, '2025-11-05 12:21:43'),
-(3, 'John, Regal C', 'xxjohn1342@gmail.com', '$2y$10$TowZ3XUqhRudzv4LTMRn6.sarG5OBIZ6Mx2m2Iue7Ejq4oo3Xtu3u', 'Blk e3 45', '0931231', 19, '2025-11-05 12:35:59'),
-(4, 'ga, ced I', 'test@gmail.com', '123', 'Blk 32 adad', '01923131', 19, '2025-11-07 12:56:17'),
-(5, 'Hello, world q', 'hello@gmail.com', '123', 'BLK e3 awd', '09123123', 20, '2025-11-07 13:31:36'),
-(6, 'PinkMan, Jesse C', 'pink@gmail.com', '123', 'ACBC', '12345', 23, '2025-11-08 17:51:08');
+INSERT INTO `voters` (`id`, `name`, `email`, `password`, `address`, `phone`, `age`, `created_at`, `status`) VALUES
+(8, 'Margolis, jane a', 'margolis@gmail.com', '123', 'blk 32', '091231', 23, '2025-11-12 16:12:47', 'active'),
+(13, 'Doe, John T', 'john@gmail.com', '123', 'BLOCK 92 adjg', '091231', 19, '2025-11-16 12:59:38', 'active'),
+(14, 'Test, test T', 'test@gmail.com', '123', 'BLOCK 32', '0911231', 23, '2025-11-16 13:00:33', 'active'),
+(15, 'Garcia, Ced E', 'ced1@gmail.com', '123', 'BLOCK 112', '0911231', 19, '2025-11-16 13:01:01', 'active');
 
 -- --------------------------------------------------------
 
@@ -111,6 +134,16 @@ CREATE TABLE `votes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `votes`
+--
+
+INSERT INTO `votes` (`id`, `user_id`, `candidate_id`, `position`, `voted_at`) VALUES
+(50, 15, 31, 'President', '2025-11-16 13:01:14'),
+(51, 15, 33, 'Vice President', '2025-11-16 13:01:14'),
+(52, 14, 31, 'President', '2025-11-16 13:02:52'),
+(53, 14, 33, 'Vice President', '2025-11-16 13:02:52');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -125,6 +158,13 @@ ALTER TABLE `candidates`
 --
 ALTER TABLE `election_settings`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `suspension_logs`
+--
+ALTER TABLE `suspension_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `voter_id` (`voter_id`);
 
 --
 -- Indexes for table `voters`
@@ -148,7 +188,7 @@ ALTER TABLE `votes`
 -- AUTO_INCREMENT for table `candidates`
 --
 ALTER TABLE `candidates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `election_settings`
@@ -157,16 +197,22 @@ ALTER TABLE `election_settings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `suspension_logs`
+--
+ALTER TABLE `suspension_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `voters`
 --
 ALTER TABLE `voters`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `votes`
 --
 ALTER TABLE `votes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- Constraints for dumped tables
