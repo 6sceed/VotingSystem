@@ -260,7 +260,7 @@
         </div>
     </div>
 
-   <script>
+    <script>
     
     const API_BASE_URL = './backend';
     
@@ -364,6 +364,8 @@
         const confirmPassword = document.getElementById('reg-confirm-password').value;
         const filipino = document.getElementById('reg-filipino').checked;
 
+        console.log("Registration data:", { name, email, phone, address, age });
+
         if (age < 18) {
             showError('You must be at least 18 years old to register.');
             return;
@@ -380,6 +382,7 @@
         }
 
         try {
+            console.log("Sending to REGISTER.PHP...");
             
             const res = await fetch(`${API_BASE_URL}/register.php`, {
                 method: 'POST',
@@ -387,7 +390,9 @@
                 body: JSON.stringify({ name, email, password, address, phone, age })
             });
 
+            console.log("Response status:", res.status);
             const data = await res.json();
+            console.log("Backend response:", data);
 
             if (data.status === 'success') {
                 showSuccess('Registration successful! Redirecting to login...');
@@ -396,6 +401,7 @@
                 showError(data.message || 'Registration failed.');
             }
         } catch (err) {
+            console.error("Registration error:", err);
             showError('Error connecting to server.');
         }
     }
@@ -443,14 +449,13 @@
                 }
                 setTimeout(() => window.location.href = redirectPath, 1500);
 
-            } else if (data.status === 'suspended') {
-                // suspension pop up
-                const reason = data.reason || 'Your account has been suspended by the administrator.';
-                showSuspended(`Suspension Reason:\n\n${reason}\n\nPlease contact the administrator for more information.`);
-
-            } else {
-                showError(data.message || 'Invalid credentials.');
-            }
+          } else if (data.status === 'suspended') {
+  
+    const reason = data.reason || 'Your account has been suspended by the administrator.';
+    showSuspended(`Suspension Reason:\n\n${reason}\n\nPlease contact the administrator for more information.`);
+} else {
+    showError(data.message || 'Invalid credentials.');
+}
 
         } catch (err) {
             console.error("Login error:", err);

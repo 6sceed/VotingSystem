@@ -10,9 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 header('Content-Type: application/json');
 include 'db.php';
+require_once 'email.php';
 
 
-$data = json_decode(file_get_contents("php://input"), true);
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
+
+
+error_log("Received registration data: " . print_r($data, true));
 
 $name = trim($data['name'] ?? '');
 $email = trim($data['email'] ?? '');
@@ -21,11 +26,15 @@ $address = trim($data['address'] ?? '');
 $phone = trim($data['phone'] ?? '');
 $age = intval($data['age'] ?? 0);
 
-if (!$name || !$email || !$password || !$address || !$phone || !$age) {
+// convert name and adress to UPPERCASE
+$name = strtoupper($name);
+
+$address = strtoupper($address);
+
+if (empty($name) || empty($email) || empty($password) || empty($address) || empty($phone) || $age === 0) {
     echo json_encode(["status" => "error", "message" => "All fields are required."]);
     exit;
 }
-
 
 if ($age < 18) {
     echo json_encode(["status" => "error", "message" => "You must be at least 18 years old to register."]);
@@ -47,14 +56,33 @@ if ($check->num_rows > 0) {
 $check->close();
 
 
-$plainPassword = $password;
-
-
-$stmt = $conn->prepare("INSERT INTO voters (name, email, password, address, phone, age) VALUES (?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("sssssi", $name, $email, $plainPassword, $address, $phone, $age);
+$stmt = $conn->prepare("INSERT INTO voters (name, email, password, address, phone, age, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+$stmt->bind_param("sssssi", $name, $email, $password, $address, $phone, $age);
 
 if ($stmt->execute()) {
-    echo json_encode(["status" => "success", "message" => "Registration successful!"]);
+
+    try {
+        $emailSender = new EmailSender();
+        $emailSent = $emailSender->sendWelcomeEmail($email, $name);
+
+        if ($emailSent) {
+            echo json_encode([
+                "status" => "success",
+                "message" => "Registration successful! A welcome email has been sent to your email address."
+            ]);
+        } else {
+            echo json_encode([
+                "status" => "success",
+                "message" => "Registration successful! (Welcome email will be sent shortly)"
+            ]);
+        }
+    } catch (Exception $e) {
+
+        echo json_encode([
+            "status" => "success",
+            "message" => "Registration successful!"
+        ]);
+    }
 } else {
     echo json_encode(["status" => "error", "message" => "Database error: " . $stmt->error]);
 }

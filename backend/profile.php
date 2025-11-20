@@ -10,13 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 header('Content-Type: application/json');
 
-// Start output buffering to catch any errors
+
 ob_start();
 
 try {
     include 'db.php';
 
-    // Get JSON input
+
     $input = file_get_contents("php://input");
     $data = json_decode($input, true);
 
@@ -33,6 +33,9 @@ try {
     $password = $data['password'] ?? '';
     $confirm_password = $data['confirm_password'] ?? '';
 
+    // convert name and address to UPPERCASE for consistency
+    $name = strtoupper($name);
+    $address = strtoupper($address);
 
     error_log("Profile Update Data - ID: $id, Name: $name, Email: $email, Address: $address, Phone: $phone, Has Current Password: " . (!empty($current_password) ? 'Yes' : 'No'));
 
@@ -40,7 +43,6 @@ try {
     if (!$id || !$name || !$email || empty($current_password)) {
         throw new Exception("ID, name, email, and current password are required.");
     }
-
 
     $checkStmt = $conn->prepare("SELECT password FROM voters WHERE id = ?");
     if (!$checkStmt) {
@@ -56,7 +58,6 @@ try {
     if ($checkStmt->num_rows === 0) {
         throw new Exception("User not found.");
     }
-
 
     error_log("Password Check - Input: '$current_password', Stored: '$stored_password'");
 
@@ -95,7 +96,6 @@ try {
         $updatePassword = true;
         $new_password = $password;
     }
-
 
     if ($updatePassword) {
         $stmt = $conn->prepare("UPDATE voters SET name = ?, email = ?, address = ?, phone = ?, password = ? WHERE id = ?");
@@ -145,7 +145,6 @@ try {
         "message" => $e->getMessage()
     ]);
 }
-
 
 ob_end_flush();
 ?>
