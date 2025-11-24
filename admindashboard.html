@@ -210,7 +210,6 @@
                         <label for="candidateBio">Biography/Description</label>
                         <textarea id="candidateBio" name="bio" placeholder="Brief description about the candidate"></textarea>
                     </div>
-                
                 </div>
                 <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:24px">
                     <button type="button" id="candidateModalCancel" class="secondary">Cancel</button>
@@ -254,7 +253,6 @@
     <footer>Voting Assistance System © 2024</footer>
 
     <script>
-       
         const views = document.querySelectorAll('.view');
         const navItems = document.querySelectorAll('.nav-item');
         const candidateModal = document.getElementById('candidateModal');
@@ -275,7 +273,6 @@
         let currentVotingState = false;
         let resultsInterval = null;
 
-     
         navItems.forEach(a => {
             a.addEventListener('click', e => {
                 e.preventDefault();
@@ -304,7 +301,6 @@
             updateVotingControls(currentVotingState);
         }
 
-        //  auto-refresh
         function startResultsAutoRefresh() {
             resultsInterval = setInterval(loadResults, 5000);
         }
@@ -316,7 +312,6 @@
             }
         }
 
-        // reset all votes function
         function resetAllVotes() {
             if (confirm('DANGER ZONE! This will DELETE ALL VOTES permanently!\n\nAll users will be able to vote again.\nThis cannot be undone!\n\nClick OK to continue or Cancel to abort.')) {
                 fetch('./backend/reset_votes.php', {
@@ -344,9 +339,7 @@
             }
         }
 
-
         function loadStats() {
-            // load total voters
             fetch('./backend/get_voters.php')
                 .then(response => response.json())
                 .then(data => {
@@ -355,7 +348,6 @@
                     }
                 });
 
-            // load total candidates
             fetch('./backend/get_candidates.php')
                 .then(response => response.json())
                 .then(data => {
@@ -364,7 +356,6 @@
                     }
                 });
 
-            // load total votes
             fetch('./backend/get_votes_count.php')
                 .then(response => response.json())
                 .then(data => {
@@ -374,14 +365,12 @@
                 });
         }
 
-        // load recent users
         function loadRecentUsers() {
             fetch('./backend/get_voters.php')
                 .then(response => response.json())
                 .then(data => {
                     const container = document.getElementById('recentUsersList');
                     if (data.success && data.voters && data.voters.length > 0) {
-                        
                         const recentVoters = data.voters
                             .sort((a, b) => b.id - a.id)
                             .slice(0, 5);
@@ -417,12 +406,10 @@
                 });
         }
 
-        
         function getInitials(name) {
             return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
         }
 
-       
         function loadElectionSettings() {
             fetch('./backend/get_election_settings.php')
                 .then(response => response.json())
@@ -456,7 +443,6 @@
                 });
         }
 
-        // update voting control buttons
         function updateVotingControls(isActive) {
             const startBtn = document.getElementById('startVotingBtn');
             const stopBtn = document.getElementById('stopVotingBtn');
@@ -470,7 +456,6 @@
             }
         }
 
-        // update election status display
         function updateElectionStatusDisplay(isActive) {
             const statusElement = document.getElementById('electionStatus');
             if (isActive) {
@@ -480,7 +465,6 @@
             }
         }
 
-        // start voting
         document.getElementById('startVotingBtn').addEventListener('click', function() {
             const title = document.getElementById('electionTitle').value;
             const startDate = document.getElementById('startDate').value;
@@ -496,17 +480,14 @@
             }
         });
 
-        // stop voting
         document.getElementById('stopVotingBtn').addEventListener('click', function() {
             if (confirm('Stop voting now? This will prevent users from casting new votes.')) {
                 updateVotingStatus(0);
             }
         });
 
-      
         document.getElementById('resetAllBtn').addEventListener('click', resetAllVotes);
 
-        // Reset form button 
         resetSettingsBtn.addEventListener('click', function() {
             if (confirm('Are you sure you want to reset the election form? All fields will be cleared.')) {
                 document.getElementById('electionTitle').value = '';
@@ -559,7 +540,6 @@
             });
         }
 
-        
         function loadResults() {
             fetch('./backend/get_live_results.php')
                 .then(response => response.json())
@@ -583,7 +563,6 @@
                 });
         }
 
- 
         function displayResults(results) {
             const resultsList = document.getElementById('resultsList');
             
@@ -639,7 +618,6 @@
             resultsList.innerHTML = html || '<div style="text-align:center;padding:32px;color:var(--muted)">No votes cast yet</div>';
         }
 
-        
         function updateResultsChart(results) {
             const chartContainer = document.getElementById('resultsChart');
             
@@ -693,7 +671,6 @@
             chartContainer.innerHTML = html || '<div class="chart-placeholder">No data available</div>';
         }
 
-      
         function getPositionColor(position) {
             const colors = {
                 'President': '#3b82f6',
@@ -763,12 +740,10 @@
             alert('Results exported successfully!');
         }
 
-   
         document.getElementById('refreshResultsBtn').addEventListener('click', function() {
             loadResults();
         });
 
-       
         document.getElementById('refreshRecentUsers').addEventListener('click', function() {
             loadRecentUsers();
             loadStats();
@@ -789,7 +764,6 @@
             }
         });
 
-        
         function loadCandidates() {
             fetch('./backend/get_candidates.php')
                 .then(response => response.json())
@@ -804,7 +778,7 @@
                                 <td>${escapeHtml(candidate.position)}</td>
                                 <td>${candidate.is_active ? '<span class="badge success">Active</span>' : '<span class="badge danger">Inactive</span>'}</td>
                                 <td class="actions">
-                                    <button class="secondary" onclick="startEditCandidate(${candidate.id}, '${escapeHtml(candidate.name)}', '${escapeHtml(candidate.position)}', '${escapeHtml(candidate.bio || '')}', '${escapeHtml(candidate.photo || '')}')">Edit</button>
+                                    <button class="secondary" onclick="startEditCandidate(${candidate.id}, '${escapeHtml(candidate.name)}', '${escapeHtml(candidate.position)}', '${escapeHtml(candidate.bio || '')}')">Edit</button>
                                     <button class="danger" onclick="deleteCandidate(${candidate.id})">Delete</button>
                                 </td>
                             `;
@@ -821,7 +795,7 @@
                 });
         }
 
-        function startEditCandidate(id, name, position, bio, photo) {
+        function startEditCandidate(id, name, position, bio) {
             editingCandidateId = id;
             const tbody = document.getElementById('candidatesTableBody');
             const rows = tbody.getElementsByTagName('tr');
@@ -855,7 +829,6 @@
             const name = document.getElementById(`editName_${id}`).value;
             const position = document.getElementById(`editPosition_${id}`).value;
             const bio = '';
-            const photo = '';
 
             if (!name || !position) {
                 alert('Please fill in all fields');
@@ -867,7 +840,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ id, name, position, bio, photo })
+                body: JSON.stringify({ id, name, position, bio })
             })
             .then(response => response.json())
             .then(data => {
@@ -947,7 +920,6 @@
             }, 5000);
         }
 
-        // Voter management functions
         function loadVoters() {
             fetch('./backend/get_voters.php')
                 .then(response => response.json())
@@ -1007,8 +979,8 @@
                     if (data.success) {
                         alert('Voter unsuspended successfully!');
                         loadVoters();
-                    loadRecentUsers();
-                    loadStats();
+                        loadRecentUsers();
+                        loadStats();
                     } else {
                         alert('Error: ' + data.message);
                     }
@@ -1025,7 +997,6 @@
             document.body.classList.add('modal-open');
         }
 
-  
         function openCandidateModal() {
             console.log('Opening candidate modal...');
             candidateModal.classList.add('open');
@@ -1049,15 +1020,13 @@
             document.body.classList.remove('modal-open');
         }
 
-     
         candidateForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const formData = {
                 name: document.getElementById('candidateName').value,
                 position: document.getElementById('candidatePosition').value,
-                bio: document.getElementById('candidateBio').value,
-                photo: document.getElementById('candidatePhoto').value || 'default_photo.jpg'
+                bio: document.getElementById('candidateBio').value
             };
 
             console.log('Submitting candidate:', formData);
@@ -1135,15 +1104,12 @@
             if (e.target === deleteModal) closeDeleteModal();
         });
 
-        
         addCandidateBtn.addEventListener('click', openCandidateModal);
 
-      
         function escapeHtml(s) { 
             return (s+'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); 
         }
 
-       
         showView('overview');
         loadCandidates();
         loadStats();
