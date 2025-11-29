@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - VoteEase</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f1115;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .animate-slideInLeft {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .animate-slideInRight {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        .animate-scaleIn {
+            animation: scaleIn 0.6s ease-out forwards;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Header Styles */
+        header {
+            background: #1d1f23;
+            color: #f2f2f2;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 20px;
+            color: #4e9eff;
+        }
+
+        .menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+        }
+
+        .menu-btn div {
+            width: 22px;
+            height: 2px;
+            background: #f2f2f2;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            background: #23262b;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            min-width: 160px;
+            overflow: hidden;
+            z-index: 999;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 10px 14px;
+            text-decoration: none;
+            color: #eaeaea;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown a:hover {
+            background: #2e3238;
+        }
+
+        .show {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: #1a1c21;
+            border-bottom: 1px solid #2b2d32;
+            position: relative;
+            overflow: hidden;
+            padding: 80px 24px;
+        }
+
+        /* Card Styles */
+        .glass-card {
+            background: #1a1c21;
+            border: 1px solid #2b2d32;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: #4e9eff;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            color: #4e9eff;
+        }
+
+        /* Timeline */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #4e9eff;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -6px;
+            top: 8px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4e9eff;
+            box-shadow: 0 0 0 4px rgba(78, 158, 255, 0.2);
+        }
+
+        /* Stats Counter */
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #4e9eff;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f1115;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4e9eff;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+
+        /* ===== GO BACK BUTTON ===== */
+        .go-back-container {
+            text-align: left;
+            padding: 16px 24px;
+        }
+        .go-back-btn {
+            background: none;
+            border: 1px solid #4e9eff;
+            color: #4e9eff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .go-back-btn:hover {
+            background: #4e9eff;
+            color: #fff;
+        }
+
+        /* Additional Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #4e9eff;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .grid-2 {
+            grid-template-columns: 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: 1fr;
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (min-width: 768px) {
+            .grid-2 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: repeat(3, 1fr); }
+            .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(78, 158, 255, 0.1);
+            border: 1px solid rgba(78, 158, 255, 0.3);
+            font-size: 32px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover .feature-icon {
+            transform: scale(1.1);
+            background: rgba(78, 158, 255, 0.2);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 32px 24px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #23262b;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4e9eff;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .tech-point {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .tech-bullet {
+            width: 8px;
+            height: 8px;
+            background: #4e9eff;
+            border-radius: 50%;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 48px;
+            background: #4e9eff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(78, 158, 255, 0.3);
+        }
+
+        .cta-button:hover {
+            background: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(78, 158, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">VoteEase</div>
+        <div class="menu">
+            <button class="menu-btn" onclick="toggleMenu()">
+                <div></div><div></div><div></div>
+            </button>
+            <div class="dropdown" id="dropdownMenu">
+                <a href="profile.html">Profile</a>
+                <a href="contactus.html">Contact Us</a>
+                <a href="about.html">About</a>
+                <a href="privacypolicy.html">Privacy Policy</a>
+                <a href="../../index.html">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="go-back-container">
+        <button class="go-back-btn" onclick="goBack()">← Go Back</button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h2 class="text-5xl md:text-6xl font-extrabold mb-6 animate-fadeInUp">
+                About <span class="gradient-text">VoteEase</span>
+            </h2>
+            <p class="text-xl text-gray-400 max-w-3xl mx-auto animate-fadeInUp" style="animation-delay: 0.2s;">
+                Revolutionizing democracy through secure, transparent, and accessible online voting
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container" style="padding-top: 64px; padding-bottom: 64px;">
+        
+        <!-- Mission Section -->
+        <section class="animate-fadeInUp">
+            <div class="glass-card" style="padding: 48px;">
+                <h3 class="section-title" style="text-align: left; margin-bottom: 24px;">Our Mission</h3>
+                <p class="text-lg text-gray-300 leading-relaxed mb-6">
+                    At VoteEase, we believe that every voice deserves to be heard. Our mission is to democratize the voting process by providing a cutting-edge platform that combines security, accessibility, and transparency. We're committed to empowering citizens to participate in democracy from anywhere, at any time.
+                </p>
+                <p class="text-lg text-gray-300 leading-relaxed">
+                    Through innovative technology and user-centric design, we're breaking down barriers to civic engagement and ensuring that the democratic process is truly representative of all citizens.
+                </p>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section>
+            <div class="grid grid-4">
+                <div class="glass-card stat-card">
+                    <div class="stat-number">99.9%</div>
+                    <p class="text-gray-400 mt-2 font-semibold">Uptime</p>
+                </div>
+                <div class="glass-card stat-card">
+                    <div class="stat-number">256-bit</div>
+                    <p class="text-gray-400 mt-2 font-semibold">Encryption</p>
+                </div>
+                <div class="glass-card stat-card">
+                    <div class="stat-number">24/7</div>
+                    <p class="text-gray-400 mt-2 font-semibold">Support</p>
+                </div>
+                <div class="glass-card stat-card">
+                    <div class="stat-number">100%</div>
+                    <p class="text-gray-400 mt-2 font-semibold">Verified</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section>
+            <h3 class="section-title">Why Choose VoteEase?</h3>
+            <div class="grid grid-3">
+                <div class="glass-card" style="padding: 32px;">
+                    <div class="feature-icon">🔒</div>
+                    <h4 class="text-xl font-bold mb-3" style="color: #4e9eff;">Bank-Level Security</h4>
+                    <p class="text-gray-400 leading-relaxed">
+                        Your vote is protected with military-grade 256-bit encryption, ensuring complete confidentiality and integrity.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="padding: 32px;">
+                    <div class="feature-icon">✓</div>
+                    <h4 class="text-xl font-bold mb-3" style="color: #4e9eff;">Verified Transparency</h4>
+                    <p class="text-gray-400 leading-relaxed">
+                        Real-time results and complete audit trails ensure every vote is counted accurately.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="padding: 32px;">
+                    <div class="feature-icon">📱</div>
+                    <h4 class="text-xl font-bold mb-3" style="color: #4e9eff;">Mobile Accessible</h4>
+                    <p class="text-gray-400 leading-relaxed">
+                        Vote from anywhere using any device. Seamless experience across all platforms.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="padding: 32px;">
+                    <div class="feature-icon">⚡</div>
+                    <h4 class="text-xl font-bold mb-3" style="color: #4e9eff;">Lightning Fast</h4>
+                    <p class="text-gray-400 leading-relaxed">
+                        Cast your vote in seconds with our optimized platform. No more long queues.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="padding: 32px;">
+                    <div class="feature-icon">👤</div>
+                    <h4 class="text-xl font-bold mb-3" style="color: #4e9eff;">User-Friendly</h4>
+                    <p class="text-gray-400 leading-relaxed">
+                        Intuitive interface designed for everyone. No technical knowledge required.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="padding: 32px;">
+                    <div class="feature-icon">📊</div>
+                    <h4 class="text-xl font-bold mb-3" style="color: #4e9eff;">Live Analytics</h4>
+                    <p class="text-gray-400 leading-relaxed">
+                        Track election progress with real-time statistics and data visualization.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology Section -->
+        <section>
+            <h3 class="section-title">Cutting-Edge Technology</h3>
+            <div class="grid grid-2" style="align-items: center;">
+                <div>
+                    <p class="text-lg text-gray-300 leading-relaxed mb-8">
+                        VoteEase is built on modern web technologies and security protocols that ensure your voting experience is both seamless and secure.
+                    </p>
+                    <div>
+                        <div class="tech-point">
+                            <div class="tech-bullet"></div>
+                            <div>
+                                <h5 class="font-bold mb-1" style="color: #4e9eff;">Advanced Encryption</h5>
+                                <p class="text-gray-400">End-to-end encryption protects your data at every step</p>
+                            </div>
+                        </div>
+                        <div class="tech-point">
+                            <div class="tech-bullet"></div>
+                            <div>
+                                <h5 class="font-bold mb-1" style="color: #4e9eff;">Cloud Infrastructure</h5>
+                                <p class="text-gray-400">Scalable and reliable hosting ensures zero downtime</p>
+                            </div>
+                        </div>
+                        <div class="tech-point">
+                            <div class="tech-bullet"></div>
+                            <div>
+                                <h5 class="font-bold mb-1" style="color: #4e9eff;">Real-Time Processing</h5>
+                                <p class="text-gray-400">Instant vote verification and result tabulation</p>
+                            </div>
+                        </div>
+                        <div class="tech-point">
+                            <div class="tech-bullet"></div>
+                            <div>
+                                <h5 class="font-bold mb-1" style="color: #4e9eff;">Multi-Layer Security</h5>
+                                <p class="text-gray-400">Multiple authentication and verification protocols</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card" style="padding: 32px;">
+                    <div style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="font-semibold" style="color: #4e9eff;">Security</span>
+                            <span class="text-gray-400">100%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="font-semibold" style="color: #4e9eff;">Reliability</span>
+                            <span class="text-gray-400">99.9%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 99.9%"></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="font-semibold" style="color: #4e9eff;">Performance</span>
+                            <span class="text-gray-400">98%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 98%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="font-semibold" style="color: #4e9eff;">User Satisfaction</span>
+                            <span class="text-gray-400">97%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 97%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section>
+            <h3 class="section-title">Our Journey</h3>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="timeline-item" style="position: relative; padding-left: 40px; margin-bottom: 32px;">
+                    <div class="timeline-dot"></div>
+                    <div class="glass-card" style="padding: 24px;">
+                        <h4 class="text-xl font-bold mb-2" style="color: #4e9eff;">Platform Conception</h4>
+                        <p class="text-gray-400 mb-2">2024</p>
+                        <p class="text-gray-300">The idea for VoteEase was born from a vision to make voting accessible to everyone, regardless of location or physical ability.</p>
+                    </div>
+                </div>
+                <div class="timeline-item" style="position: relative; padding-left: 40px; margin-bottom: 32px;">
+                    <div class="timeline-dot"></div>
+                    <div class="glass-card" style="padding: 24px;">
+                        <h4 class="text-xl font-bold mb-2" style="color: #4e9eff;">Development & Testing</h4>
+                        <p class="text-gray-400 mb-2">2025</p>
+                        <p class="text-gray-300">Rigorous development phase with extensive security testing and user experience optimization to ensure a flawless platform.</p>
+                    </div>
+                </div>
+                <div class="timeline-item" style="position: relative; padding-left: 40px; margin-bottom: 32px;">
+                    <div class="timeline-dot"></div>
+                    <div class="glass-card" style="padding: 24px;">
+                        <h4 class="text-xl font-bold mb-2" style="color: #4e9eff;">Official Launch</h4>
+                        <p class="text-gray-400 mb-2">2025</p>
+                        <p class="text-gray-300">VoteEase goes live, empowering citizens to participate in democracy with unprecedented ease and security.</p>
+                    </div>
+                </div>
+                <div class="timeline-item" style="position: relative; padding-left: 40px;">
+                    <div class="timeline-dot"></div>
+                    <div class="glass-card" style="padding: 24px;">
+                        <h4 class="text-xl font-bold mb-2" style="color: #4e9eff;">Continuous Innovation</h4>
+                        <p class="text-gray-400 mb-2">Ongoing</p>
+                        <p class="text-gray-300">Constant updates and improvements based on user feedback and emerging technologies to stay ahead of the curve.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Values Section -->
+        <section>
+            <h3 class="section-title">Our Core Values</h3>
+            <div class="grid grid-2">
+                <div class="glass-card" style="padding: 32px;">
+                    <h4 class="text-2xl font-bold mb-4" style="color: #4e9eff;">Transparency</h4>
+                    <p class="text-gray-300 leading-relaxed">
+                        We believe in complete openness. Every vote is verifiable, every process is auditable, and every result is transparent. No hidden algorithms, no secret processes.
+                    </p>
+                </div>
+                <div class="glass-card" style="padding: 32px;">
+                    <h4 class="text-2xl font-bold mb-4" style="color: #4e9eff;">Security First</h4>
+                    <p class="text-gray-300 leading-relaxed">
+                        Your data and vote are protected with the highest security standards. We employ multiple layers of protection to ensure absolute confidentiality and integrity.
+                    </p>
+                </div>
+                <div class="glass-card" style="padding: 32px;">
+                    <h4 class="text-2xl font-bold mb-4" style="color: #4e9eff;">Accessibility</h4>
+                    <p class="text-gray-300 leading-relaxed">
+                        Democracy should be available to all. We've designed VoteEase to be accessible to everyone, regardless of technical expertise or physical ability.
+                    </p>
+                </div>
+                <div class="glass-card" style="padding: 32px;">
+                    <h4 class="text-2xl font-bold mb-4" style="color: #4e9eff;">Innovation</h4>
+                    <p class="text-gray-300 leading-relaxed">
+                        We continuously push the boundaries of what's possible in digital voting, leveraging cutting-edge technology to improve the democratic process.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section style="text-align: center;">
+            <div class="glass-card" style="padding: 64px 32px;">
+                <h3 class="text-4xl font-bold mb-6" style="color: #4e9eff;">Join the Democratic Revolution</h3>
+                <p class="text-xl text-gray-300 mb-8" style="max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Be part of the future of voting. Experience secure, transparent, and accessible democracy with VoteEase.
+                </p>
+                <a href="../../dashboard.html" class="cta-button">
+                    Go to Dashboard
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-card mt-16 py-8 px-6 text-center border-t border-gray-800">
+        <p class="text-gray-400">&copy; 2025 VoteEase. All rights reserved.</p>
+        <p class="text-gray-500 text-sm mt-2">Empowering democracy through technology</p>
+    </footer>
+
+    <script>
+        function goBack() {
+            window.location.href = "../../dashboard.html";
+        }
+
+        function toggleMenu() {
+            document.getElementById("dropdownMenu").classList.toggle("show");
+        }
+
+        window.onclick = function(e) {
+            if (!e.target.matches('.menu-btn') && !e.target.closest('.menu-btn')) {
+                const dropdown = document.getElementById("dropdownMenu");
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        };
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.animate-fadeInUp, .animate-slideInLeft, .animate-slideInRight').forEach((el) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(40px)';
+            observer.observe(el);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

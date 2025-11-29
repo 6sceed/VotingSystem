@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VoteEase - Profile</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+:root {
+  --bg: #121417;
+  --header-bg: #1d1f23;
+  --header-text: #f2f2f2;
+  --accent: #4e9eff;
+  --shadow: rgba(0, 0, 0, 0.6);
+}
+body {
+  font-family: "Inter", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--header-text);
+  margin: 0;
+}
+
+header {
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--accent);
+}
+.menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.menu-links {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+.menu-links a {
+  text-decoration: none;
+  color: var(--header-text);
+  font-weight: 500;
+  font-size: 15px;
+  transition: opacity 0.2s ease;
+}
+.menu-links a:hover {
+  opacity: 0.7;
+}
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+.menu-btn div {
+  width: 22px;
+  height: 2px;
+  background: var(--header-text);
+  margin: 5px 0;
+  transition: 0.3s;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 42px;
+  background: #23262b;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  min-width: 160px;
+  overflow: hidden;
+  z-index: 999;
+}
+.dropdown a {
+  display: block;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: #eaeaea;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+.dropdown a:hover {
+  background: #2e3238;
+}
+.show {
+  display: block;
+}
+/* ===== GO BACK BUTTON ===== */
+.go-back-container {
+  text-align: left;
+  padding: 16px 24px;
+}
+.go-back-btn {
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.go-back-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.profile-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 24px;
+  background: #1d1f23;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+.profile-container h2 {
+  margin-top: 0;
+  color: var(--accent);
+}
+.profile-container label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 500;
+}
+.profile-container input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #121417;
+  color: var(--header-text);
+  box-sizing: border-box;
+}
+
+.profile-container input:disabled {
+  background: #1a1c20;
+  border: 1px solid #333;
+  color: #aaa;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+.name-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 80px;
+  gap: 10px;
+}
+.input-wrapper {
+  position: relative;
+}
+.toggle-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--accent);
+  user-select: none;
+}
+.profile-container button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+  width: 100%;
+}
+.profile-container button:hover {
+  opacity: 0.8;
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">VoteEase</div>
+  <div class="menu">
+    <div class="menu-links"></div>
+    <button class="menu-btn" onclick="toggleMenu()">
+      <div></div><div></div><div></div>
+    </button>
+    <div class="dropdown" id="dropdownMenu">
+      <a href="profile.html">Profile</a>
+      <a href="contactus.html">Contact Us</a>
+      <a href="about.html">About</a>
+      <a href="privacypolicy.html">Privacy Policy</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</header>
+<div class="go-back-container">
+  <button class="go-back-btn" onclick="goBack()">← Go Back</button>
+</div>
+<div class="profile-container">
+  <h2>Update Profile</h2>
+  <form id="profileForm">
+    <div class="name-grid">
+      <div>
+        <label>Last Name:</label>
+        <input type="text" id="lastname" required>
+      </div>
+      <div>
+        <label>First Name:</label>
+        <input type="text" id="firstname" required>
+      </div>
+      <div>
+        <label>M.I.:</label>
+        <input type="text" id="mi" maxlength="1">
+      </div>
+    </div>
+    <label>Email:</label>
+    <input type="email" id="email" required>
+    <label>Address:</label>
+    <input type="text" id="address" required disabled>
+    <label>Phone:</label>
+    <input type="text" id="phone" required disabled>
+    <label>Current Password:</label>
+    <div class="input-wrapper">
+      <input type="password" id="current_password" required>
+      <span class="toggle-eye" onmousedown="holdEye('current_password')" onmouseup="releaseEye('current_password')" onmouseleave="releaseEye('current_password')">&#128065;</span>
+    </div>
+    <label>New Password:</label>
+    <div class="input-wrapper">
+      <input type="password" id="password">
+      <span class="toggle-eye" onmousedown="holdEye('password')" onmouseup="releaseEye('password')" onmouseleave="releaseEye('password')">&#128065;</span>
+    </div>
+    <label>Confirm Password:</label>
+    <div class="input-wrapper">
+      <input type="password" id="confirm_password">
+      <span class="toggle-eye" onmousedown="holdEye('confirm_password')" onmouseup="releaseEye('confirm_password')" onmouseleave="releaseEye('confirm_password')">&#128065;</span>
+    </div>
+    <button type="submit">Save Changes</button>
+  </form>
+</div>
+<script>
+function toggleMenu() { document.getElementById("dropdownMenu").classList.toggle("show"); }
+window.onclick = function(e) { if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) { document.getElementById("dropdownMenu").classList.remove("show"); } };
+function logout() {
+  Swal.fire({
+    title: 'Logout Confirmation',
+    text: 'Are you sure you want to logout?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#4e9eff',
+    cancelButtonColor: '#9aa3ad',
+    confirmButtonText: 'Yes, Logout',
+    cancelButtonText: 'Cancel',
+    background: '#1a1c20',
+    color: '#eaeaea'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      localStorage.removeItem("user");
+      window.location.href = "/voting_system/index.html";
+    }
+  });
+}
+
+function goBack() {
+  window.location.href = "http://localhost/voting_system/dashboard.html";
+}
+
+
+function holdEye(id) { const input = document.getElementById(id); input.type = "text"; }
+function releaseEye(id) { const input = document.getElementById(id); input.type = "password"; }
+
+
+function showSuccess(message) {
+  Swal.fire({
+    icon: 'success',
+    title: 'Success',
+    text: message,
+    confirmButtonColor: '#36c97e',
+    background: '#1a1c20',
+    color: '#eaeaea'
+  });
+}
+
+function showError(message) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: message,
+    confirmButtonColor: '#4e9eff',
+    background: '#1a1c20',
+    color: '#eaeaea'
+  });
+}
+
+
+function parseName(fullName) {
+  if (!fullName) return { lastname: '', firstname: '', mi: '' };
+  
+  if (fullName.includes(',')) {
+    const parts = fullName.split(',');
+    const lastname = parts[0].trim();
+    const firstAndMI = parts[1].trim().split(' ');
+    const firstname = firstAndMI[0] || '';
+    const mi = firstAndMI[1] || '';
+    return { lastname, firstname, mi };
+  } else {
+    const parts = fullName.split(' ');
+    const lastname = parts[0] || '';
+    const firstname = parts[1] || '';
+    const mi = parts[2] || '';
+    return { lastname, firstname, mi };
+  }
+}
+
+
+function formatName(lastname, firstname, mi) {
+  if (mi) {
+    return `${lastname}, ${firstname} ${mi}`;
+  } else {
+    return `${lastname}, ${firstname}`;
+  }
+}
+
+
+document.addEventListener("DOMContentLoaded", async ()=>{
+  const user = JSON.parse(localStorage.getItem("user")||"{}");
+  
+  if(!user.id){
+    showError("User not logged in.");
+    setTimeout(() => {
+      window.location.href="index.html";
+    }, 2000);
+    return;
+  }
+  
+  
+  try {
+    const response = await fetch('../../backend/get_user.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: user.id })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const text = await response.text();
+    let userData;
+    try {
+      userData = JSON.parse(text);
+    } catch (parseError) {
+      throw new Error("Invalid JSON response from server");
+    }
+    
+    if (userData && userData.status === "success" && userData.user) {
+      
+      localStorage.setItem("user", JSON.stringify(userData.user));
+      
+      
+      const { lastname, firstname, mi } = parseName(userData.user.name || "");
+      document.getElementById("lastname").value = lastname;
+      document.getElementById("firstname").value = firstname;
+      document.getElementById("mi").value = mi;
+      
+      
+      document.getElementById("email").value = userData.user.email || "";
+      
+      
+      const addressValue = userData.user.address;
+      const phoneValue = userData.user.phone;
+      
+      document.getElementById("address").value = addressValue && addressValue !== "" ? addressValue : "No address in database";
+      document.getElementById("phone").value = phoneValue && phoneValue !== "" ? phoneValue : "No phone in database";
+      
+    } else {
+      throw new Error(userData?.message || "Failed to fetch user data");
+    }
+    
+  } catch (error) {
+    
+    const { lastname, firstname, mi } = parseName(user.name || "");
+    document.getElementById("lastname").value = lastname;
+    document.getElementById("firstname").value = firstname;
+    document.getElementById("mi").value = mi;
+    document.getElementById("email").value = user.email || "";
+    document.getElementById("address").value = user.address && user.address !== "" ? user.address : "No address available";
+    document.getElementById("phone").value = user.phone && user.phone !== "" ? user.phone : "No phone available";
+  }
+
+  const form = document.getElementById("profileForm");
+  form.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    Swal.fire({
+      title: 'Confirm Changes',
+      text: 'Are you sure you want to save your profile changes?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#4e9eff',
+      cancelButtonColor: '#9aa3ad',
+      confirmButtonText: 'Yes, Save Changes',
+      cancelButtonText: 'Cancel',
+      background: '#1a1c20',
+      color: '#eaeaea'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        updateProfile(user);
+      }
+    });
+  });
+});
+
+async function updateProfile(user){
+  const lastname = document.getElementById("lastname").value.trim();
+  const firstname = document.getElementById("firstname").value.trim();
+  const mi = document.getElementById("mi").value.trim();
+  
+ 
+  const name = formatName(lastname, firstname, mi);
+  
+  const payload = {
+    id: user.id,
+    current_password: document.getElementById("current_password").value,
+    name: name,
+    email: document.getElementById("email").value,
+    address: document.getElementById("address").value,
+    phone: document.getElementById("phone").value,
+    password: document.getElementById("password").value,
+    confirm_password: document.getElementById("confirm_password").value
+  };
+  
+  try {
+    const res = await fetch("../../backend/profile.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseError) {
+      showError("Server returned invalid response. Please try again.");
+      return;
+    }
+
+    if(data.status === "error") {
+      showError(data.message);
+      return;
+    }
+
+    if(data.status === "success") {
+      showSuccess(data.message);
+      
+      if(data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        
+        const { lastname, firstname, mi } = parseName(data.user.name || "");
+        document.getElementById("lastname").value = lastname;
+        document.getElementById("firstname").value = firstname;
+        document.getElementById("mi").value = mi;
+        document.getElementById("email").value = data.user.email;
+        document.getElementById("address").value = data.user.address && data.user.address !== "" ? data.user.address : "No address in database";
+        document.getElementById("phone").value = data.user.phone && data.user.phone !== "" ? data.user.phone : "No phone in database";
+        
+  
+        document.getElementById("password").value = "";
+        document.getElementById("confirm_password").value = "";
+        document.getElementById("current_password").value = "";
+      }
+    }
+  } catch (err) {
+    showError("Error updating profile: " + err.message);
+  }
+}
+</script>
+</body>
+</html>

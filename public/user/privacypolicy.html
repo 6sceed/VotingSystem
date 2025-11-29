@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Privacy Policy - VoteEase</title>
+  <style>
+    :root {
+      --bg: #121417;
+      --header-bg: #1d1f23;
+      --header-text: #f2f2f2;
+      --accent: #4e9eff;
+      --shadow: rgba(0, 0, 0, 0.6);
+    }
+
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--header-text);
+      margin: 0;
+    }
+
+    
+    header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .menu {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .menu-links {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .menu-links a {
+      text-decoration: none;
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 15px;
+      transition: opacity 0.2s ease;
+    }
+
+    .menu-links a:hover {
+      opacity: 0.7;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    .menu-btn div {
+      width: 22px;
+      height: 2px;
+      background: var(--header-text);
+      margin: 5px 0;
+      transition: 0.3s;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 42px;
+      background: #23262b;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      min-width: 160px;
+      overflow: hidden;
+      z-index: 999;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px 14px;
+      text-decoration: none;
+      color: #eaeaea;
+      font-size: 14px;
+      transition: background 0.2s ease;
+    }
+
+    .dropdown a:hover {
+      background: #2e3238;
+    }
+
+    .show {
+      display: block;
+    }
+
+    .go-back-container {
+      text-align: left;
+      padding: 16px 24px;
+    }
+
+    .go-back-btn {
+      background: none;
+      border: 1px solid #4e9eff;
+      color: #4e9eff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .go-back-btn:hover {
+      background: #4e9eff;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 24px 60px;
+    }
+
+    .policy-card {
+      background: #1a1c21;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .policy-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #e2e8f0;
+    }
+
+    .policy-date {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 32px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #4e9eff;
+      margin-bottom: 12px;
+    }
+
+    .section-text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #cbd5e1;
+      margin-bottom: 12px;
+    }
+
+    .section-list {
+      margin: 12px 0;
+      padding-left: 24px;
+    }
+
+    .section-list li {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .policy-card {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">VoteEase</div>
+    <div class="menu">
+      <div class="menu-links"></div>
+      <button class="menu-btn" onclick="toggleMenu()">
+        <div></div><div></div><div></div>
+      </button>
+      <div class="dropdown" id="dropdownMenu">
+        <a href="profile.html">Profile</a>
+        <a href="contactus.html">Contact Us</a>
+        <a href="about.html">About</a>
+        <a href="privacypolicy.html">Privacy Policy</a>
+        <a href="../../index.html" onclick="logout()">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="go-back-container">
+    <button class="go-back-btn" onclick="goBack()">← Go Back</button>
+  </div>
+
+  <div class="container">
+    <div class="policy-card">
+      <h1 class="policy-title">Privacy Policy</h1>
+      <p class="policy-date">Last updated: November 29, 2025</p>
+
+      <div class="section">
+        <h2 class="section-title">Introduction</h2>
+        <p class="section-text">
+          VoteEase is committed to protecting your privacy. This policy outlines how we collect, use, and safeguard your personal information when you use our online voting platform.
+        </p>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Information We Collect</h2>
+        <p class="section-text">We collect the following information:</p>
+        <ul class="section-list">
+          <li>Name and email address for account registration</li>
+          <li>Voting preferences and election participation data</li>
+          <li>Login activity and session information</li>
+          <li>IP address and device information for security purposes</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">How We Use Your Information</h2>
+        <p class="section-text">Your information is used to:</p>
+        <ul class="section-list">
+          <li>Enable your participation in secure online elections</li>
+          <li>Verify your identity and prevent fraudulent voting</li>
+          <li>Send election notifications and updates</li>
+          <li>Improve our platform's security and user experience</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Data Security</h2>
+        <p class="section-text">
+          We implement industry-standard security measures including 256-bit encryption to protect your data. Your voting choices are anonymized and stored securely to maintain ballot secrecy while ensuring election integrity.
+        </p>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Your Rights</h2>
+        <p class="section-text">You have the right to:</p>
+        <ul class="section-list">
+          <li>Access your personal data at any time through your profile</li>
+          <li>Request deletion of your account and associated data</li>
+          <li>Opt out of non-essential communications</li>
+          <li>Request a copy of your data in a portable format</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Data Retention</h2>
+        <p class="section-text">
+          We retain your personal information only as long as necessary for election purposes and legal compliance. Voting records are maintained according to electoral regulations, while personal account data can be deleted upon request.
+        </p>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Contact Us</h2>
+        <p class="section-text">
+          If you have questions about this privacy policy or how your data is handled, please contact us through our contact form or email us directly.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+   
+    function toggleMenu() {
+      document.getElementById("dropdownMenu").classList.toggle("show");
+    }
+
+    
+    window.onclick = function(e) {
+      if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) {
+        document.getElementById("dropdownMenu").classList.remove("show");
+      }
+    };
+
+    
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "../../index.html";
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+</body>
+</html>

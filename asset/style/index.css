@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0f1115;
+    color: #e2e8f0;
+}
+
+.view-transition {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+input, textarea, select {
+    background-color: #1e2026 !important;
+    color: #f1f5f9 !important;
+}
+
+input::placeholder {
+    color: #9ca3af;
+}
+
+/* ===== BLUE EYE TOGGLE ===== */
+.input-wrapper {
+    position: relative;
+}
+
+.toggle-eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 16px;
+    color: #4e9eff;
+    user-select: none;
+}
+
+/* ===== CUSTOM MODAL ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: #1d1f23;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.7);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    color: #fff;
+    border: 1px solid #333;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.modal-message {
+    margin: 15px 0;
+    line-height: 1.5;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.modal-box button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    border: none;
+    min-width: 80px;
+}
+
+.modal-confirm {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.modal-cancel {
+    background: #444;
+    color: #fff;
+}
+
+.modal-ok {
+    background: #3b82f6;
+    color: #fff;
+    width: 100%;
+}
+
+/* Success and Error specific styles */
+.modal-success .modal-title {
+    color: #4CAF50;
+}
+
+.modal-error .modal-title {
+    color: #f44336;
+}
