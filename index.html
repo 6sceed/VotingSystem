@@ -5,124 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VoteEase</title>
     <script src="https://cdn.tailwindcss.com"></script>
-<<<<<<< HEAD
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="asset/style/index.css">
     <style>
-        /* Enhanced Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .animate-fadeInUp {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .animate-fadeIn {
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .animate-slideInRight {
-            animation: slideInRight 0.5s ease-out;
-        }
-
-        /* Enhanced Input Styling */
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-            transform: translateY(-1px);
-            transition: all 0.2s ease;
-        }
-
-        input, select, textarea {
-            transition: all 0.2s ease;
-        }
-
-        /* Button Hover Effects */
-        button {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        button:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top: 3px solid #3b82f6;
-            width: 20px;
-            height: 20px;
-            animation: spin 0.8s linear infinite;
-            display: inline-block;
-            margin-left: 8px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Enhanced Toggle Eye */
-=======
-    <link rel="stylesheet" href="asset/style/index.css">
-    <style>
-        
         .modal-overlay {
             display: none;
             position: fixed;
@@ -209,12 +93,10 @@
             background: #b91c1c;
         }
 
-        
         .input-wrapper {
             position: relative;
         }
         
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         .toggle-eye {
             position: absolute;
             right: 12px;
@@ -224,146 +106,26 @@
             color: #6b7280;
             font-size: 18px;
             user-select: none;
-<<<<<<< HEAD
-            transition: all 0.2s ease;
-        }
-
-        .toggle-eye:hover {
-            color: #3b82f6;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .toggle-eye:active {
-            transform: translateY(-50%) scale(0.95);
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        /* Card Hover Effects */
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Smooth View Transitions */
-        .view-transition {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .view-transition.hidden {
-            opacity: 0;
-            transform: scale(0.95);
-            pointer-events: none;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1a1c21;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #3b82f6;
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #2563eb;
-        }
-
-        /* Gradient Text Effect */
-        .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Glass Effect */
-        .glass-effect {
-            background: rgba(26, 28, 33, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* SweetAlert2 Custom Styling */
-        .swal2-popup {
-            background: #1a1c21 !important;
-            border: 1px solid rgba(59, 130, 246, 0.3) !important;
-        }
-
-        .swal2-title {
-            color: #e2e8f0 !important;
-        }
-
-        .swal2-html-container {
-            color: #cbd5e0 !important;
-        }
-
-        .swal2-confirm {
-            background: #3b82f6 !important;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
-        }
-
-        .swal2-confirm:hover {
-            background: #2563eb !important;
-        }
-
-        .swal2-cancel {
-            background: #6b7280 !important;
-        }
-
-        .swal2-icon.swal2-success [class^='swal2-success-line'] {
-            background-color: #10b981 !important;
-        }
-
-        .swal2-icon.swal2-success .swal2-success-ring {
-            border-color: rgba(16, 185, 129, 0.3) !important;
-        }
-
-=======
         }
         
         .view-transition {
             transition: opacity 0.3s ease-in-out;
         }
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
-<<<<<<< HEAD
-    <header class="bg-[#1a1c21] shadow-lg p-4 sticky top-0 z-50 animate-fadeIn">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 cursor-pointer transform hover:scale-105 transition-transform duration-300" onclick="showView('home')">
-=======
     <header class="bg-[#1a1c21] shadow-md p-4 sticky top-0 z-10">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-extrabold text-blue-400 cursor-pointer" onclick="showView('home')">
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 VoteEase
             </h1>
 
             <nav>
                 <button 
-<<<<<<< HEAD
-                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-blue-500/50"
-                    onclick="showView('login')">
-                    <span class="relative z-10">Login / Register</span>
-=======
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transition duration-150 ease-in-out transform hover:scale-105"
                     onclick="showView('login')">
                     Login / Register
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 </button>
             </nav>
         </div>
@@ -372,82 +134,14 @@
     <main class="flex-grow flex items-center justify-center p-4">
 
         <!-- Home -->
-<<<<<<< HEAD
-        <div id="home-view" class="view-transition w-full max-w-4xl text-center p-6 md:p-12 glass-effect rounded-2xl shadow-2xl space-y-8 card-hover animate-fadeInUp">
-            <div class="space-y-4">
-                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-100 leading-tight">
-                    Your Voice, Your Vote. <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Simplified.</span>
-                </h2>
-                <p class="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-=======
         <div id="home-view" class="view-transition w-full max-w-4xl text-center p-6 md:p-12 bg-[#1a1c21] rounded-xl shadow-2xl space-y-8">
             <div class="space-y-4">
                 <h2 class="text-4xl md:text-5xl font-extrabold text-gray-100 leading-tight">Your Voice, Your Vote. Simplified.</h2>
                 <p class="text-lg text-gray-400 max-w-2xl mx-auto">
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                     VoteEase allows citizens to register, log in, and securely participate in elections online.
                 </p>
             </div>
 
-<<<<<<< HEAD
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-                <button 
-                    class="text-lg font-bold py-3 px-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-xl hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
-                    onclick="showView('register')">
-                    <span class="relative z-10">Register to Vote Now</span>
-                </button>
-                <button 
-                    class="text-lg font-semibold py-3 px-8 bg-transparent border-2 border-blue-500 text-blue-400 rounded-full hover:bg-blue-500 hover:text-white transition-all duration-300 transform hover:scale-105"
-                    onclick="showView('login')">
-                    <span class="relative z-10">Already Registered?</span>
-                </button>
-            </div>
-
-            <!-- Feature Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-                <div class="p-6 bg-gradient-to-br from-blue-900/30 to-purple-900/30 rounded-xl border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300 transform hover:scale-105">
-                    <div class="text-4xl mb-3 font-bold text-blue-400">🔐</div>
-                    <h3 class="text-xl font-bold text-gray-100 mb-2">Secure</h3>
-                    <p class="text-gray-400 text-sm">Your vote is encrypted and protected</p>
-                </div>
-                <div class="p-6 bg-gradient-to-br from-green-900/30 to-blue-900/30 rounded-xl border border-green-500/30 hover:border-green-400/50 transition-all duration-300 transform hover:scale-105">
-                    <div class="text-4xl mb-3 font-bold text-green-400">⚡</div>
-                    <h3 class="text-xl font-bold text-gray-100 mb-2">Fast</h3>
-                    <p class="text-gray-400 text-sm">Vote in seconds from anywhere</p>
-                </div>
-                <div class="p-6 bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-xl border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 transform hover:scale-105">
-                    <div class="text-4xl mb-3 font-bold text-purple-400">✓</div>
-                    <h3 class="text-xl font-bold text-gray-100 mb-2">Transparent</h3>
-                    <p class="text-gray-400 text-sm">Real-time results and tracking</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Login -->
-        <div id="login-view" class="view-transition w-full max-w-sm p-8 glass-effect rounded-2xl shadow-2xl hidden card-hover">
-            <div class="text-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-100">Voter Login</h2>
-                <p class="text-gray-400 text-sm mt-2">Welcome back! Please login to continue</p>
-            </div>
-            <form id="login-form" onsubmit="event.preventDefault(); handleLogin();" class="space-y-5 animate-slideInRight">
-                <div>
-                    <label for="voter-id" class="block text-sm font-medium text-gray-300 mb-2">Voter ID or Email</label>
-                    <input type="text" id="voter-id" required placeholder="e.g., voter@example.com"
-                        class="mt-1 block w-full px-4 py-3 bg-[#1e2026] border border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                </div>
-                <div class="input-wrapper">
-                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
-                    <input type="password" id="password" required placeholder="••••••••"
-                        class="mt-1 block w-full px-4 py-3 bg-[#1e2026] border border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pr-10">
-                    <span class="toggle-eye" onmousedown="holdEye('password')" onmouseup="releaseEye('password')" onmouseleave="releaseEye('password')" title="Show password">&#128065;</span>
-                </div>
-                <button type="submit" id="login-btn" class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-blue-500/50 hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-[1.02]">
-                    <span class="relative z-10">Sign In</span>
-                </button>
-                <p class="text-center text-sm text-gray-400 mt-4">
-                    Don't have an account? 
-                    <a href="#" class="text-blue-400 hover:text-blue-300 font-medium hover:underline transition-colors duration-200" onclick="showView('register')">Register Now</a>
-=======
             <button 
                 class="mt-8 text-lg font-bold py-3 px-8 bg-blue-600 text-white rounded-full shadow-xl hover:bg-blue-700 transition duration-300 transform hover:scale-105"
                 onclick="showView('register')">
@@ -477,39 +171,18 @@
                 <p class="text-center text-sm text-gray-400 mt-4">
                     Don't have an account? 
                     <a href="#" class="text-blue-400 hover:text-blue-300 font-medium" onclick="showView('register')">Register Now</a>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 </p>
             </form>
         </div>
 
         <!-- Register -->
-<<<<<<< HEAD
-        <div id="register-view" class="view-transition w-full max-w-md p-8 glass-effect rounded-2xl shadow-2xl hidden card-hover">
-            <div class="text-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-100">Voter Registration</h2>
-                <p class="text-gray-400 text-sm mt-2">Join thousands of voters today</p>
-            </div>
-            <form id="register-form" onsubmit="event.preventDefault(); handleRegistration();" class="space-y-4 animate-slideInRight">
-=======
         <div id="register-view" class="view-transition w-full max-w-md p-8 bg-[#1a1c21] rounded-xl shadow-2xl hidden">
             <h2 class="text-3xl font-bold text-center text-gray-100 mb-6">Voter Registration</h2>
             <form id="register-form" onsubmit="event.preventDefault(); handleRegistration();" class="space-y-5">
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
 
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
-<<<<<<< HEAD
-                        <input type="text" id="reg-lname" required placeholder="Dela Cruz" class="block w-full px-3 py-2.5 bg-[#1e2026] border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
-                        <input type="text" id="reg-fname" required placeholder="Juan" class="block w-full px-3 py-2.5 bg-[#1e2026] border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">M.I.</label>
-                        <input type="text" id="reg-mi" maxlength="1" placeholder="L" class="block w-full px-3 py-2.5 bg-[#1e2026] border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-=======
                         <input type="text" id="reg-lname" required placeholder="Dela Cruz" class="block w-full px-3 py-2 border border-gray-600 rounded-lg">
                     </div>
                     <div>
@@ -519,84 +192,43 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-300 mb-1">M.I.</label>
                         <input type="text" id="reg-mi" maxlength="1" placeholder="L" class="block w-full px-3 py-2 border border-gray-600 rounded-lg">
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                     </div>
                 </div>
 
                 <div>
                     <label for="reg-email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
                     <input type="email" id="reg-email" required placeholder="your.email@gov.org"
-<<<<<<< HEAD
-                        class="mt-1 block w-full px-4 py-2.5 bg-[#1e2026] border border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-=======
                         class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm">
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 </div>
 
                 <div>
                     <label for="reg-phone" class="block text-sm font-medium text-gray-300 mb-1">Phone Number</label>
                     <input type="tel" id="reg-phone" required placeholder="09XXXXXXXXX"
-<<<<<<< HEAD
-                        class="block w-full px-4 py-2.5 bg-[#1e2026] border border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-=======
                         class="block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm">
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 </div>
 
                 <div>
                     <label for="reg-address" class="block text-sm font-medium text-gray-300 mb-1">Address</label>
                     <input type="text" id="reg-address" required placeholder="House No., Street, Barangay"
-<<<<<<< HEAD
-                        class="block w-full px-4 py-2.5 bg-[#1e2026] border border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-=======
                         class="block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm">
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 </div>
 
                 <div>
                     <label for="reg-age" class="block text-sm font-medium text-gray-300 mb-1">Age</label>
                     <input type="number" id="reg-age" required min="1" placeholder="e.g., 25"
-<<<<<<< HEAD
-                        class="block w-full px-4 py-2.5 bg-[#1e2026] border border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-=======
                         class="block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm">
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 </div>
 
                 <div class="input-wrapper">
                     <label for="reg-password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
                     <input type="password" id="reg-password" required placeholder="••••••••"
-<<<<<<< HEAD
-                        class="block w-full px-4 py-2.5 bg-[#1e2026] border border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pr-10">
-                    <span class="toggle-eye" onmousedown="holdEye('reg-password')" onmouseup="releaseEye('reg-password')" onmouseleave="releaseEye('reg-password')" title="Show password">&#128065;</span>
-=======
                         class="block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm pr-10">
                     <span class="toggle-eye" onmousedown="holdEye('reg-password')" onmouseup="releaseEye('reg-password')" onmouseleave="releaseEye('reg-password')">&#128065;</span>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 </div>
 
                 <div class="input-wrapper">
                     <label for="reg-confirm-password" class="block text-sm font-medium text-gray-300 mb-1">Confirm Password</label>
                     <input type="password" id="reg-confirm-password" required placeholder="••••••••"
-<<<<<<< HEAD
-                        class="block w-full px-4 py-2.5 bg-[#1e2026] border border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pr-10">
-                    <span class="toggle-eye" onmousedown="holdEye('reg-confirm-password')" onmouseup="releaseEye('reg-confirm-password')" onmouseleave="releaseEye('reg-confirm-password')" title="Show password">&#128065;</span>
-                </div>
-
-                <div class="flex items-center p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
-                    <input id="reg-filipino" type="checkbox" required class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
-                    <label for="reg-filipino" class="ml-3 text-sm text-gray-300 cursor-pointer">I am a Filipino citizen</label>
-                </div>
-
-                <button type="submit" id="register-btn" class="w-full py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-lg shadow-lg hover:shadow-green-500/50 hover:from-green-700 hover:to-green-800 transition-all duration-300 transform hover:scale-[1.02]">
-                    <span class="relative z-10">Create Account</span>
-                </button>
-
-                <p class="text-center text-sm text-gray-400 mt-4">
-                    Already have an account? 
-                    <a href="#" class="text-blue-400 hover:text-blue-300 font-medium hover:underline transition-colors duration-200" onclick="showView('login')">Login Here</a>
-                </p>
-=======
                         class="block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm pr-10">
                     <span class="toggle-eye" onmousedown="holdEye('reg-confirm-password')" onmouseup="releaseEye('reg-confirm-password')" onmouseleave="releaseEye('reg-confirm-password')">&#128065;</span>
                 </div>
@@ -610,18 +242,11 @@
                 <button type="submit" class="w-full py-3 bg-green-600 text-white font-bold rounded-lg shadow-lg hover:bg-green-700 transition duration-150 transform hover:scale-[1.01]">
                     Create Account
                 </button>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             </form>
         </div>
 
     </main>
 
-<<<<<<< HEAD
-    <!-- Footer -->
-    <footer class="glass-effect text-center py-4 text-gray-400 text-sm border-t border-gray-800">
-        <p>&copy; 2025 VoteEase. All rights reserved. | <span class="text-blue-400">Secure • Fast • Transparent</span></p>
-    </footer>
-=======
     <!-- pop ups -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box" id="modalBox">
@@ -632,10 +257,8 @@
             </div>
         </div>
     </div>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
 
     <script>
-    
     const API_BASE_URL = './backend';
     
     const views = {
@@ -644,124 +267,15 @@
         register: document.getElementById('register-view')
     };
 
-<<<<<<< HEAD
-    // SweetAlert2 Toast Configuration
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        background: '#1a1c21',
-        color: '#e2e8f0',
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-    });
-
-    // Enhanced Alert Functions with SweetAlert2
-    function showSuccess(message, redirect = null) {
-        Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: message,
-            background: '#1a1c21',
-            color: '#e2e8f0',
-            confirmButtonColor: '#10b981',
-            confirmButtonText: 'Great!',
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp'
-            }
-        }).then(() => {
-            if (redirect) {
-                window.location.href = redirect;
-            }
-        });
-    }
-
-    function showError(message) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: message,
-            background: '#1a1c21',
-            color: '#e2e8f0',
-            confirmButtonColor: '#ef4444',
-            confirmButtonText: 'Try Again',
-            showClass: {
-                popup: 'animate__animated animate__shakeX'
-            }
-        });
-    }
-
-    function showWarning(message) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Warning',
-            text: message,
-            background: '#1a1c21',
-            color: '#e2e8f0',
-            confirmButtonColor: '#f59e0b',
-            confirmButtonText: 'I Understand'
-        });
-    }
-
-    function showSuspended(message) {
-        Swal.fire({
-            icon: 'error',
-            title: 'ACCOUNT SUSPENDED',
-            html: `<div style="text-align: left; padding: 10px;">
-                <strong>Suspension Reason:</strong><br><br>
-                ${message}<br><br>
-                <em>Please contact the administrator for more information.</em>
-            </div>`,
-            background: '#7f1d1d',
-            color: '#fecaca',
-            confirmButtonColor: '#dc2626',
-            confirmButtonText: 'Contact Admin',
-            allowOutsideClick: false,
-            customClass: {
-                popup: 'swal2-suspended',
-                confirmButton: 'swal2-suspended-btn'
-            }
-        });
-    }
-
-    function showLoading(message = 'Processing...') {
-        Swal.fire({
-            title: message,
-            background: '#1a1c21',
-            color: '#e2e8f0',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-    }
-
-    function showToast(type, message) {
-        Toast.fire({
-            icon: type,
-            title: message
-        });
-=======
-    
     function showModal(title = "Notification", message = "Message will appear here", type = "info") {
         const modalBox = document.getElementById("modalBox");
         const modalTitle = document.getElementById("modalTitle");
         const modalMessage = document.getElementById("modalMessage");
         const modalButtons = document.getElementById("modalButtons");
         
-       
         modalTitle.textContent = title;
         modalMessage.textContent = message;
         
-  
         modalBox.className = "modal-box";
         if (type === "success") {
             modalBox.classList.add("modal-success");
@@ -771,7 +285,6 @@
             modalBox.classList.add("modal-suspended");
         }
         
-       
         modalButtons.innerHTML = `
             <button class="modal-ok" onclick="closeModal()">OK</button>
         `;
@@ -793,7 +306,6 @@
 
     function closeModal() {
         document.getElementById("modalOverlay").style.display = "none";
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     }
 
     function showView(viewName) {
@@ -801,18 +313,12 @@
             const view = views[name];
             if (name === viewName) {
                 view.classList.remove('hidden');
-<<<<<<< HEAD
-                // Add entrance animation
-                view.style.animation = 'fadeInUp 0.6s ease-out';
-=======
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             } else {
                 view.classList.add('hidden');
             }
         }
     }
 
-    
     function holdEye(id) { 
         const input = document.getElementById(id); 
         input.type = "text"; 
@@ -822,9 +328,7 @@
         input.type = "password"; 
     }
 
-
     function getFirstName(fullName) {
-        
         if (fullName.includes(',')) {
             const parts = fullName.split(',');
             if (parts.length > 1) {
@@ -836,20 +340,6 @@
         return fullName.split(' ')[0];
     }
 
-<<<<<<< HEAD
-    // Form validation helpers
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-
-    function validatePhone(phone) {
-        const re = /^09\d{9}$/;
-        return re.test(phone);
-    }
-
-=======
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     async function handleRegistration() {
         const lname = document.getElementById('reg-lname').value.trim();
         const fname = document.getElementById('reg-fname').value.trim();
@@ -864,54 +354,19 @@
         const confirmPassword = document.getElementById('reg-confirm-password').value;
         const filipino = document.getElementById('reg-filipino').checked;
 
-<<<<<<< HEAD
-        // Validation with enhanced feedback
-        if (!validateEmail(email)) {
-            showError('Please enter a valid email address.');
-            return;
-        }
-
-        if (!validatePhone(phone)) {
-            showError('Phone number must be in format: 09XXXXXXXXX');
-            return;
-        }
-
-        if (age < 18) {
-            showWarning('You must be at least 18 years old to register.');
-            return;
-        }
-
-        if (password.length < 6) {
-            showError('Password must be at least 6 characters long.');
-=======
         console.log("Registration data:", { name, email, phone, address, age });
 
         if (age < 18) {
             showError('You must be at least 18 years old to register.');
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             return;
         }
 
         if (password !== confirmPassword) {
-<<<<<<< HEAD
-            showError('Passwords do not match. Please try again.');
-=======
             showError('Passwords do not match.');
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             return;
         }
 
         if (!filipino) {
-<<<<<<< HEAD
-            showWarning('You must confirm that you are a Filipino citizen.');
-            return;
-        }
-
-        // Show loading
-        showLoading('Creating your account...');
-
-        try {
-=======
             showError('You must confirm that you are a Filipino citizen.');
             return;
         }
@@ -919,45 +374,12 @@
         try {
             console.log("Sending to REGISTER.PHP...");
             
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             const res = await fetch(`${API_BASE_URL}/register.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password, address, phone, age })
             });
 
-<<<<<<< HEAD
-            const data = await res.json();
-
-            if (data.status === 'success') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Registration Successful!',
-                    html: `
-                        <div style="text-align: center;">
-                            <p style="font-size: 16px; margin-bottom: 10px;">Welcome to VoteEase!</p>
-                            <p style="color: #cbd5e0;">Your account has been created successfully.</p>
-                            <p style="color: #cbd5e0;">Redirecting to login...</p>
-                        </div>
-                    `,
-                    background: '#1a1c21',
-                    color: '#e2e8f0',
-                    confirmButtonColor: '#10b981',
-                    timer: 2500,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                }).then(() => {
-                    document.getElementById('register-form').reset();
-                    showView('login');
-                    showToast('info', 'Please login with your credentials');
-                });
-            } else {
-                showError(data.message || 'Registration failed. Please try again.');
-            }
-        } catch (err) {
-            console.error("Registration error:", err);
-            showError('Unable to connect to server. Please check your connection.');
-=======
             console.log("Response status:", res.status);
             const data = await res.json();
             console.log("Backend response:", data);
@@ -971,7 +393,6 @@
         } catch (err) {
             console.error("Registration error:", err);
             showError('Error connecting to server.');
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         }
     }
 
@@ -979,41 +400,7 @@
         const voterId = document.getElementById('voter-id').value.trim();
         const password = document.getElementById('password').value;
 
-<<<<<<< HEAD
-        if (!voterId || !password) {
-            showWarning('Please fill in all fields.');
-            return;
-        }
-
-        // Admin login check
         if (voterId === 'admin' && password === 'admin123') {
-            const adminUser = { id: 0, name: 'Administrator', email: 'admin' };
-            localStorage.setItem('user', JSON.stringify(adminUser));
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Admin Access Granted',
-                text: 'Welcome back, Administrator!',
-                background: '#1a1c21',
-                color: '#e2e8f0',
-                confirmButtonColor: '#3b82f6',
-                timer: 1500,
-                timerProgressBar: true,
-                showConfirmButton: false
-            }).then(() => {
-                window.location.href = 'admindashboard.html';
-            });
-            return;
-        }
-
-        // Show loading
-        showLoading('Verifying credentials...');
-
-        try {
-=======
-    
-        if (voterId === 'admin' && password === 'admin123') {
-            
             const adminUser = { id: 0, name: 'Administrator', email: 'admin' };
             localStorage.setItem('user', JSON.stringify(adminUser));
 
@@ -1024,8 +411,6 @@
         }
 
         try {
-           
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             const res = await fetch(`${API_BASE_URL}/login.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1033,95 +418,26 @@
             });
 
             const data = await res.json();
-<<<<<<< HEAD
-
-            if (data.status === 'success') {
-                localStorage.setItem('user', JSON.stringify(data.user));
-
-                const firstName = getFirstName(data.user.name);
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: `Welcome back, ${firstName}!`,
-                    html: `
-                        <div style="text-align: center;">
-                            <p style="color: #cbd5e0; margin-top: 10px;">Login successful!</p>
-                            <p style="color: #cbd5e0;">Redirecting to your dashboard...</p>
-                        </div>
-                    `,
-                    background: '#1a1c21',
-                    color: '#e2e8f0',
-                    confirmButtonColor: '#10b981',
-                    timer: 2000,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                }).then(() => {
-                    let redirectPath = './dashboard.html'; 
-                    if (data.redirect) {
-                        redirectPath = data.redirect.replace(/^\/voting_system\//, './');
-                    }
-                    window.location.href = redirectPath;
-                });
-
-            } else if (data.status === 'suspended') {
-                const reason = data.reason || 'Your account has been suspended by the administrator.';
-                showSuspended(reason);
-            } else {
-                showError(data.message || 'Invalid credentials. Please try again.');
-            }
-
-        } catch (err) {
-            console.error("Login error:", err);
-            showError('Unable to connect to server. Please check your connection.');
-        }
-    }
-
-    // Add enter key support for forms
-    document.addEventListener('DOMContentLoaded', () => {
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-            form.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    form.querySelector('button[type="submit"]').click();
-                }
-            });
-        });
-    });
-
-    window.onload = () => {
-        showView('home');
-        // Show welcome toast
-        setTimeout(() => {
-            showToast('info', 'Welcome to VoteEase!');
-        }, 500);
-    };
-=======
             console.log("Login response:", data);
 
             if (data.status === 'success') {
-                
                 localStorage.setItem('user', JSON.stringify(data.user));
 
-        
                 const firstName = getFirstName(data.user.name);
                 showSuccess(`Welcome, ${firstName}! Redirecting...`);
                 
-                
                 let redirectPath = './dashboard.html'; 
                 if (data.redirect) {
-                   
                     redirectPath = data.redirect.replace(/^\/voting_system\//, './');
                 }
                 setTimeout(() => window.location.href = redirectPath, 1500);
 
-          } else if (data.status === 'suspended') {
-  
-    const reason = data.reason || 'Your account has been suspended by the administrator.';
-    showSuspended(`Suspension Reason:\n\n${reason}\n\nPlease contact the administrator for more information.`);
-} else {
-    showError(data.message || 'Invalid credentials.');
-}
+            } else if (data.status === 'suspended') {
+                const reason = data.reason || 'Your account has been suspended by the administrator.';
+                showSuspended(`Suspension Reason:\n\n${reason}\n\nPlease contact the administrator for more information.`);
+            } else {
+                showError(data.message || 'Invalid credentials.');
+            }
 
         } catch (err) {
             console.error("Login error:", err);
@@ -1130,8 +446,7 @@
     }
 
     window.onload = () => showView('home');
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
-</script>
+    </script>
 
 </body>
 </html>

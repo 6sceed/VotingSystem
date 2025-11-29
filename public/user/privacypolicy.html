@@ -3,11 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-<<<<<<< HEAD
   <title>Privacy Policy - VoteEase</title>
-=======
-  <title>Voting System</title>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
   <style>
     :root {
       --bg: #121417;
@@ -24,7 +20,6 @@
       margin: 0;
     }
 
-    
     header {
       background: var(--header-bg);
       color: var(--header-text);
@@ -113,7 +108,6 @@
     .show {
       display: block;
     }
-<<<<<<< HEAD
 
     .go-back-container {
       text-align: left;
@@ -137,87 +131,216 @@
     }
 
     .container {
-      max-width: 800px;
-      margin: 40px auto;
+      max-width: 900px;
+      margin: 0 auto;
       padding: 0 24px 60px;
     }
 
-    .policy-card {
-      background: #1a1c21;
-      border-radius: 12px;
-      padding: 40px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    .privacy-hero {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 16px;
+      padding: 60px 40px;
+      text-align: center;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 32px rgba(78, 158, 255, 0.15);
+      position: relative;
+      overflow: hidden;
     }
 
-    .policy-title {
-      font-size: 32px;
-      font-weight: 700;
+    .privacy-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(78, 158, 255, 0.1) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(180deg); }
+    }
+
+    .privacy-icon {
+      font-size: 56px;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .privacy-title {
+      font-size: 42px;
+      font-weight: 800;
       margin-bottom: 8px;
-      color: #e2e8f0;
+      background: linear-gradient(135deg, #4e9eff 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
     }
 
-    .policy-date {
-      font-size: 14px;
+    .last-updated {
+      font-size: 15px;
       color: #94a3b8;
-      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
     }
 
-    .section {
-      margin-bottom: 32px;
+    .section-card {
+      background: linear-gradient(135deg, #1a1c21 0%, #0f1115 100%);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(78, 158, 255, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #4e9eff 0%, #3b82f6 100%);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s ease;
+    }
+
+    .section-card:hover {
+      border-color: rgba(78, 158, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(78, 158, 255, 0.15);
+    }
+
+    .section-card:hover::before {
+      transform: scaleY(1);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-icon {
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(78, 158, 255, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border-radius: 10px;
+      flex-shrink: 0;
     }
 
     .section-title {
       font-size: 20px;
-      font-weight: 600;
-      color: #4e9eff;
-      margin-bottom: 12px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin: 0;
     }
 
     .section-text {
       font-size: 15px;
-      line-height: 1.7;
-      color: #cbd5e1;
+      line-height: 1.8;
+      color: #94a3b8;
       margin-bottom: 12px;
     }
 
     .section-list {
-      margin: 12px 0;
-      padding-left: 24px;
+      list-style: none;
+      padding-left: 0;
+      margin: 16px 0;
     }
 
     .section-list li {
       font-size: 15px;
-      line-height: 1.7;
-      color: #cbd5e1;
+      line-height: 1.6;
+      color: #94a3b8;
+      padding: 10px 16px;
+      padding-left: 40px;
+      position: relative;
       margin-bottom: 8px;
+      background: rgba(78, 158, 255, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid rgba(78, 158, 255, 0.3);
+      transition: all 0.2s ease;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .section-list li:hover {
+      background: rgba(78, 158, 255, 0.1);
+      border-left-color: #4e9eff;
+      transform: translateX(4px);
     }
 
-    .policy-card {
-      animation: fadeIn 0.5s ease-out;
+    .section-list li:before {
+      content: "✓";
+      color: #4e9eff;
+      font-weight: bold;
+      font-size: 16px;
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
     }
-=======
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
+
+    .contact-info {
+      background: linear-gradient(135deg, rgba(78, 158, 255, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+      padding: 28px;
+      border-radius: 12px;
+      border: 2px solid rgba(78, 158, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-info::before {
+      content: '📞';
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 48px;
+      opacity: 0.1;
+    }
+
+    .contact-info p {
+      margin: 10px 0;
+      font-size: 15px;
+      color: #cbd5e1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-info strong {
+      color: #e2e8f0;
+      font-weight: 700;
+    }
+
+    .contact-info a {
+      color: #4e9eff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .contact-info a:hover {
+      color: #3b82f6;
+      text-decoration: underline;
+    }
   </style>
 </head>
 
 <body>
   <header>
-<<<<<<< HEAD
     <div class="logo">VoteEase</div>
-=======
-    <div class="logo">VotingEase</div>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     <div class="menu">
       <div class="menu-links"></div>
       <button class="menu-btn" onclick="toggleMenu()">
@@ -228,115 +351,148 @@
         <a href="contactus.html">Contact Us</a>
         <a href="about.html">About</a>
         <a href="privacypolicy.html">Privacy Policy</a>
-<<<<<<< HEAD
         <a href="../../index.html" onclick="logout()">Logout</a>
-=======
-        <a href="index.html" onclick="logout()">Logout</a>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
       </div>
     </div>
   </header>
 
-<<<<<<< HEAD
   <div class="go-back-container">
     <button class="go-back-btn" onclick="goBack()">← Go Back</button>
   </div>
 
   <div class="container">
-    <div class="policy-card">
-      <h1 class="policy-title">Privacy Policy</h1>
-      <p class="policy-date">Last updated: November 29, 2025</p>
+    <div class="privacy-hero">
+      <div class="privacy-icon">🔒</div>
+      <h1 class="privacy-title">Privacy Policy</h1>
+      <p class="last-updated">Last updated: January 2025</p>
+    </div>
 
-      <div class="section">
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">📋</div>
         <h2 class="section-title">Introduction</h2>
-        <p class="section-text">
-          VoteEase is committed to protecting your privacy. This policy outlines how we collect, use, and safeguard your personal information when you use our online voting platform.
-        </p>
       </div>
+      <p class="section-text">
+        Welcome to VoteEase. We respect your privacy and are committed to protecting your personal information. 
+        This privacy policy explains how we collect, use, and safeguard your data when you use our voting platform.
+      </p>
+    </div>
 
-      <div class="section">
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">📊</div>
         <h2 class="section-title">Information We Collect</h2>
-        <p class="section-text">We collect the following information:</p>
-        <ul class="section-list">
-          <li>Name and email address for account registration</li>
-          <li>Voting preferences and election participation data</li>
-          <li>Login activity and session information</li>
-          <li>IP address and device information for security purposes</li>
-        </ul>
       </div>
+        <p class="section-text">We collect the following information to provide our services:</p>
+        <ul class="section-list">
+          <li>Email address for account creation and communication</li>
+          <li>Full name for voter identification</li>
+          <li>Voting records to ensure election integrity</li>
+          <li>Login activity for security purposes</li>
+        </ul>
+    </div>
 
-      <div class="section">
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">⚙️</div>
         <h2 class="section-title">How We Use Your Information</h2>
-        <p class="section-text">Your information is used to:</p>
-        <ul class="section-list">
-          <li>Enable your participation in secure online elections</li>
-          <li>Verify your identity and prevent fraudulent voting</li>
-          <li>Send election notifications and updates</li>
-          <li>Improve our platform's security and user experience</li>
-        </ul>
       </div>
+      <p class="section-text">Your information is used solely for:</p>
+      <ul class="section-list">
+        <li>Enabling you to participate in elections</li>
+        <li>Preventing duplicate voting and fraud</li>
+        <li>Sending important election-related notifications</li>
+        <li>Maintaining accurate voting records</li>
+        <li>Improving our platform security and functionality</li>
+      </ul>
+    </div>
 
-      <div class="section">
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🛡️</div>
         <h2 class="section-title">Data Security</h2>
-        <p class="section-text">
-          We implement industry-standard security measures including 256-bit encryption to protect your data. Your voting choices are anonymized and stored securely to maintain ballot secrecy while ensuring election integrity.
-        </p>
       </div>
+        <p class="section-text">
+          We take data security seriously. Your password is encrypted, and we use industry-standard security measures 
+          to protect your information. However, no system is completely secure, and we encourage you to use strong, 
+          unique passwords.
+        </p>
+    </div>
 
-      <div class="section">
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🤝</div>
+        <h2 class="section-title">Data Sharing</h2>
+      </div>
+      <p class="section-text">
+        We do not sell, trade, or share your personal information with third parties. Your data is used exclusively 
+        within VoteEase for election management purposes. Voting results may be shared publicly, but individual 
+        voting choices remain private.
+      </p>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">✋</div>
         <h2 class="section-title">Your Rights</h2>
+      </div>
         <p class="section-text">You have the right to:</p>
         <ul class="section-list">
-          <li>Access your personal data at any time through your profile</li>
-          <li>Request deletion of your account and associated data</li>
-          <li>Opt out of non-essential communications</li>
-          <li>Request a copy of your data in a portable format</li>
+          <li>Access your personal information at any time</li>
+          <li>Update or correct your profile details</li>
+          <li>Request deletion of your account (subject to legal requirements)</li>
+          <li>View your voting history</li>
         </ul>
-      </div>
+    </div>
 
-      <div class="section">
-        <h2 class="section-title">Data Retention</h2>
-        <p class="section-text">
-          We retain your personal information only as long as necessary for election purposes and legal compliance. Voting records are maintained according to electoral regulations, while personal account data can be deleted upon request.
-        </p>
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🍪</div>
+        <h2 class="section-title">Cookies</h2>
       </div>
+      <p class="section-text">
+        We use local storage to keep you logged in and improve your experience. This information stays on your 
+        device and can be cleared at any time through your browser settings.
+      </p>
+    </div>
 
-      <div class="section">
-        <h2 class="section-title">Contact Us</h2>
-        <p class="section-text">
-          If you have questions about this privacy policy or how your data is handled, please contact us through our contact form or email us directly.
-        </p>
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🔄</div>
+        <h2 class="section-title">Changes to This Policy</h2>
       </div>
+      <p class="section-text">
+        We may update this privacy policy occasionally. Any changes will be posted on this page with an updated 
+        revision date. We encourage you to review this policy periodically.
+      </p>
+    </div>
+
+    <div class="contact-info">
+        <p><strong>Questions or Concerns?</strong></p>
+        <p>If you have any questions about this privacy policy or how we handle your data, please contact us:</p>
+        <p>Email: <a href="mailto:caidgahs@gmail.com">caidgahs@gmail.com</a></p>
+        <p>Or visit our <a href="contactus.html">Contact Us</a> page.</p>
     </div>
   </div>
 
-=======
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
   <script>
-   
     function toggleMenu() {
       document.getElementById("dropdownMenu").classList.toggle("show");
     }
 
-    
     window.onclick = function(e) {
       if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) {
         document.getElementById("dropdownMenu").classList.remove("show");
       }
     };
 
-    
     function logout() {
       localStorage.removeItem("user");
-<<<<<<< HEAD
       window.location.href = "../../index.html";
     }
 
     function goBack() {
       window.history.back();
-=======
-      window.location.href = "index.html";
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     }
   </script>
 </body>

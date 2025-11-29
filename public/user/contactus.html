@@ -3,15 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-<<<<<<< HEAD
   <title>Contact Us - VoteEase</title>
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
-=======
-  <title>Voting System</title>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
   <style>
     :root {
       --bg: #121417;
@@ -117,7 +113,6 @@
     .show {
       display: block;
     }
-<<<<<<< HEAD
 
     .go-back-container {
       text-align: left;
@@ -141,62 +136,139 @@
     }
 
     .container {
-      max-width: 600px;
+      max-width: 700px;
       margin: 40px auto;
-      padding: 0 24px;
+      padding: 0 24px 60px;
     }
 
-    .contact-card {
-      background: #1a1c21;
-      border-radius: 12px;
-      padding: 40px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    .contact-hero {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 16px;
+      padding: 48px 40px;
+      text-align: center;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(78, 158, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(78, 158, 255, 0.1) 0%, transparent 70%);
+      animation: rotate 15s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .contact-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
     }
 
     .contact-title {
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 36px;
+      font-weight: 800;
       margin-bottom: 8px;
-      color: #e2e8f0;
+      background: linear-gradient(135deg, #4e9eff 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
     }
 
     .contact-subtitle {
-      font-size: 15px;
+      font-size: 16px;
       color: #94a3b8;
-      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-card {
+      background: linear-gradient(135deg, #1a1c21 0%, #0f1115 100%);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(78, 158, 255, 0.1);
     }
 
     .form-group {
-      margin-bottom: 24px;
+      margin-bottom: 28px;
+      position: relative;
     }
 
     .form-label {
       display: block;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       color: #cbd5e1;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-label::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background: #4e9eff;
+      border-radius: 50%;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: 18px;
+      transition: color 0.2s;
+      pointer-events: none;
     }
 
     .form-input,
     .form-textarea {
       width: 100%;
-      padding: 12px 16px;
-      background: #0f1115;
-      border: 1px solid #2d3139;
-      border-radius: 8px;
+      padding: 14px 16px 14px 48px;
+      background: rgba(15, 17, 21, 0.6);
+      border: 2px solid rgba(78, 158, 255, 0.2);
+      border-radius: 12px;
       color: #e2e8f0;
       font-size: 15px;
       font-family: "Inter", Arial, sans-serif;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.3s ease;
       box-sizing: border-box;
+    }
+
+    .form-textarea {
+      padding-left: 16px;
     }
 
     .form-input:focus,
     .form-textarea:focus {
       outline: none;
       border-color: #4e9eff;
-      box-shadow: 0 0 0 3px rgba(78, 158, 255, 0.1);
+      background: rgba(15, 17, 21, 0.8);
+      box-shadow: 0 0 0 4px rgba(78, 158, 255, 0.15), 0 8px 24px rgba(78, 158, 255, 0.1);
+    }
+
+    .form-input:focus + .input-icon {
+      color: #4e9eff;
     }
 
     .form-textarea {
@@ -206,41 +278,67 @@
 
     .send-btn {
       width: 100%;
-      padding: 14px;
-      background: #4e9eff;
+      padding: 16px;
+      background: linear-gradient(135deg, #4e9eff 0%, #3b82f6 100%);
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       color: #fff;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(78, 158, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .send-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .send-btn:hover::before {
+      width: 300px;
+      height: 300px;
     }
 
     .send-btn:hover {
-      background: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(78, 158, 255, 0.4);
     }
 
     .send-btn:active {
-      transform: scale(0.98);
+      transform: translateY(0);
     }
 
     .send-btn:disabled {
-      background: #334155;
+      background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     .social-section {
       margin-top: 48px;
       text-align: center;
-      padding-top: 32px;
-      border-top: 1px solid #2d3139;
+      padding: 32px;
+      background: rgba(78, 158, 255, 0.05);
+      border-radius: 12px;
+      border: 1px dashed rgba(78, 158, 255, 0.2);
     }
 
     .social-title {
       font-size: 16px;
+      font-weight: 600;
       color: #cbd5e1;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .social-links {
@@ -253,50 +351,49 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
-      background: #0f1115;
-      border: 1px solid #2d3139;
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, rgba(78, 158, 255, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+      border: 2px solid rgba(78, 158, 255, 0.2);
       border-radius: 50%;
       color: #94a3b8;
-      font-size: 20px;
+      font-size: 22px;
       text-decoration: none;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .social-link::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      padding: 2px;
+      background: linear-gradient(135deg, #4e9eff, #3b82f6);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .social-link:hover::before {
+      opacity: 1;
     }
 
     .social-link:hover {
-      background: #4e9eff;
-      border-color: #4e9eff;
+      background: linear-gradient(135deg, #4e9eff 0%, #3b82f6 100%);
+      border-color: transparent;
       color: #fff;
-      transform: translateY(-2px);
+      transform: translateY(-4px) scale(1.1);
+      box-shadow: 0 8px 20px rgba(78, 158, 255, 0.4);
     }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .contact-card {
-      animation: fadeIn 0.5s ease-out;
-    }
-=======
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
   </style>
 </head>
 
 <body>
   <header>
-<<<<<<< HEAD
     <div class="logo">VoteEase</div>
-=======
-    <div class="logo">VotingEase</div>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     <div class="menu">
       <div class="menu-links"></div>
       <button class="menu-btn" onclick="toggleMenu()">
@@ -307,44 +404,52 @@
         <a href="contactus.html">Contact Us</a>
         <a href="about.html">About</a>
         <a href="privacypolicy.html">Privacy Policy</a>
-        <a href="index.html" onclick="logout()">Logout</a>
+        <a href="../../index.html" onclick="logout()">Logout</a>
       </div>
     </div>
   </header>
 
-<<<<<<< HEAD
   <div class="go-back-container">
     <button class="go-back-btn" onclick="goBack()">← Go Back</button>
   </div>
 
   <div class="container">
-    <div class="contact-card">
+    <div class="contact-hero">
+      <div class="contact-icon">✉️</div>
       <h1 class="contact-title">Contact Us</h1>
       <p class="contact-subtitle">Have a question? We'd love to hear from you.</p>
+    </div>
 
+    <div class="contact-card">
       <form id="contactForm" onsubmit="handleSubmit(event)">
         <div class="form-group">
           <label class="form-label" for="email">Email Address</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            class="form-input" 
-            placeholder="your.email@example.com"
-            required
-          />
+          <div class="input-wrapper">
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-input" 
+              placeholder="your.email@example.com"
+              required
+            />
+            <span class="input-icon">📧</span>
+          </div>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="subject">Subject</label>
-          <input 
-            type="text" 
-            id="subject" 
-            name="subject" 
-            class="form-input" 
-            placeholder="What's this about?"
-            required
-          />
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="subject" 
+              name="subject" 
+              class="form-input" 
+              placeholder="What's this about?"
+              required
+            />
+            <span class="input-icon">💬</span>
+          </div>
         </div>
 
         <div class="form-group">
@@ -358,7 +463,9 @@
           ></textarea>
         </div>
 
-        <button type="submit" class="send-btn" id="sendBtn">Send Message</button>
+        <button type="submit" class="send-btn" id="sendBtn">
+          <span style="position: relative; z-index: 1;">Send Message</span>
+        </button>
       </form>
 
       <div class="social-section">
@@ -404,18 +511,10 @@
       }
     });
 
-=======
-  <script>
-    
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     function toggleMenu() {
       document.getElementById("dropdownMenu").classList.toggle("show");
     }
 
-<<<<<<< HEAD
-=======
- 
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     window.onclick = function(e) {
       if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) {
         document.getElementById("dropdownMenu").classList.remove("show");
@@ -424,7 +523,6 @@
 
     function logout() {
       localStorage.removeItem("user");
-<<<<<<< HEAD
       window.location.href = "../../index.html";
     }
 
@@ -491,9 +589,6 @@
         sendBtn.disabled = false;
         sendBtn.textContent = 'Send Message';
       }
-=======
-      window.location.href = "index.html";
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     }
   </script>
 </body>

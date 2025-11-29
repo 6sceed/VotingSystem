@@ -16,11 +16,7 @@ $email = $data['email'] ?? '';
 $password = $data['password'] ?? '';
 
 // check if voter exists and get their status
-<<<<<<< HEAD
 $stmt = $conn->prepare("SELECT id, name, email, password, status, is_archived FROM voters WHERE email = ?");
-=======
-$stmt = $conn->prepare("SELECT id, name, email, password, status FROM voters WHERE email = ?");
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -32,7 +28,6 @@ if ($result->num_rows === 0) {
 
 $voter = $result->fetch_assoc();
 
-<<<<<<< HEAD
 // check if account is archived
 if (isset($voter['is_archived']) && $voter['is_archived'] == 1) {
     echo json_encode([
@@ -42,8 +37,6 @@ if (isset($voter['is_archived']) && $voter['is_archived'] == 1) {
     exit;
 }
 
-=======
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
 // check if account is suspended 
 if ($voter['status'] === 'suspended' || $voter['status'] === 'Suspended' || $voter['status'] === '0') {
 

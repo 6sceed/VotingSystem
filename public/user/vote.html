@@ -4,13 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Voting System — Cast Your Vote</title>
-<<<<<<< HEAD
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
-=======
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
   <style>
     :root {
       --bg: #121417;
@@ -313,19 +310,11 @@
         <div></div><div></div><div></div>
       </button>
       <div class="dropdown" id="dropdownMenu">
-<<<<<<< HEAD
         <a href="profile.html">Profile</a>
         <a href="contactus.html">Contact Us</a>
         <a href="about.html">About</a>
         <a href="privacypolicy.html">Privacy Policy</a>
         <a href="../../index.html" onclick="logout()">Logout</a>
-=======
-        <a href="/voting_system/public/user/profile.html">Profile</a>
-        <a href="/voting_system/public/user/contactus.html">Contact Us</a>
-        <a href="/voting_system/public/user/about.html">About</a>
-        <a href="/voting_system/public/user/privacypolicy.html">Privacy Policy</a>
-        <a href="/voting_system/index.html" onclick="logout()">Logout</a>
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
       </div>
     </div>
   </header>
@@ -365,18 +354,10 @@
     let userVotes = {};
 
     function goBack() {
-<<<<<<< HEAD
       window.location.href = "../../dashboard.html";
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-=======
-      window.location.href = "/voting_system/dashboard.html";
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-    
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
       const votedStatus = localStorage.getItem('hasVoted');
       const storedVotes = localStorage.getItem('userVote');
       
@@ -388,7 +369,6 @@
       
       loadCandidates();
       
-<<<<<<< HEAD
       const user = JSON.parse(localStorage.getItem("user"));
       if (!user) {
         Swal.fire({
@@ -401,12 +381,6 @@
         }).then(() => {
           window.location.href = "../../index.html";
         });
-=======
-      
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user) {
-        window.location.href = "/voting_system/index.html";
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
       }
     });
 
@@ -417,7 +391,6 @@
     }
 
     function loadCandidates() {
-<<<<<<< HEAD
       // Show loading state
       Swal.fire({
         title: 'Loading Candidates',
@@ -439,11 +412,6 @@
         .then(response => response.json())
         .then(data => {
           Swal.close();
-=======
-      fetch('/voting_system/backend/get_candidates.php')
-        .then(response => response.json())
-        .then(data => {
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
           console.log('Candidates data:', data); 
           if (data.success && data.candidates) {
             allCandidates = data.candidates;
@@ -451,7 +419,6 @@
           } else {
             document.getElementById('positionsContainer').innerHTML = 
               '<div class="error">No candidates available for voting.</div>';
-<<<<<<< HEAD
             
             Swal.fire({
               icon: 'info',
@@ -483,22 +450,6 @@
     function displayCandidatesByPosition() {
       const container = document.getElementById('positionsContainer');
       
-=======
-          }
-        })
-        .catch(error => {
-          console.error('Error loading candidates:', error);
-          document.getElementById('positionsContainer').innerHTML = 
-            '<div class="error">Error loading candidates. Please try again.</div>';
-        });
-    }
-
-    
-    function displayCandidatesByPosition() {
-      const container = document.getElementById('positionsContainer');
-      
-    
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
       const positions = {};
       allCandidates.forEach(candidate => {
         if (!positions[candidate.position]) {
@@ -506,7 +457,6 @@
         }
         positions[candidate.position].push(candidate);
       })
-<<<<<<< HEAD
       
       const positionOrder = ['President', 'Vice President', 'Secretary', 'Treasurer', 'Auditor'];
       const sortedPositions = Object.keys(positions).sort((a, b) => {
@@ -521,10 +471,6 @@
       let html = '';
       for (const position of sortedPositions) {
         const candidates = positions[position];
-=======
-      let html = '';
-      for (const [position, candidates] of Object.entries(positions)) {
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         html += `
           <div class="position-section">
             <h2 class="position-title">${escapeHtml(position)}</h2>
@@ -558,10 +504,6 @@
       }
     }
 
-<<<<<<< HEAD
-=======
-    
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     function selectCandidate(position, candidateId) {
       if (hasVoted) return; 
       
@@ -569,27 +511,15 @@
       const cards = positionSection.querySelectorAll('.candidate-card');
       cards.forEach(card => card.classList.remove('selected'));
       
-<<<<<<< HEAD
-=======
-      
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
       const selectedCard = document.querySelector(`.candidate-card[onclick*="${position}"][onclick*="${candidateId}"]`);
       if (selectedCard) {
         selectedCard.classList.add('selected');
       }
       
-<<<<<<< HEAD
-=======
-      
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
       selectedCandidates[position] = candidateId;
       updateSubmitButton();
     }
 
-<<<<<<< HEAD
-=======
-  
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     function updateSubmitButton() {
       const positions = [...new Set(allCandidates.map(c => c.position))];
       const allPositionsSelected = positions.every(position => selectedCandidates[position]);
@@ -609,7 +539,6 @@
       }
     }
 
-<<<<<<< HEAD
     document.getElementById('submitVote').addEventListener('click', function() {
       if (hasVoted) return; 
       
@@ -633,7 +562,9 @@
             const settings = data.settings;
             const now = new Date();
             const start = new Date(settings.start_date);
+            start.setHours(0, 0, 0, 0); // Start of start date
             const end = new Date(settings.end_date);
+            end.setHours(23, 59, 59, 999); // End of end date
             
             if (!settings.is_active || now < start || now > end) {
               Swal.fire({
@@ -759,73 +690,6 @@
       });
     }
 
-=======
-    
-    
-document.getElementById('submitVote').addEventListener('click', function() {
-    if (hasVoted) return; 
-    
-    fetch('/voting_system/backend/get_election_settings.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.settings) {
-                const settings = data.settings;
-                const now = new Date();
-                const start = new Date(settings.start_date);
-                const end = new Date(settings.end_date);
-                
-                if (!settings.is_active || now < start || now > end) {
-                    alert('Voting is currently closed. Please contact the administrator.');
-                    return;
-                }
-                
-                
-                if (confirm('Are you sure you want to submit your vote? This action cannot be undone.')) {
-                    const user = JSON.parse(localStorage.getItem("user"));
-                    const userId = user.id;
-                    
-                    console.log('Submitting vote for user:', userId, 'Votes:', selectedCandidates);
-                    
-                    
-                    fetch('/voting_system/backend/cast_vote.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            user_id: userId,
-                            votes: selectedCandidates
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Server response:', data);
-                        if (data.success) {
-                            
-                            localStorage.setItem('userVote', JSON.stringify(selectedCandidates));
-                            localStorage.setItem('hasVoted', 'true');
-                            
-                            alert('Vote submitted successfully!');
-                            window.location.href = '/voting_system/dashboard.html';
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Vote submission error:', error);
-                        alert('Error submitting vote: ' + error.message);
-                    });
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error checking voting status:', error);
-            alert('Error checking voting status. Please try again.');
-        });
-});
-
-    
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     function escapeHtml(s) { 
       return (s+'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); 
     }
@@ -841,7 +705,6 @@ document.getElementById('submitVote').addEventListener('click', function() {
     };
 
     function logout() {
-<<<<<<< HEAD
       Swal.fire({
         title: 'Logout Confirmation',
         text: 'Are you sure you want to logout?',
@@ -861,12 +724,6 @@ document.getElementById('submitVote').addEventListener('click', function() {
           window.location.href = "../../index.html";
         }
       });
-=======
-      localStorage.removeItem("user");
-      localStorage.removeItem("userVote");
-      localStorage.removeItem("hasVoted");
-      window.location.href = "/voting_system/index.html";
->>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     }
   </script>
 </body>
