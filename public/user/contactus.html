@@ -3,11 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+<<<<<<< HEAD
   <title>Contact Us - VoteEase</title>
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
+=======
+  <title>Voting System</title>
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
   <style>
     :root {
       --bg: #121417;
@@ -113,6 +117,7 @@
     .show {
       display: block;
     }
+<<<<<<< HEAD
 
     .go-back-container {
       text-align: left;
@@ -280,12 +285,18 @@
     .contact-card {
       animation: fadeIn 0.5s ease-out;
     }
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
   </style>
 </head>
 
 <body>
   <header>
+<<<<<<< HEAD
     <div class="logo">VoteEase</div>
+=======
+    <div class="logo">VotingEase</div>
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     <div class="menu">
       <div class="menu-links"></div>
       <button class="menu-btn" onclick="toggleMenu()">
@@ -301,6 +312,7 @@
     </div>
   </header>
 
+<<<<<<< HEAD
   <div class="go-back-container">
     <button class="go-back-btn" onclick="goBack()">← Go Back</button>
   </div>
@@ -392,10 +404,18 @@
       }
     });
 
+=======
+  <script>
+    
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     function toggleMenu() {
       document.getElementById("dropdownMenu").classList.toggle("show");
     }
 
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     window.onclick = function(e) {
       if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) {
         document.getElementById("dropdownMenu").classList.remove("show");
@@ -404,6 +424,7 @@
 
     function logout() {
       localStorage.removeItem("user");
+<<<<<<< HEAD
       window.location.href = "../../index.html";
     }
 
@@ -470,6 +491,9 @@
         sendBtn.disabled = false;
         sendBtn.textContent = 'Send Message';
       }
+=======
+      window.location.href = "index.html";
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     }
   </script>
 </body>

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>VotingEase — Admin Dashboard</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="./asset/style/admindb.css">
@@ -171,6 +172,13 @@
 <body>
     <header>
         <h1>VoteEase Admin Dashboard</h1>
+=======
+    <link rel="stylesheet" href="./asset/style/admindb.css">
+</head>
+<body>
+    <header>
+        <h1>Voting System Admin Dashboard</h1>
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         <div class="controls">
          
         </div>
@@ -190,9 +198,12 @@
             <a href="#" class="nav-item" data-view="results">
                 Results
             </a>
+<<<<<<< HEAD
             <a href="#" class="nav-item" data-view="archived">
                 Archived
             </a>
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             <hr style="border:none;height:1px;background:var(--border);margin:16px 20px;">
             <a href="#" class="nav-item" id="logoutBtn">
                 Logout
@@ -297,7 +308,11 @@
                     <div style="display:flex;justify-content:space-between;align-items:center">
                         <h3 style="margin:0;color:var(--text);">Registered Voters</h3>
                         <div>
+<<<<<<< HEAD
                             <input type="text" id="voterSearchInput" placeholder="Search voters..." style="padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);width:300px">
+=======
+                            <button id="addVoterBtn">New Voter</button>
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                         </div>
                     </div>
                 </div>
@@ -347,6 +362,7 @@
                     </div>
                 </div>
             </section>
+<<<<<<< HEAD
 
             <section id="view-archived" class="view" style="display:none">
                 <div class="card" style="margin-bottom:20px">
@@ -383,6 +399,8 @@
                     </table>
                 </div>
             </section>
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         </main>
     </div>
 
@@ -411,7 +429,10 @@
                         <label for="candidateBio">Biography/Description</label>
                         <textarea id="candidateBio" name="bio" placeholder="Brief description about the candidate"></textarea>
                     </div>
+<<<<<<< HEAD
                 
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 </div>
                 <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:24px">
                     <button type="button" id="candidateModalCancel" class="secondary">Cancel</button>
@@ -452,10 +473,16 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <footer>VoteEase © 2025</footer>
 
     <script>
        
+=======
+    <footer>Voting Assistance System © 2024</footer>
+
+    <script>
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         const views = document.querySelectorAll('.view');
         const navItems = document.querySelectorAll('.nav-item');
         const candidateModal = document.getElementById('candidateModal');
@@ -476,7 +503,10 @@
         let currentVotingState = false;
         let resultsInterval = null;
 
+<<<<<<< HEAD
      
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         navItems.forEach(a => {
             a.addEventListener('click', e => {
                 e.preventDefault();
@@ -497,9 +527,12 @@
             } else if (name === 'results') {
                 loadResults();
                 startResultsAutoRefresh();
+<<<<<<< HEAD
             } else if (name === 'archived') {
                 loadArchivedCandidates();
                 loadArchivedVoters();
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             } else if (name === 'overview') {
                 loadRecentUsers();
             } else {
@@ -508,7 +541,10 @@
             updateVotingControls(currentVotingState);
         }
 
+<<<<<<< HEAD
         //  auto-refresh
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function startResultsAutoRefresh() {
             resultsInterval = setInterval(loadResults, 5000);
         }
@@ -520,6 +556,7 @@
             }
         }
 
+<<<<<<< HEAD
         // reset all votes function
         function resetAllVotes() {
             Swal.fire({
@@ -587,6 +624,37 @@
         function loadStats() {
             // load total voters
             fetch('./backend/get_voters.php?t=' + new Date().getTime())
+=======
+        function resetAllVotes() {
+            if (confirm('DANGER ZONE! This will DELETE ALL VOTES permanently!\n\nAll users will be able to vote again.\nThis cannot be undone!\n\nClick OK to continue or Cancel to abort.')) {
+                fetch('./backend/reset_votes.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password: 'admin123' })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('All votes reset successfully! Users can now vote again.');
+                        loadStats();
+                        if (document.getElementById('view-voters').style.display !== 'none') {
+                            loadVoters();
+                        }
+                    } else {
+                        alert('Reset failed: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert('Network error: ' + error);
+                });
+            }
+        }
+
+        function loadStats() {
+            fetch('./backend/get_voters.php')
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.voters) {
@@ -594,8 +662,12 @@
                     }
                 });
 
+<<<<<<< HEAD
             // load total candidates
             fetch('./backend/get_candidates.php?t=' + new Date().getTime())
+=======
+            fetch('./backend/get_candidates.php')
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.candidates) {
@@ -603,7 +675,10 @@
                     }
                 });
 
+<<<<<<< HEAD
             // load total votes
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             fetch('./backend/get_votes_count.php')
                 .then(response => response.json())
                 .then(data => {
@@ -613,14 +688,22 @@
                 });
         }
 
+<<<<<<< HEAD
         // load recent users
         function loadRecentUsers() {
             fetch('./backend/get_voters.php?t=' + new Date().getTime())
+=======
+        function loadRecentUsers() {
+            fetch('./backend/get_voters.php')
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 .then(response => response.json())
                 .then(data => {
                     const container = document.getElementById('recentUsersList');
                     if (data.success && data.voters && data.voters.length > 0) {
+<<<<<<< HEAD
                         
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                         const recentVoters = data.voters
                             .sort((a, b) => b.id - a.id)
                             .slice(0, 5);
@@ -656,12 +739,18 @@
                 });
         }
 
+<<<<<<< HEAD
         
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function getInitials(name) {
             return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
         }
 
+<<<<<<< HEAD
        
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function loadElectionSettings() {
             fetch('./backend/get_election_settings.php')
                 .then(response => response.json())
@@ -695,7 +784,10 @@
                 });
         }
 
+<<<<<<< HEAD
         // update voting control buttons
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function updateVotingControls(isActive) {
             const startBtn = document.getElementById('startVotingBtn');
             const stopBtn = document.getElementById('stopVotingBtn');
@@ -709,7 +801,10 @@
             }
         }
 
+<<<<<<< HEAD
         // update election status display
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function updateElectionStatusDisplay(isActive) {
             const statusElement = document.getElementById('electionStatus');
             if (isActive) {
@@ -719,13 +814,17 @@
             }
         }
 
+<<<<<<< HEAD
         // start voting
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         document.getElementById('startVotingBtn').addEventListener('click', function() {
             const title = document.getElementById('electionTitle').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             
             if (!title || !startDate || !endDate) {
+<<<<<<< HEAD
                 Swal.fire({
                     icon: 'warning',
                     title: 'Missing Information',
@@ -813,6 +912,38 @@
                     });
                 }
             });
+=======
+                alert('Please fill in Election Title, Start Date, and End Date before starting voting.');
+                return;
+            }
+            
+            if (confirm('Start voting now? This will allow users to cast their votes.')) {
+                updateVotingStatus(1);
+            }
+        });
+
+        document.getElementById('stopVotingBtn').addEventListener('click', function() {
+            if (confirm('Stop voting now? This will prevent users from casting new votes.')) {
+                updateVotingStatus(0);
+            }
+        });
+
+        document.getElementById('resetAllBtn').addEventListener('click', resetAllVotes);
+
+        resetSettingsBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to reset the election form? All fields will be cleared.')) {
+                document.getElementById('electionTitle').value = '';
+                document.getElementById('electionDescription').value = '';
+                document.getElementById('startDate').value = '';
+                document.getElementById('endDate').value = '';
+                
+                currentVotingState = false;
+                updateVotingControls(false);
+                updateElectionStatusDisplay(false);
+                
+                alert('Election form has been reset successfully!');
+            }
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         });
      
         function updateVotingStatus(isActive, showAlert = true) {
@@ -838,6 +969,7 @@
                     updateVotingControls(isActive);
                     updateElectionStatusDisplay(isActive);
                     
+<<<<<<< HEAD
                     if (showAlert) {
                         Swal.fire({
                             icon: 'success',
@@ -873,6 +1005,22 @@
         }
 
         
+=======
+                    if (isActive) {
+                        if (showAlert) alert('Voting started successfully!');
+                    } else {
+                        if (showAlert) alert('Voting stopped successfully!');
+                    }
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Network error: ' + error);
+            });
+        }
+
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function loadResults() {
             fetch('./backend/get_live_results.php')
                 .then(response => response.json())
@@ -896,7 +1044,10 @@
                 });
         }
 
+<<<<<<< HEAD
  
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function displayResults(results) {
             const resultsList = document.getElementById('resultsList');
             
@@ -915,6 +1066,7 @@
                 }
             });
             
+<<<<<<< HEAD
             const positionOrder = ['President', 'Vice President', 'Secretary', 'Treasurer', 'Auditor'];
             const sortedPositions = Object.keys(resultsByPosition).sort((a, b) => {
                 const indexA = positionOrder.indexOf(a);
@@ -928,6 +1080,11 @@
             let html = '';
             
             sortedPositions.forEach(position => {
+=======
+            let html = '';
+            
+            Object.keys(resultsByPosition).sort().forEach(position => {
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 const positionResults = resultsByPosition[position];
                 const totalVotes = positionResults.reduce((sum, candidate) => sum + candidate.vote_count, 0);
                 
@@ -962,7 +1119,10 @@
             resultsList.innerHTML = html || '<div style="text-align:center;padding:32px;color:var(--muted)">No votes cast yet</div>';
         }
 
+<<<<<<< HEAD
         
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function updateResultsChart(results) {
             const chartContainer = document.getElementById('resultsChart');
             
@@ -981,6 +1141,7 @@
                 }
             });
             
+<<<<<<< HEAD
             const positionOrder = ['President', 'Vice President', 'Secretary', 'Treasurer', 'Auditor'];
             const sortedPositions = Object.keys(resultsByPosition).sort((a, b) => {
                 const indexA = positionOrder.indexOf(a);
@@ -994,6 +1155,11 @@
             let html = '';
             
             sortedPositions.forEach(position => {
+=======
+            let html = '';
+            
+            Object.keys(resultsByPosition).sort().forEach(position => {
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 const positionResults = resultsByPosition[position];
                 const totalVotes = positionResults.reduce((sum, candidate) => sum + candidate.vote_count, 0);
                 
@@ -1026,7 +1192,10 @@
             chartContainer.innerHTML = html || '<div class="chart-placeholder">No data available</div>';
         }
 
+<<<<<<< HEAD
       
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function getPositionColor(position) {
             const colors = {
                 'President': '#3b82f6',
@@ -1045,6 +1214,7 @@
                     if (data.success && data.results) {
                         exportToCSV(data.results);
                     } else {
+<<<<<<< HEAD
                         Swal.fire({
                             icon: 'info',
                             title: 'No Results',
@@ -1064,6 +1234,13 @@
                         background: '#1a1c20',
                         color: '#eaeaea'
                     });
+=======
+                        alert('No results available to export.');
+                    }
+                })
+                .catch(error => {
+                    alert('Error fetching results for export: ' + error);
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 });
         });
 
@@ -1107,6 +1284,7 @@
             link.click();
             document.body.removeChild(link);
             
+<<<<<<< HEAD
             Swal.fire({
                 icon: 'success',
                 title: 'Export Successful',
@@ -1118,11 +1296,19 @@
         }
 
    
+=======
+            alert('Results exported successfully!');
+        }
+
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         document.getElementById('refreshResultsBtn').addEventListener('click', function() {
             loadResults();
         });
 
+<<<<<<< HEAD
        
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         document.getElementById('refreshRecentUsers').addEventListener('click', function() {
             loadRecentUsers();
             loadStats();
@@ -1130,6 +1316,7 @@
 
         logoutBtn.addEventListener('click', function(e) {
             e.preventDefault();
+<<<<<<< HEAD
             Swal.fire({
                 title: 'Logout Confirmation',
                 text: 'Are you sure you want to logout?',
@@ -1159,6 +1346,23 @@
         
         function loadCandidates() {
             fetch('./backend/get_candidates.php?t=' + new Date().getTime())
+=======
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('./backend/logout.php', {
+                    method: 'POST'
+                })
+                .then(response => {
+                    window.location.href = 'index.html';
+                })
+                .catch(error => {
+                    window.location.href = 'index.html';
+                });
+            }
+        });
+
+        function loadCandidates() {
+            fetch('./backend/get_candidates.php')
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 .then(response => response.json())
                 .then(data => {
                     const tbody = document.getElementById('candidatesTableBody');
@@ -1171,7 +1375,11 @@
                                 <td>${escapeHtml(candidate.position)}</td>
                                 <td>${candidate.is_active ? '<span class="badge success">Active</span>' : '<span class="badge danger">Inactive</span>'}</td>
                                 <td class="actions">
+<<<<<<< HEAD
                                     <button class="secondary" onclick="startEditCandidate(${candidate.id}, '${escapeHtml(candidate.name)}', '${escapeHtml(candidate.position)}', '${escapeHtml(candidate.bio || '')}', '${escapeHtml(candidate.photo || '')}')">Edit</button>
+=======
+                                    <button class="secondary" onclick="startEditCandidate(${candidate.id}, '${escapeHtml(candidate.name)}', '${escapeHtml(candidate.position)}', '${escapeHtml(candidate.bio || '')}')">Edit</button>
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                                     <button class="danger" onclick="deleteCandidate(${candidate.id})">Delete</button>
                                 </td>
                             `;
@@ -1188,7 +1396,11 @@
                 });
         }
 
+<<<<<<< HEAD
         function startEditCandidate(id, name, position, bio, photo) {
+=======
+        function startEditCandidate(id, name, position, bio) {
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             editingCandidateId = id;
             const tbody = document.getElementById('candidatesTableBody');
             const rows = tbody.getElementsByTagName('tr');
@@ -1222,6 +1434,7 @@
             const name = document.getElementById(`editName_${id}`).value;
             const position = document.getElementById(`editPosition_${id}`).value;
             const bio = '';
+<<<<<<< HEAD
             const photo = '';
 
             if (!name || !position) {
@@ -1233,6 +1446,11 @@
                     background: '#1a1c20',
                     color: '#eaeaea'
                 });
+=======
+
+            if (!name || !position) {
+                alert('Please fill in all fields');
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                 return;
             }
 
@@ -1241,7 +1459,11 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
+<<<<<<< HEAD
                 body: JSON.stringify({ id, name, position, bio, photo })
+=======
+                body: JSON.stringify({ id, name, position, bio })
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             })
             .then(response => response.json())
             .then(data => {
@@ -1286,6 +1508,7 @@
         }
 
         function deleteCandidate(candidateId) {
+<<<<<<< HEAD
             Swal.fire({
                 title: 'Delete Candidate',
                 text: 'Are you sure you want to delete this candidate?',
@@ -1321,6 +1544,30 @@
                     });
                 }
             });
+=======
+            if (confirm('Are you sure you want to delete this candidate?')) {
+                fetch('./backend/delete_candidate.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: candidateId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showCandidateMessage('Candidate deleted successfully!', 'success');
+                        loadCandidates();
+                        loadStats();
+                    } else {
+                        showCandidateMessage('Error: ' + data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    showCandidateMessage('Network error: ' + error, 'error');
+                });
+            }
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         }
 
         function showCandidateMessage(text, type) {
@@ -1334,6 +1581,7 @@
             }, 5000);
         }
 
+<<<<<<< HEAD
         // Voter management functions
         let allVoters = [];
         
@@ -1346,6 +1594,38 @@
                         displayVoters(allVoters);
                     } else {
                         document.getElementById('votersTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted)">No voters found</td></tr>';
+=======
+        function loadVoters() {
+            fetch('./backend/get_voters.php')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('votersTableBody');
+                    if (data.success && data.voters) {
+                        tbody.innerHTML = '';
+                        data.voters.forEach(voter => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td><strong>${escapeHtml(voter.name)}</strong></td>
+                                <td>${escapeHtml(voter.email)}</td>
+                                <td>${parseInt(voter.has_voted) === 1 ? '<span class="badge success">Voted</span>' : '<span class="badge muted">Not Voted</span>'}</td>
+                                <td>
+                                    ${voter.status === 'active' ? '<span class="badge success">Active</span>' : 
+                                      voter.status === 'suspended' ? '<span class="badge danger">Suspended</span>' : 
+                                      '<span class="badge success">Active</span>'}
+                                </td>
+                                <td class="actions">
+                                    ${voter.status === 'suspended' ? 
+                                        `<button class="success" onclick="unsuspendVoter(${voter.id})">Unsuspend</button>` : 
+                                        `<button class="secondary" onclick="suspendVoter(${voter.id}, '${escapeHtml(voter.name)}')">Suspend</button>`
+                                    }
+                                    <button class="danger" onclick="deleteVoter(${voter.id}, '${escapeHtml(voter.name)}')">Delete</button>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted)">No voters found</td></tr>';
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                     }
                 })
                 .catch(error => {
@@ -1354,6 +1634,7 @@
                         '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted)">Error loading voters</td></tr>';
                 });
         }
+<<<<<<< HEAD
         
         function displayVoters(voters) {
             const tbody = document.getElementById('votersTableBody');
@@ -1398,6 +1679,8 @@
                 });
             }
         });
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
 
         function suspendVoter(voterId, voterName) {
             document.getElementById('suspendVoterId').value = voterId;
@@ -1406,6 +1689,7 @@
         }
 
         function unsuspendVoter(voterId) {
+<<<<<<< HEAD
             Swal.fire({
                 title: 'Unsuspend Voter',
                 text: 'Are you sure you want to unsuspend this voter?',
@@ -1464,6 +1748,31 @@
                     });
                 }
             });
+=======
+            if (confirm('Are you sure you want to unsuspend this voter?')) {
+                fetch('./backend/unsuspend_voter.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: voterId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Voter unsuspended successfully!');
+                        loadVoters();
+                        loadRecentUsers();
+                        loadStats();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert('Network error: ' + error);
+                });
+            }
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         }
 
         function deleteVoter(voterId, voterName) {
@@ -1472,7 +1781,10 @@
             document.body.classList.add('modal-open');
         }
 
+<<<<<<< HEAD
   
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function openCandidateModal() {
             console.log('Opening candidate modal...');
             candidateModal.classList.add('open');
@@ -1496,17 +1808,27 @@
             document.body.classList.remove('modal-open');
         }
 
+<<<<<<< HEAD
      
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         candidateForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const formData = {
                 name: document.getElementById('candidateName').value,
                 position: document.getElementById('candidatePosition').value,
+<<<<<<< HEAD
                 bio: document.getElementById('candidateBio').value,
                 photo: 'default_photo.jpg'
             };
 
+=======
+                bio: document.getElementById('candidateBio').value
+            };
+
+            console.log('Submitting candidate:', formData);
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             addCandidate(formData);
         });
 
@@ -1525,6 +1847,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+<<<<<<< HEAD
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -1534,11 +1857,15 @@
                         background: '#1a1c20',
                         color: '#eaeaea'
                     });
+=======
+                    alert('Voter suspended successfully!');
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                     closeSuspendModal();
                     loadVoters();
                     loadRecentUsers();
                     loadStats();
                 } else {
+<<<<<<< HEAD
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -1558,6 +1885,13 @@
                     background: '#1a1c20',
                     color: '#eaeaea'
                 });
+=======
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Network error: ' + error);
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             });
         });
 
@@ -1574,6 +1908,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+<<<<<<< HEAD
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -1583,11 +1918,15 @@
                         background: '#1a1c20',
                         color: '#eaeaea'
                     });
+=======
+                    alert('Voter deleted successfully!');
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
                     closeDeleteModal();
                     loadVoters();
                     loadRecentUsers();
                     loadStats();
                 } else {
+<<<<<<< HEAD
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -1607,6 +1946,13 @@
                     background: '#1a1c20',
                     color: '#eaeaea'
                 });
+=======
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Network error: ' + error);
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             });
         });
 
@@ -1625,14 +1971,20 @@
             if (e.target === deleteModal) closeDeleteModal();
         });
 
+<<<<<<< HEAD
         
         addCandidateBtn.addEventListener('click', openCandidateModal);
 
       
+=======
+        addCandidateBtn.addEventListener('click', openCandidateModal);
+
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         function escapeHtml(s) { 
             return (s+'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); 
         }
 
+<<<<<<< HEAD
         let allArchivedCandidates = [];
         let allArchivedVoters = [];
 
@@ -2106,6 +2458,8 @@
         }
 
        
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
         showView('overview');
         loadCandidates();
         loadStats();

@@ -24,7 +24,11 @@ try {
     }
 
     // fetch all candidates
+<<<<<<< HEAD
     $sql = "SELECT id, name, position, photo, bio, created_at, is_active FROM candidates WHERE is_archived = 0";
+=======
+    $sql = "SELECT id, name, position, photo, bio, created_at, is_active FROM candidates ORDER BY position, name";
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     $result = $conn->query($sql);
 
     if ($result === false) {
@@ -38,6 +42,7 @@ try {
         }
     }
 
+<<<<<<< HEAD
     $positionOrder = ['President' => 1, 'Vice President' => 2, 'Secretary' => 3, 'Treasurer' => 4, 'Auditor' => 5];
     usort($candidates, function ($a, $b) use ($positionOrder) {
         $orderA = $positionOrder[$a['position']] ?? 999;
@@ -48,6 +53,8 @@ try {
         return $orderA - $orderB;
     });
 
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
     echo json_encode([
         'success' => true,
         'candidates' => $candidates,

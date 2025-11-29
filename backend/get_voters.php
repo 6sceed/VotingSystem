@@ -16,7 +16,10 @@ try {
                     ELSE 0 
                 END as has_voted
             FROM voters v
+<<<<<<< HEAD
             WHERE v.is_archived = 0
+=======
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
             ORDER BY v.name";
 
     $result = $conn->query($sql);

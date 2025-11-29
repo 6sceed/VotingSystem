@@ -3,11 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<<<<<<< HEAD
 <title>VoteEase - Profile</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+=======
+<title>VotingEase</title>
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
 <style>
 :root {
   --bg: #121417;
@@ -188,6 +192,77 @@ header {
   opacity: 0.8;
 }
 
+<<<<<<< HEAD
+=======
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(3px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-box {
+  background: #1d1f23;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.7);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  color: #fff;
+  border: 1px solid #333;
+}
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--accent);
+}
+.modal-message {
+  margin: 15px 0;
+  line-height: 1.5;
+}
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.modal-box button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+  min-width: 80px;
+}
+.modal-confirm {
+  background: var(--accent);
+  color: #fff;
+}
+.modal-cancel {
+  background: #444;
+  color: #fff;
+}
+.modal-ok {
+  background: var(--accent);
+  color: #fff;
+  width: 100%;
+}
+
+.modal-success .modal-title {
+  color: #4CAF50;
+}
+.modal-error .modal-title {
+  color: #f44336;
+}
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
 </style>
 </head>
 <body>
@@ -251,6 +326,7 @@ header {
     <button type="submit">Save Changes</button>
   </form>
 </div>
+<<<<<<< HEAD
 <script>
 function toggleMenu() { document.getElementById("dropdownMenu").classList.toggle("show"); }
 window.onclick = function(e) { if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) { document.getElementById("dropdownMenu").classList.remove("show"); } };
@@ -277,12 +353,33 @@ function logout() {
 function goBack() {
   window.location.href = "http://localhost/voting_system/dashboard.html";
 }
+=======
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-title" id="modalTitle">Confirmation</div>
+    <div class="modal-message" id="modalMessage">Are you sure you want to save changes?</div>
+    <div class="modal-buttons" id="modalButtons">
+      <button class="modal-confirm" onclick="confirmModal()">Yes</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+function toggleMenu() { document.getElementById("dropdownMenu").classList.toggle("show"); }
+window.onclick = function(e) { if (!e.target.matches('.menu-btn') && !e.target.closest('.menu')) { document.getElementById("dropdownMenu").classList.remove("show"); } };
+function logout() { 
+  localStorage.removeItem("user"); 
+  window.location.href = "/voting_system/index.html"; 
+}
+function goBack() {  window.location.href = "http://localhost/voting_system/dashboard.html";}
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
 
 
 function holdEye(id) { const input = document.getElementById(id); input.type = "text"; }
 function releaseEye(id) { const input = document.getElementById(id); input.type = "password"; }
 
 
+<<<<<<< HEAD
 function showSuccess(message) {
   Swal.fire({
     icon: 'success',
@@ -303,6 +400,59 @@ function showError(message) {
     background: '#1a1c20',
     color: '#eaeaea'
   });
+=======
+let modalCallback = null;
+
+function showModal(callback, title = "Confirmation", message = "Are you sure you want to save changes?", type = "confirm") {
+  modalCallback = callback;
+  const modalBox = document.getElementById("modalBox");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalMessage = document.getElementById("modalMessage");
+  const modalButtons = document.getElementById("modalButtons");
+  
+  
+  modalTitle.textContent = title;
+  modalMessage.textContent = message;
+  
+
+  modalBox.className = "modal-box";
+  if (type === "success") {
+    modalBox.classList.add("modal-success");
+  } else if (type === "error") {
+    modalBox.classList.add("modal-error");
+  }
+  
+  
+  if (type === "confirm") {
+    modalButtons.innerHTML = `
+      <button class="modal-confirm" onclick="confirmModal()">Yes</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    `;
+  } else {
+    modalButtons.innerHTML = `
+      <button class="modal-ok" onclick="closeModal()">OK</button>
+    `;
+  }
+  
+  document.getElementById("modalOverlay").style.display = "flex";
+}
+
+function showSuccess(message) {
+  showModal(null, "Success", message, "success");
+}
+
+function showError(message) {
+  showModal(null, "Error", message, "error");
+}
+
+function closeModal() {
+  document.getElementById("modalOverlay").style.display = "none";
+}
+
+function confirmModal() {
+  closeModal();
+  if (modalCallback) modalCallback();
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
 }
 
 
@@ -406,6 +556,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
   const form = document.getElementById("profileForm");
   form.addEventListener("submit",(e)=>{
     e.preventDefault();
+<<<<<<< HEAD
     Swal.fire({
       title: 'Confirm Changes',
       text: 'Are you sure you want to save your profile changes?',
@@ -422,6 +573,9 @@ document.addEventListener("DOMContentLoaded", async ()=>{
         updateProfile(user);
       }
     });
+=======
+    showModal(()=>updateProfile(user), "Confirm Changes", "Are you sure you want to save your profile changes?");
+>>>>>>> 1a112624b7ee701f0c01f7dbf4b7a38d2f5fd443
   });
 });
 
